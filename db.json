@@ -1,0 +1,22 @@
+{
+  "Daftar": [
+    {
+      "nama": "ayyas",
+      "jabatan": "guru biologi",
+      "kategori": "Guru",
+      "id": "af9f"
+    },
+    {
+      "id": "b691",
+      "nama": "fadil kompres",
+      "jabatan": "satpam gerbang",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "67e8",
+      "nama": "sakti",
+      "jabatan": "satpam rider",
+      "kategori": "Karyawan"
+    }
+  ]
+}

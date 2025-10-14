@@ -22,7 +22,7 @@ function Login() {
       icon: "success",
       draggable: true,
     }).then(() => {
-      navigate("/");
+      navigate("/Daftar");
     });
   };
 
@@ -41,7 +41,7 @@ function Login() {
             <input
               className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
-              type="text"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -58,9 +58,9 @@ function Login() {
             </label>
             <input
               className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="text"
-              name="email"
+              id="password"
+              type="password"
+              name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Masukan Password Email Anda"
@@ -68,8 +68,14 @@ function Login() {
             />
           </div>
           <div>
-            <button className="">
-              
+            <button
+              className="bg-blue-500 shadow-lg px-3 py-2 rounded-lg items-center ml-30 text-white"
+              type="submit"
+            >
+              Daftar
+            </button>
+            <button className="shadow ml-5 mt-4">
+              <Link to="/Register">Belum Punya Akun? Daftar disini bre🤔</Link>
             </button>
             
           </div>
