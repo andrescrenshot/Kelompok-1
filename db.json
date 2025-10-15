@@ -1,21 +1,24 @@
 {
   "Daftar": [
     {
-      "nama": "ayyas",
-      "jabatan": "guru biologi",
-      "kategori": "Guru",
-      "id": "af9f"
+      "nama": "Moreno",
+      "jabatan": "Kelas 7A",
+      "email": "reno@gmail.com",
+      "kategori": "Siswa",
+      "id": "e201"
     },
     {
-      "id": "b691",
-      "nama": "fadil kompres",
-      "jabatan": "satpam gerbang",
+      "id": "2be0",
+      "nama": "Moreno",
+      "jabatan": "Guru Jumpshot",
+      "email": "dapagacor33@hayo.gmail",
       "kategori": "Karyawan"
     },
     {
-      "id": "67e8",
-      "nama": "sakti",
-      "jabatan": "satpam rider",
+      "id": "ca77",
+      "nama": "Fadil",
+      "jabatan": "Penjaga WC",
+      "email": "WCkiller@gmail.com",
       "kategori": "Karyawan"
     }
   ]

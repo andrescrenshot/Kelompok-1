@@ -3,6 +3,8 @@ import Register from "./component/Register";
 import Login from "./component/Login";
 import Daftar from "./component/Daftar";
 import MainLayout from "./component/MainLayaout";
+import TambahData from "./component/TambahData";
+import Edit from "./component/Edit"
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/TambahData" element={<TambahData />} />
+        <Route path="/EditData/:id" element={<Edit />} />
 
         <Route element={<MainLayout />}>
           <Route path="/Daftar" element={<Daftar />} />
