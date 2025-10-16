@@ -22,7 +22,7 @@ function Login() {
       icon: "success",
       draggable: true,
     }).then(() => {
-      navigate("/Daftar");
+      navigate("/Dasboard");
     });
   };
 

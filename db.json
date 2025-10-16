@@ -1,25 +1,53 @@
 {
   "Daftar": [
     {
-      "nama": "Moreno",
-      "jabatan": "Kelas 7A",
-      "email": "reno@gmail.com",
-      "kategori": "Siswa",
-      "id": "e201"
-    },
-    {
-      "id": "2be0",
-      "nama": "Moreno",
-      "jabatan": "Guru Jumpshot",
-      "email": "dapagacor33@hayo.gmail",
-      "kategori": "Karyawan"
-    },
-    {
       "id": "ca77",
       "nama": "Fadil",
       "jabatan": "Penjaga WC",
       "email": "WCkiller@gmail.com",
       "kategori": "Karyawan"
+    },
+    {
+      "id": "821b",
+      "nama": "dsd",
+      "jabatan": "dasd",
+      "email": "reno@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "1b09",
+      "nama": "w",
+      "jabatan": "Guru Jumpshot",
+      "email": "dapagacor33@hayo.gmailw",
+      "kategori": "Guru"
+    },
+    {
+      "id": "50d0",
+      "nama": "Moreno",
+      "jabatan": "kelas12",
+      "email": "dapagacor33@hayo.gmailw",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "de81",
+      "nama": "dafa",
+      "jabatan": "penjaga loli",
+      "email": "regis@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "94f5",
+      "nama": "Ani",
+      "jabatan": "Kelas 7A",
+      "email": "regis@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "b26b",
+      "nama": "w",
+      "jabatan": "Kelas 7A",
+      "email": "dapagacor33@hayo.gmail",
+      "kategori": "Siswa"
     }
   ]
 }

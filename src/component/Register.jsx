@@ -20,11 +20,11 @@ function Register() {
     e.preventDefault();
 
     Swal.fire({
-  title: "Pendaftaran Berhasil!",
+  title: "regsiterasi berhasil!",
   icon: "success",
   draggable: true
 }).then(()=>{
-   navigate("/Daftar");
+   navigate("/Dasboard");
 })
   
 

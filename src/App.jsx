@@ -5,6 +5,7 @@ import Daftar from "./component/Daftar";
 import MainLayout from "./component/MainLayaout";
 import TambahData from "./component/TambahData";
 import Edit from "./component/Edit"
+import Dasboard from "./component/Dasboard"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/EditData/:id" element={<Edit />} />
 
         <Route element={<MainLayout />}>
+        <Route path="/Dasboard" element={<Dasboard />} />
           <Route path="/Daftar" element={<Daftar />} />
         </Route>
       </Routes>
