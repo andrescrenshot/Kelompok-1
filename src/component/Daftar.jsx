@@ -48,7 +48,7 @@ function Daftar() {
     filter === "Semua" ? data : data.filter((d) => d.kategori === filter);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8 flex justify-center">
+    <div className="min-h-screen bg-gray-700 p-8 flex justify-center rounded-lg">
       <div className="w-full max-w-5xl space-y-8">
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
@@ -103,13 +103,14 @@ function Daftar() {
                         <button
                           className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded"
                           onClick={() => navigate(`/EditData/${item.id}`)}
-                        >
+                        ><i class="ri-edit-line"></i>
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
                           className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                        >
+                        ><i class="ri-delete-bin-line"></i>
+                          
                           Hapus
                         </button>
                       </td>
