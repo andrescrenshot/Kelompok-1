@@ -17,9 +17,9 @@ function Sidnav() {
         <nav className="space-y-3" >
           <a
             href="/Dasboard"
-            className="block py-2 px-3 font-bold rounded hover:bg-blue-600 "
+            className="block py-2 px-3 font-bold rounded hover:bg-blue-600"
           >
-            <i class="ri-dashboard-line text-lg"></i>
+            <i className  ="ri-dashboard-line text-lg animate"></i>
             Dasboard
           </a>
           <a
@@ -29,6 +29,7 @@ function Sidnav() {
             <i class="ri-function-ai-line text-lg"></i>
             Daftar Tabel
           </a>
+          
           <a
             href="/"
             className="block py-2 px-3 font-bold rounded-lg hover:bg-blue-600 mt-110 bg-red-400 animate-pulse"
