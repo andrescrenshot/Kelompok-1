@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import logo from "../../public/logo.jpg"
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ function Login() {
     password: "",
   });
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,6 +17,28 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(u => u.email === formData.email);
+
+    if (!user) {
+      Swal.fire({
+        title: "Akun belum terdaftar!",
+        text: "Silakan daftar terlebih dahulu.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+      return;
+    }
+
+    if (user.password !== formData.password) {
+      Swal.fire({
+        title: "Password salah!",
+        icon: "error",
+        confirmButtonText: "Coba Lagi"
+      });
+      return;
+    }
 
     Swal.fire({
       title: "Login Berhasil!",
@@ -27,59 +50,66 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen h-14 shadowlg">
-      <div className="bg-white p-8 ronded-lg shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="Email"
-            >
-              Email
-            </label>
-            <input
-              className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Masukan Email anda"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Masukan Password Email Anda"
-              required
-            />
-          </div>
-          <div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+      <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[350px] overflow-hidden">
+        
+        <div className="w-1/3 bg-blue-100 flex items-center justify-center">
+          <img
+            src={logo}
+            alt="Logo"                                                                    
+            className="w-43 h-43 object-contain"
+          />
+        </div>
+
+        <div className="w-2/3 p-8 flex flex-col justify-center">
+          <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Masukan Email anda"
+                required
+              />
+            </div>
+
+            <div className="relative">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Masukan Password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
+              >
+                <i className={`ri-${showPassword ? "eye-off-line" : "eye-line"} text-xl`}></i>
+              </button>
+            </div>
+
             <button
-              className="bg-blue-500 shadow-lg px-3 py-2 rounded-lg items-center ml-30 text-white"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
               type="submit"
             >
-              Daftar
+              Login
             </button>
-            <button className="shadow ml-5 mt-4">
-              <Link to="/Register">Belum Punya Akun? Daftar disini bre🤔</Link>
-            </button>
-            
-          </div>
-        </form>
+          </form>
+
+          <p className="text-center text-gray-700 text-sm mt-4">
+            Belum punya akun? <Link to="/Register" className="text-blue-600 hover:underline">Daftar di sini</Link>
+          </p>
+        </div>
+
       </div>
     </div>
   );

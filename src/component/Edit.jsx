@@ -61,7 +61,7 @@ function EditData() {
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm">
+      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm mt-20">
         <h1 className="text-2xl font-bold text-center mb-6">Edit Data</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

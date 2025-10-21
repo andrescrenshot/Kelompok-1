@@ -1,46 +1,172 @@
 {
   "Daftar": [
     {
-      "id": "72ed",
-      "nama": "Moreno",
-      "jabatan": "kelas12",
+      "id": "0388",
+      "nama": "Moreno hitam",
+      "jabatan": "Kelas 7A",
       "email": "reno@gmail.com",
       "kategori": "Siswa"
     },
     {
-      "id": "f0cd",
+      "id": "6aac",
       "nama": "Fadil",
-      "jabatan": "Guru Jumpshot",
-      "email": "reno@gmail.com",
-      "kategori": "Guru"
-    },
-    {
-      "id": "42a3",
-      "nama": "ayyas",
-      "jabatan": "Satpam",
+      "jabatan": "Penjaga WC",
       "email": "regis@gmail.com",
       "kategori": "Karyawan"
     },
     {
-      "id": "5e1c",
+      "id": "5355",
       "nama": "dafa",
-      "jabatan": "Guru Jumpshot",
-      "email": "dapagacor33@hayo.gmailw",
-      "kategori": "Guru"
+      "jabatan": "KELAS10",
+      "email": "dapagacor33@hayo.gmail",
+      "kategori": "Siswa"
     },
     {
-      "id": "10bd",
+      "id": "2f39",
       "nama": "Ani",
-      "jabatan": "Kelas 7A",
+      "jabatan": "KELAS10/OSIS",
       "email": "regis@gmail.com",
       "kategori": "Siswa"
     },
     {
-      "id": "d9d5",
-      "nama": "ayyas",
-      "jabatan": "Guru Jumpshot",
-      "email": "WCkiller@gmail.com",
+      "id": "8a12",
+      "nama": "Budi Santoso",
+      "jabatan": "Kelas 8B",
+      "email": "budi8b@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "c27f",
+      "nama": "Lina Marlina",
+      "jabatan": "Guru Matematika",
+      "email": "lina.mtk@gmail.com",
       "kategori": "Guru"
+    },
+    {
+      "id": "e991",
+      "nama": "Rafi Ramadhan",
+      "jabatan": "Kelas 9C",
+      "email": "rafi9c@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "5d31",
+      "nama": "Tini Suryani",
+      "jabatan": "Guru Bahasa Inggris",
+      "email": "tini.eng@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "7b45",
+      "nama": "Satria Nugraha",
+      "jabatan": "Petugas Kebersihan",
+      "email": "satria.clean@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "a139",
+      "nama": "Andi Setiawan",
+      "jabatan": "Kelas 7C",
+      "email": "andi7c@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "b814",
+      "nama": "Dewi Kartika",
+      "jabatan": "Guru IPA",
+      "email": "dewi.ipa@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "4f20",
+      "nama": "Rani Fitri",
+      "jabatan": "Kelas 9A",
+      "email": "rani9a@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "f783",
+      "nama": "Joko Prasetyo",
+      "jabatan": "Satpam",
+      "email": "joko.satpam@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "8d51",
+      "nama": "Putri Aulia",
+      "jabatan": "Kelas 8A",
+      "email": "putri8a@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "b902",
+      "nama": "Siti Aminah",
+      "jabatan": "Guru IPS",
+      "email": "siti.ips@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "ce41",
+      "nama": "Rizky Maulana",
+      "jabatan": "Kelas 10B",
+      "email": "rizky10b@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "1d73",
+      "nama": "Eka Puspita",
+      "jabatan": "Guru Bahasa Indonesia",
+      "email": "eka.bindo@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "f159",
+      "nama": "Asep Kurniawan",
+      "jabatan": "Office Boy",
+      "email": "asep.ob@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "6e84",
+      "nama": "Bagus Saputra",
+      "jabatan": "Kelas 11A",
+      "email": "bagus11a@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "2b60",
+      "nama": "Maya Lestari",
+      "jabatan": "Guru PKN",
+      "email": "maya.pkn@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "5a12",
+      "nama": "Tono Riyadi",
+      "jabatan": "Penjaga Kantin",
+      "email": "tono.kantin@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "9b17",
+      "nama": "Alya Zahra",
+      "jabatan": "Kelas 12C",
+      "email": "alya12c@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "d732",
+      "nama": "Farhan Syahputra",
+      "jabatan": "Guru Olahraga",
+      "email": "farhan.sport@gmail.com",
+      "kategori": "Guru"
+    },
+    {
+      "id": "e478",
+      "nama": "Rudi Hartono",
+      "jabatan": "Karyawan Perpustakaan",
+      "email": "rudi.library@gmail.com",
+      "kategori": "Karyawan"
     }
   ]
 }
