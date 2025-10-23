@@ -6,6 +6,7 @@ const Dashboard = () => {
   const [filter, setFilter] = useState("Semua");
   const [visible, setVisible] = useState(false);
 
+
   const API_URL = "http://localhost:5001/Daftar";
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const Dashboard = () => {
             <i className="ri-dashboard-line text-4xl text-blue-500 animate-bounce"></i>
             DASHBOARD
           </h1>
-          ``
+          
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
             <div className="bg-gray-900 text-white p-5 rounded-lg shadow text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-800 cursor-pointer">
               <h2 className="text-lg font-semibold mb-2"> Total Semua</h2>
@@ -65,7 +66,7 @@ const Dashboard = () => {
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 p-2 rounded "
+              className="border border-gray-300 p-2"
             >
               <option value="Semua">Semua</option>
               <option value="Guru">Guru</option>
@@ -74,7 +75,7 @@ const Dashboard = () => {
             </select>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-lg ">
-            <h2 className="text-xl font-semibold mb-4 text-center text-gray-700 ">
+            <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">
               Daftar Data Terbaru
             </h2>
             <table className="w-full border border-gray-200 rounded-lg ">
@@ -113,6 +114,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <p className="text-center text-gray-500 text-sm pt-6">
+          © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
+        </p>
     </div>
   );
 };

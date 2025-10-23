@@ -48,7 +48,7 @@ function Login() {
       navigate("/Dasboard");
     });
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[350px] overflow-hidden">

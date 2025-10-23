@@ -32,7 +32,13 @@ function Sidnav() {
             href="/Daftar"
             className="block py-2 px-3 font-bold rounded hover:bg-blue-600"
           >
-            <i className="ri-function-ai-line text-lg"></i> Daftar Tabel
+            <i class="ri-dashboard-horizontal-fill"></i> Tabel
+          </a>
+          <a
+            href="/Datakelas"
+            className="block py-2 px-3 font-bold rounded hover:bg-blue-600"
+          >
+            <i class="ri-id-card-line"></i> New
           </a>
           <a
             href="/"

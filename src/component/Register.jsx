@@ -43,6 +43,7 @@ function Register() {
   };
 
   return (
+    
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="bg-gradient-to-br from-blue-100 via-white to-gray-100 p-8 rounded-lg shadow-md w-full max-w-sm">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Registrasi</h1>
@@ -106,6 +107,7 @@ function Register() {
           </div>
         </form>
       </div>
+      
     </div>
   );
 }

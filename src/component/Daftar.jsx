@@ -62,8 +62,7 @@ function Daftar() {
       >
         <div className="w-full max-w-6xl space-y-8">
           <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <i className="ri-dashboard-line text-4xl text-blue-500 animate-bounce"></i>
-        
+            <i className="ri-dashboard-line text-4xl text-blue-500 animate-spin"></i> Tabel
           </h1>
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
@@ -164,6 +163,9 @@ function Daftar() {
           </div>
         </div>
       </div>
+      <p className="text-center text-gray-500 text-sm pt-6">
+        © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
+      </p>
     </div>
   );
 }
