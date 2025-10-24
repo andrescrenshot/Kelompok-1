@@ -6,7 +6,6 @@ const Dashboard = () => {
   const [filter, setFilter] = useState("Semua");
   const [visible, setVisible] = useState(false);
 
-
   const API_URL = "http://localhost:5001/Daftar";
 
   useEffect(() => {
@@ -18,9 +17,8 @@ const Dashboard = () => {
         console.error("Gagal mengambil data:", error);
       }
     };
-
     fetchData();
-      setTimeout(() => setVisible(true), 100);
+    setTimeout(() => setVisible(true), 100);
   }, []);
 
   const totalGuru = data.filter((d) => d.kategori === "Guru").length;
@@ -40,33 +38,32 @@ const Dashboard = () => {
       <div className="min-h-screen p-8 flex justify-center">
         <div className="w-full max-w-6xl space-y-8">
           <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <i className="ri-dashboard-line text-4xl text-blue-500 animate-bounce"></i>
+            <i className="ri-dashboard-line text-4xl text-blue-500 animate-spin"></i>
             DASHBOARD
           </h1>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
-            <div className="bg-gray-900 text-white p-5 rounded-lg shadow text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-800 cursor-pointer">
-              <h2 className="text-lg font-semibold mb-2"> Total Semua</h2>
-              <p className="text-2xl font-bold">{totalSemua}</p>
-            </div>
-            <div className="bg-gray-900 text-white p-5 rounded-lg shadow text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-800 cursor-pointer">
-              <h2 className="text-lg font-semibold mb-2">Total Guru</h2>
-              <p className="text-2xl font-bold">{totalGuru}</p>
-            </div>
-            <div className="bg-gray-900 text-white p-5 rounded-lg shadow text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-800 cursor-pointer">
-              <h2 className="text-lg font-semibold mb-2">Total Siswa</h2>
-              <p className="text-2xl font-bold">{totalSiswa}</p>
-            </div>
-            <div className="bg-gray-900 text-white p-5 rounded-lg shadow text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gray-800 cursor-pointer">
-              <h2 className="text-lg font-semibold mb-2">Total Karyawan</h2>
-              <p className="text-2xl font-bold">{totalKaryawan}</p>
-            </div>
+
+          {/* Statistik Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[{ label: "Total Semua", value: totalSemua },
+              { label: "Total Guru", value: totalGuru },
+              { label: "Total Siswa", value: totalSiswa },
+              { label: "Total Karyawan", value: totalKaryawan }].map((card, idx) => (
+              <div
+                key={idx}
+                className="bg-white/90 backdrop-blur-lg p-5 rounded-2xl shadow-2xl border border-gray-200 text-center transform transition duration-300 hover:scale-105 hover:shadow-xl hover:bg-white cursor-pointer"
+              >
+                <h2 className="text-lg font-semibold mb-2 text-gray-800">{card.label}</h2>
+                <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+              </div>
+            ))}
           </div>
+
+          {/* Filter */}
           <div className="flex justify-end">
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 p-2"
+              className="border border-gray-300 p-2 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
               <option value="Semua">Semua</option>
               <option value="Guru">Guru</option>
@@ -74,49 +71,68 @@ const Dashboard = () => {
               <option value="Karyawan">Karyawan</option>
             </select>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-lg ">
+
+          {/* Tabel Data */}
+          <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">
               Daftar Data Terbaru
             </h2>
-            <table className="w-full border border-gray-200 rounded-lg ">
-              <thead className="bg-gray-200 text-gray-700">
-                <tr>
-                  <th className="p-3 text-left">No</th>
-                  <th className="p-3 text-left">Nama</th>
-                  <th className="p-3 text-left">Jabatan/Kelas/Bagian</th>
-                  <th className="p-3 text-left">Email</th>
-                  <th className="p-3 text-left">Kategori</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((item, index) => (
-                    <tr key={item.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3">{index + 1}</td>
-                      <td className="p-3">{item.nama}</td>
-                      <td className="p-3">{item.jabatan}</td>
-                      <td className="p-3">{item.email}</td>
-                      <td className="p-3">{item.kategori}</td>
-                    </tr>
-                  ))
-                ) : (
+            <div className="overflow-x-auto rounded-lg shadow-inner">
+              <table className="w-full border-collapse overflow-hidden">
+                <thead className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white">
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="p-4 text-center text-gray-500 italic"
-                    >
-                      Tidak ada data untuk kategori ini
-                    </td>
+                    <th className="p-3 text-left">No</th>
+                    <th className="p-3 text-left">Nama</th>
+                    <th className="p-3 text-left">Jabatan/Kelas/Bagian</th>
+                    <th className="p-3 text-left">Email</th>
+                    <th className="p-3 text-left">Kategori</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredData.length > 0 ? (
+                    filteredData.map((item, index) => (
+                      <tr
+                        key={item.id}
+                        className={`${
+                          index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+                        } hover:bg-blue-100 transition duration-200`}
+                      >
+                        <td className="p-3 font-medium text-gray-700">{index + 1}</td>
+                        <td className="p-3 text-gray-800">{item.nama}</td>
+                        <td className="p-3 text-gray-700">{item.jabatan}</td>
+                        <td className="p-3 text-gray-600">{item.email}</td>
+                        <td className="p-3">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                              item.kategori === "Guru"
+                                ? "bg-blue-100 text-blue-700"
+                                : item.kategori === "Siswa"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            {item.kategori}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="p-4 text-center text-gray-500 italic bg-gray-50">
+                        Tidak ada data untuk kategori ini
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
+
       <p className="text-center text-gray-500 text-sm pt-6">
-          © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
-        </p>
+        © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
+      </p>
     </div>
   );
 };

@@ -1,14 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import logo from "../../public/logo.jpg";
 
 function Register() {
   const [formData, setFormData] = useState({
-    nama: '',
-    email: '',
-    password: '',
+    nama: "",
+    email: "",
+    password: "",
   });
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -19,13 +20,13 @@ function Register() {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
+    const exists = users.some((u) => u.email === formData.email);
 
-    const exists = users.some(u => u.email === formData.email);
     if (exists) {
       Swal.fire({
         title: "Email sudah terdaftar!",
         icon: "error",
-        confirmButtonText: "OK"
+        confirmButtonText: "OK",
       });
       return;
     }
@@ -36,78 +37,98 @@ function Register() {
     Swal.fire({
       title: "Registrasi berhasil!",
       icon: "success",
-      draggable: true
+      draggable: true,
     }).then(() => {
       navigate("/");
     });
   };
 
   return (
-    
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="bg-gradient-to-br from-blue-100 via-white to-gray-100 p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Registrasi</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Nama lengkap</label>
-            <input 
-              className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              type="text"
-              name="nama"
-              value={formData.nama}
-              onChange={handleChange}
-              placeholder="Masukan Nama anda"
-              required
-            />
-          </div>
+      <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[400px] overflow-hidden">
+        
+        <div className="w-1/3 flex items-center justify-center">
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-43 h-43 object-contain"
+          />
+        </div>
 
-          <div className="relative">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input 
-              className="shadow appearance-none rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Masukan email anda"
-              required
-            />
-          </div>
+        <div className="w-2/3 p-8 flex flex-col justify-center">
+          <h1 className="text-2xl font-bold text-center mb-6">Registrasi</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Nama Lengkap
+              </label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
+                type="text"
+                name="nama"
+                value={formData.nama}
+                onChange={handleChange}
+                placeholder="Masukan Nama Anda"
+                required
+              />
+            </div>
 
-          <div className="relative mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input
-              className="shadow appearance-none rounded w-full py-2 px-3 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Masukan password"
-              required
-            />
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Email
+              </label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Masukan Email Anda"
+                required
+              />
+            </div>
+
+            <div className="relative">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password
+              </label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Masukan Password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
+              >
+                <i
+                  className={`ri-${showPassword ? "eye-off-line" : "eye-line"} text-xl`}
+                ></i>
+              </button>
+            </div>
+
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-            >
-              <i className={`ri-${showPassword ? "eye-off-line" : "eye-line"} text-xl`}></i>
-            </button>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
               type="submit"
             >
               Daftar
             </button>
-            <p className="mt-4 text-gray-700 text-sm">
-              Sudah punya akun? <Link to="/" className="text-blue-600 hover:underline">Login di sini</Link>
-            </p>
-          </div>
-        </form>
+          </form>
+
+          <p className="text-center text-gray-700 text-sm mt-4">
+            Sudah punya akun?{" "}
+            <Link to="/" className="text-blue-600 hover:underline">
+              Login di sini
+            </Link>
+          </p>
+        </div>
       </div>
-      
     </div>
   );
 }
