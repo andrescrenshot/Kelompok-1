@@ -1,25 +1,11 @@
 {
   "Daftar": [
     {
-      "id": "0388",
-      "nama": "Moreno hitam",
-      "jabatan": "Kelas 7A",
-      "email": "reno@gmail.com",
-      "kategori": "Siswa"
-    },
-    {
       "id": "6aac",
       "nama": "Fadil",
       "jabatan": "Penjaga WC",
       "email": "regis@gmail.com",
       "kategori": "Karyawan"
-    },
-    {
-      "id": "5355",
-      "nama": "dafa",
-      "jabatan": "KELAS10",
-      "email": "dapagacor33@hayo.gmail",
-      "kategori": "Siswa"
     },
     {
       "id": "2f39",
@@ -167,6 +153,101 @@
       "jabatan": "Karyawan Perpustakaan",
       "email": "rudi.library@gmail.com",
       "kategori": "Karyawan"
+    },
+    {
+      "id": "e5e8",
+      "nama": "sakti",
+      "jabatan": "Kelas12 TKJ",
+      "email": "sakti@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "4f0b",
+      "nama": "pak fuad",
+      "jabatan": "Satpam bawa shotgun",
+      "email": "pepeng@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "f2ac",
+      "nama": "kudil wasington",
+      "jabatan": "Penjaga WC",
+      "email": "WCkiller@gmail.com",
+      "kategori": "Karyawan"
+    }
+  ],
+  "Kelas": [
+    {
+      "id": 1,
+      "namaKelas": "X IPA 1",
+      "waliKelas": "Bu Sari",
+      "murid": ["Andi", "Budi", "Citra", "Dina", "Eko", "Farah", "Gilang", "Hana", "Indra", "Joko", "Kiki", "Lina", "Mira", "Niko", "Oki", "Putri", "Rizky", "Santi", "Tari", "Wawan"]
+    },
+    {
+      "id": 2,
+      "namaKelas": "X IPA 2",
+      "waliKelas": "Pak Heru",
+      "murid": ["Bagas", "Cindy", "Dimas", "Erlangga", "Fani", "Gita", "Hendra", "Ika", "Jihan", "Kevin", "Laila", "Maya", "Nadia", "Omar", "Puspa", "Rafi", "Sinta", "Tono", "Umar", "Vina"]
+    },
+    {
+      "id": 3,
+      "namaKelas": "X IPS 1",
+      "waliKelas": "Pak Joko",
+      "murid": ["Anita", "Bima", "Cahya", "Dewi", "Erik", "Farid", "Gilang", "Hani", "Irma", "Juli", "Krisna", "Lani", "Mega", "Novi", "Opan", "Prita", "Reni", "Seno", "Tika", "Vian"]
+    },
+    {
+      "id": 4,
+      "namaKelas": "X IPS 2",
+      "waliKelas": "Bu Nita",
+      "murid": ["Alya", "Bayu", "Clara", "Dodi", "Eka", "Fadil", "Gita", "Heri", "Indah", "Jeni", "Karin", "Lutfi", "Meli", "Nando", "Ocha", "Putra", "Rama", "Siska", "Tomi", "Winda"]
+    },
+    {
+      "id": 5,
+      "namaKelas": "XI IPA 1",
+      "waliKelas": "Pak Dedi",
+      "murid": ["Adi", "Bella", "Cindy", "Danu", "Eka", "Farhan", "Gina", "Hafiz", "Irfan", "Jihan", "Koko", "Lina", "Maya", "Nina", "Oki", "Pandu", "Rafa", "Salsa", "Tegar", "Wulan"]
+    },
+    {
+      "id": 6,
+      "namaKelas": "XI IPA 2",
+      "waliKelas": "Bu Fitri",
+      "murid": ["Adit", "Bintang", "Chika", "Diana", "Evan", "Fira", "Gilang", "Hani", "Iqbal", "Joko", "Kayla", "Luthfi", "Miko", "Novi", "Olga", "Pipit", "Rama", "Susi", "Tania", "Yoga"]
+    },
+    {
+      "id": 7,
+      "namaKelas": "XI IPS 1",
+      "waliKelas": "Bu Rina",
+      "murid": ["Anjas", "Bella", "Cahyo", "Dhea", "Evan", "Faisal", "Gita", "Hafiza", "Indri", "Joni", "Kiki", "Laras", "Manda", "Naufal", "Olivia", "Putra", "Rafi", "Salsa", "Tono", "Vivi"]
+    },
+    {
+      "id": 8,
+      "namaKelas": "XI IPS 2",
+      "waliKelas": "Pak Arif",
+      "murid": ["Andra", "Bagas", "Citra", "Dodi", "Elisa", "Farel", "Gilang", "Hendra", "Ilham", "Jessi", "Kamal", "Lina", "Mika", "Nina", "Omar", "Putri", "Rendi", "Sinta", "Teguh", "Winda"]
+    },
+    {
+      "id": 9,
+      "namaKelas": "XII IPA 1",
+      "waliKelas": "Bu Yuni",
+      "murid": ["Ari", "Bela", "Cahya", "Dio", "Eka", "Fani", "Galih", "Hana", "Ira", "Joko", "Kirana", "Luki", "Mega", "Niko", "Ocha", "Pandu", "Reni", "Siska", "Tomi", "Vira"]
+    },
+    {
+      "id": 10,
+      "namaKelas": "XII IPA 2",
+      "waliKelas": "Pak Rudi",
+      "murid": ["Alfa", "Beni", "Cici", "Dina", "Egi", "Farah", "Gina", "Haris", "Indah", "Juna", "Koko", "Lani", "Mira", "Nando", "Olga", "Pipit", "Raka", "Siti", "Tia", "Wawan"]
+    },
+    {
+      "id": 11,
+      "namaKelas": "XII IPS 1",
+      "waliKelas": "Bu Maya",
+      "murid": ["Agus", "Budi", "Clara", "Dewi", "Evan", "Fika", "Gilang", "Heni", "Irfan", "Jihan", "Kiki", "Lutfi", "Meli", "Novi", "Omar", "Putra", "Risa", "Sinta", "Tono", "Vivi"]
+    },
+    {
+      "id": 12,
+      "namaKelas": "XII IPS 2",
+      "waliKelas": "Pak Wahyu",
+      "murid": ["Anita", "Bagus", "Cindy", "Dani", "Erik", "Fani", "Gita", "Hendri", "Ina", "Joni", "Karin", "Luki", "Maya", "Nanda", "Oki", "Puspa", "Rico", "Sari", "Tegar", "Wulan"]
     }
   ]
 }

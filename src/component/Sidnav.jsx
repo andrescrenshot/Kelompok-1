@@ -47,6 +47,16 @@ function Sidnav() {
             >
               <i className="ri-dashboard-horizontal-fill"></i> Tabel
             </a>
+            <a
+              href="/DataKelas"
+              className={`block py-3 px-4 font-bold text-lg rounded-xl transition-all duration-300 ${
+                isActive("/DataKelas")
+                  ? "bg-blue-600 shadow-inner text-white"
+                  : "hover:bg-blue-600 hover:translate-x-1"
+              }`}
+            >
+              <i class="ri-school-line"></i>Data Kelas
+            </a>
           </nav>
         </div>
 
@@ -54,7 +64,7 @@ function Sidnav() {
           href="/"
           className="block py-2 px-3 font-bold rounded-lg hover:bg-red-600 bg-red-600 m-3"
         >
-          <i className="ri-logout-box-line text-lg"></i> Log Out
+          <i className="ri-logout-box-line text-lg"></i> Keluar
         </a>
       </div>
     </>

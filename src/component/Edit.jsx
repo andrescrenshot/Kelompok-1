@@ -38,7 +38,7 @@ function EditData() {
     e.preventDefault();
     Swal.fire({
       title: "Simpan perubahan?",
-      text: "Perubahan akan disimpan permanen.",
+      text: "Perubahan akan disimpan dan dapat di rubah kembali.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Simpan",
@@ -132,7 +132,7 @@ function EditData() {
           <div className="flex gap-3">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded w-full"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded w-full"
             >
               Simpan
             </button>

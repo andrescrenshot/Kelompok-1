@@ -53,7 +53,7 @@ function Login() {
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[350px] overflow-hidden">
         <div className="w-1/3 flex items-center justify-center bg-white p-6 shadow-md">
-          <img src={logo} alt="Logo" className="w-43 h-43 object-contain" />
+          <img src={logo} alt="Logo" className="w-90 h-90 object-contain" />
         </div>
 
         <div className="w-2/3 p-8 flex flex-col justify-center">
@@ -94,7 +94,7 @@ function Login() {
               >
                 <i
                   className={`ri-${
-                    showPassword ? "eye-off-line" : "eye-line"
+                    showPassword ? "eye-line" : "eye-off-line"
                   } text-xl`}
                 ></i>
               </button>
@@ -111,7 +111,7 @@ function Login() {
           <p className="text-center text-gray-700 text-sm mt-4">
             Belum punya akun?{" "}
             <Link to="/Register" className="text-blue-600 hover:underline">
-              Daftar di sini
+              Registrasi di sini
             </Link>
           </p>
         </div>

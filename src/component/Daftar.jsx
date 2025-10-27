@@ -37,7 +37,7 @@ function Daftar() {
       if (result.isConfirmed) {
         try {
           await axios.delete(`${API_URL}/${id}`);
-          Swal.fire("Dihapus!", "", "success");
+          Swal.fire("Data Berhasil Di Hapus!", "", "success");
           getData();
         } catch (err) {
           console.error("Gagal hapus:", err.response?.data || err.message);
@@ -62,7 +62,8 @@ function Daftar() {
       >
         <div className="w-full max-w-6xl space-y-8">
           <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <i className="ri-dashboard-line text-4xl text-blue-500 animate-spin"></i> Tabel
+            <i className="ri-dashboard-horizontal-fill text-4xl text-blue-500 animate-bounce"></i>{" "}
+            Tabel
           </h1>
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
@@ -84,7 +85,7 @@ function Daftar() {
 
                 <button
                   onClick={() => navigate("/TambahData")}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
                 >
                   + Tambah Data
                 </button>
@@ -134,7 +135,7 @@ function Daftar() {
                         <td className="p-3 flex justify-center gap-2">
                           <button
                             className="flex items-center gap-1 bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-lg shadow transition duration-300"
-                            onClick={() => navigate(`/EditData/${item.id}`)}
+                            onClick={() => navigate(`/EditData1/${item.id}`)}
                           >
                             <i className="ri-edit-line"></i> Edit
                           </button>

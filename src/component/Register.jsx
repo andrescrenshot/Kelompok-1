@@ -47,18 +47,13 @@ function Register() {
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[400px] overflow-hidden">
         
-        <div className="w-1/3 flex items-center justify-center">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-43 h-43 object-contain"
-          />
+        <div className="w-1/3 flex items-center justify-center bg-white p-6 shadow-md">
+          <img src={logo} alt="Logo" className="w-90 h-90 object-contain" />
         </div>
 
         <div className="w-2/3 p-8 flex flex-col justify-center">
           <h1 className="text-2xl font-bold text-center mb-6">Registrasi</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Nama Lengkap
@@ -108,7 +103,7 @@ function Register() {
                 className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
               >
                 <i
-                  className={`ri-${showPassword ? "eye-off-line" : "eye-line"} text-xl`}
+                  className={`ri-${showPassword ? "eye-line" : "eye-off-line"} text-xl`}
                 ></i>
               </button>
             </div>
@@ -117,7 +112,7 @@ function Register() {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
               type="submit"
             >
-              Daftar
+              Registrasi
             </button>
           </form>
 

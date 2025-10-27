@@ -6,6 +6,8 @@ import MainLayout from "./component/MainLayaout";
 import TambahData from "./component/TambahData";
 import Edit from "./component/Edit"
 import Dasboard from "./component/Dasboard"
+import DataKelas from "./component/DataKelas";
+import EditDataKelas from "./component/EditDataKelas"
 
 function App() {
   return (
@@ -14,11 +16,13 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/TambahData" element={<TambahData />} />
-        <Route path="/EditData/:id" element={<Edit />} />
+        <Route path="/EditData1/:id" element={<Edit />} />
+        <Route path="/EditData2/:id" element={<EditDataKelas />} />
 
         <Route element={<MainLayout />}>
         <Route path="/Dasboard" element={<Dasboard />} />
           <Route path="/Daftar" element={<Daftar />} />
+          <Route path="/DataKelas" element={<DataKelas />} />
         </Route>
       </Routes>
     </BrowserRouter>

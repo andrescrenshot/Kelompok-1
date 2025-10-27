@@ -4,6 +4,7 @@ import axios from "axios";
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("Semua");
+  const [search, setSearch] = useState(""); // 🔍 untuk pencarian nama
   const [visible, setVisible] = useState(false);
 
   const API_URL = "http://localhost:5001/Daftar";
@@ -26,8 +27,11 @@ const Dashboard = () => {
   const totalKaryawan = data.filter((d) => d.kategori === "Karyawan").length;
   const totalSemua = data.length;
 
-  const filteredData =
-    filter === "Semua" ? data : data.filter((d) => d.kategori === filter);
+  const filteredData = data.filter((d) => {
+    const cocokKategori = filter === "Semua" || d.kategori === filter;
+    const cocokNama = d.nama.toLowerCase().includes(search.toLowerCase());
+    return cocokKategori && cocokNama;
+  });
 
   return (
     <div
@@ -42,28 +46,41 @@ const Dashboard = () => {
             DASHBOARD
           </h1>
 
-          {/* Statistik Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[{ label: "Total Semua", value: totalSemua },
+            {[
+              { label: "Total Semua", value: totalSemua },
               { label: "Total Guru", value: totalGuru },
               { label: "Total Siswa", value: totalSiswa },
-              { label: "Total Karyawan", value: totalKaryawan }].map((card, idx) => (
+              { label: "Total Karyawan", value: totalKaryawan },
+            ].map((card, idx) => (
               <div
                 key={idx}
                 className="bg-white/90 backdrop-blur-lg p-5 rounded-2xl shadow-2xl border border-gray-200 text-center transform transition duration-300 hover:scale-105 hover:shadow-xl hover:bg-white cursor-pointer"
               >
-                <h2 className="text-lg font-semibold mb-2 text-gray-800">{card.label}</h2>
+                <h2 className="text-lg font-semibold mb-2 text-gray-800">
+                  {card.label}
+                </h2>
                 <p className="text-2xl font-bold text-gray-900">{card.value}</p>
               </div>
             ))}
           </div>
 
-          {/* Filter */}
-          <div className="flex justify-end">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3">
+            <div className="relative w-full md:w-64">
+              <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="text"
+                placeholder="Cari nama..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+              />
+            </div>
+
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 p-2 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 bg-white cursor-pointer"
             >
               <option value="Semua">Semua</option>
               <option value="Guru">Guru</option>
@@ -72,14 +89,13 @@ const Dashboard = () => {
             </select>
           </div>
 
-          {/* Tabel Data */}
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">
               Daftar Data Terbaru
             </h2>
             <div className="overflow-x-auto rounded-lg shadow-inner">
               <table className="w-full border-collapse overflow-hidden">
-                <thead className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white">
+                <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                   <tr>
                     <th className="p-3 text-left">No</th>
                     <th className="p-3 text-left">Nama</th>
@@ -97,7 +113,9 @@ const Dashboard = () => {
                           index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
                         } hover:bg-blue-100 transition duration-200`}
                       >
-                        <td className="p-3 font-medium text-gray-700">{index + 1}</td>
+                        <td className="p-3 font-medium text-gray-700">
+                          {index + 1}
+                        </td>
                         <td className="p-3 text-gray-800">{item.nama}</td>
                         <td className="p-3 text-gray-700">{item.jabatan}</td>
                         <td className="p-3 text-gray-600">{item.email}</td>
@@ -118,8 +136,11 @@ const Dashboard = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="p-4 text-center text-gray-500 italic bg-gray-50">
-                        Tidak ada data untuk kategori ini
+                      <td
+                        colSpan="5"
+                        className="p-4 text-center text-gray-500 italic bg-gray-50"
+                      >
+                        Tidak ada data untuk pencarian atau kategori ini
                       </td>
                     </tr>
                   )}
