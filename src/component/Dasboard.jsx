@@ -4,7 +4,7 @@ import axios from "axios";
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("Semua");
-  const [search, setSearch] = useState(""); // 🔍 untuk pencarian nama
+  const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(false);
 
   const API_URL = "http://localhost:5001/Daftar";
@@ -19,7 +19,7 @@ const Dashboard = () => {
       }
     };
     fetchData();
-    setTimeout(() => setVisible(true), 100);
+    setTimeout(() => setVisible(true), 200);
   }, []);
 
   const totalGuru = data.filter((d) => d.kategori === "Guru").length;
@@ -35,14 +35,14 @@ const Dashboard = () => {
 
   return (
     <div
-      className={`transition-all duration-700 ${
+      className={`transition-all duration-700 ease-out ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
       }`}
     >
-      <div className="min-h-screen p-8 flex justify-center">
+      <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-6xl space-y-8">
-          <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <i className="ri-dashboard-line text-4xl text-blue-500 animate-spin"></i>
+          <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2 text-gray-800">
+            <i className="ri-dashboard-line text-4xl text-blue-500 animate-pulse"></i>
             DASHBOARD
           </h1>
 
@@ -55,12 +55,15 @@ const Dashboard = () => {
             ].map((card, idx) => (
               <div
                 key={idx}
-                className="bg-white/90 backdrop-blur-lg p-5 rounded-2xl shadow-2xl border border-gray-200 text-center transform transition duration-300 hover:scale-105 hover:shadow-xl hover:bg-white cursor-pointer"
+                title={`Menampilkan jumlah ${card.label.toLowerCase()}`}
+                className="bg-white/90 backdrop-blur-lg p-5 rounded-2xl shadow-md border border-gray-200 text-center transform transition duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
               >
-                <h2 className="text-lg font-semibold mb-2 text-gray-800">
+                <h2 className="text-lg font-semibold mb-2 text-gray-700">
                   {card.label}
                 </h2>
-                <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+                <p className="text-2xl font-bold text-gray-900 tracking-tight">
+                  {card.value}
+                </p>
               </div>
             ))}
           </div>
@@ -73,14 +76,14 @@ const Dashboard = () => {
                 placeholder="Cari nama..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200"
+                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition duration-200"
               />
             </div>
 
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 bg-white cursor-pointer"
+              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition duration-200"
             >
               <option value="Semua">Semua</option>
               <option value="Guru">Guru</option>
@@ -111,7 +114,7 @@ const Dashboard = () => {
                         key={item.id}
                         className={`${
                           index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                        } hover:bg-blue-100 transition duration-200`}
+                        } hover:bg-blue-50 hover:border-l-4 hover:border-blue-500 transition duration-300`}
                       >
                         <td className="p-3 font-medium text-gray-700">
                           {index + 1}

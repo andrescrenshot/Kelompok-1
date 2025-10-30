@@ -135,7 +135,7 @@ function Daftar() {
                         <td className="p-3 flex justify-center gap-2">
                           <button
                             className="flex items-center gap-1 bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-lg shadow transition duration-300"
-                            onClick={() => navigate(`/EditData1/${item.id}`)}
+                            onClick={() => navigate(`/EditData/${item.id}`)}
                           >
                             <i className="ri-edit-line"></i> Edit
                           </button>

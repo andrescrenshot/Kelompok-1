@@ -23,7 +23,7 @@ function Sidnav() {
       >
         <div>
           <div className="text-xl font-bold mb-8 text-center bg-blue-800 py-5 h-18">
-            <i className="ri-bar-chart-grouped-line"></i> Statistik data
+            <i className="ri-bar-chart-grouped-line"></i> Statistik Data
           </div>
 
           <nav className="space-y-3 px-3">
@@ -46,16 +46,6 @@ function Sidnav() {
               }`}
             >
               <i className="ri-dashboard-horizontal-fill"></i> Tabel
-            </a>
-            <a
-              href="/DataKelas"
-              className={`block py-3 px-4 font-bold text-lg rounded-xl transition-all duration-300 ${
-                isActive("/DataKelas")
-                  ? "bg-blue-600 shadow-inner text-white"
-                  : "hover:bg-blue-600 hover:translate-x-1"
-              }`}
-            >
-              <i class="ri-school-line"></i>Data Kelas
             </a>
           </nav>
         </div>
