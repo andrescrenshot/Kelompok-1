@@ -6,6 +6,7 @@ import MainLayout from "./component/MainLayaout";
 import TambahData from "./component/TambahData";
 import Edit from "./component/Edit"
 import Dasboard from "./component/Dasboard"
+import Tagihan from "./tagihan/Tagihan";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route element={<MainLayout />}>
         <Route path="/Dasboard" element={<Dasboard />} />
           <Route path="/Daftar" element={<Daftar />} />
+          <Route path="/Tagihan" element={<Tagihan />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -167,6 +167,14 @@
       "jabatan": "Penjaga WC",
       "email": "WCkiller@gmail.com",
       "kategori": "Karyawan"
+    },
+    {
+      "id": "0f61",
+      "nama": "KOlo",
+      "jabatan": "KELAS 10 TKJ",
+      "email": "EFTRGHGTE@gmail.com",
+      "kategori": "Siswa"
     }
-  ]
+  ],
+  "Tagihan": []
 }

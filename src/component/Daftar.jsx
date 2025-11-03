@@ -22,7 +22,7 @@ function Daftar() {
 
   useEffect(() => {
     getData();
-    setTimeout(() => setVisible(true), 100);
+    setTimeout(() => setVisible(true), 200);
   }, []);
 
   const handleDelete = async (id) => {
@@ -37,7 +37,7 @@ function Daftar() {
       if (result.isConfirmed) {
         try {
           await axios.delete(`${API_URL}/${id}`);
-          Swal.fire("Data Berhasil Di Hapus!", "", "success");
+          Swal.fire("Data Berhasil Dihapus!", "", "success");
           getData();
         } catch (err) {
           console.error("Gagal hapus:", err.response?.data || err.message);
@@ -52,19 +52,17 @@ function Daftar() {
 
   return (
     <div
-      className={`transition-all duration-700 ${
+      className={`transition-all duration-700 ease-out ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
       }`}
     >
-      <div
-        className="min-h-screen p-8 flex justify-center
-    "
-      >
+      <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-6xl space-y-8">
-          <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <i className="ri-dashboard-horizontal-fill text-4xl text-blue-500 animate-bounce"></i>{" "}
-            Tabel
+          <h1 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-2 text-gray-800">
+            <i className="ri-dashboard-horizontal-fill text-4xl text-blue-500 animate-pulse"></i>
+            DAFTAR DATA
           </h1>
+
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
               <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -75,7 +73,7 @@ function Daftar() {
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
-                  className="border border-gray-300 p-2 rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  className="border border-gray-300 py-2 px-3 rounded-lg text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition duration-200"
                 >
                   <option value="Semua">Semua</option>
                   <option value="Guru">Guru</option>
@@ -94,7 +92,7 @@ function Daftar() {
 
             <div className="overflow-x-auto rounded-lg shadow-inner">
               <table className="w-full border-collapse overflow-hidden">
-                <thead className="bg-gradient-to-r from-blue-400 to-indigo-500 text-white">
+                <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                   <tr>
                     <th className="p-3 text-left">No</th>
                     <th className="p-3 text-left">Nama</th>
@@ -111,7 +109,7 @@ function Daftar() {
                         key={item.id}
                         className={`${
                           index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                        } hover:bg-blue-100 transition duration-200`}
+                        } hover:bg-blue-50 hover:border-l-4 hover:border-blue-500 transition duration-300`}
                       >
                         <td className="p-3 font-medium text-gray-700">
                           {index + 1}
@@ -164,11 +162,12 @@ function Daftar() {
           </div>
         </div>
       </div>
+
       <p className="text-center text-gray-500 text-sm pt-6">
         © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
       </p>
     </div>
   );
-}
+} 
 
 export default Daftar;

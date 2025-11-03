@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import logo from "../../public/logo.jpg";
+import logo from "../../public/kakangku.jpg";
 
 function Register() {
   const [formData, setFormData] = useState({
