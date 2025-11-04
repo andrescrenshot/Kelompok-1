@@ -12,6 +12,7 @@ function EditData() {
     jabatan: "",
     email: "",
     kategori: "Siswa",
+    kelas: "", 
   });
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +39,7 @@ function EditData() {
     e.preventDefault();
     Swal.fire({
       title: "Simpan perubahan?",
-      text: "Perubahan akan disimpan dan dapat di rubah kembali.",
+      text: "Perubahan akan disimpan dan dapat diubah kembali.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Simpan",
@@ -114,7 +115,7 @@ function EditData() {
             />
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-1">Kategori</label>
             <select
               name="kategori"
@@ -128,6 +129,23 @@ function EditData() {
               <option value="Karyawan">Karyawan</option>
             </select>
           </div>
+
+          {formData.kategori === "Siswa" && (
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-1">Kelas</label>
+              <select
+                name="kelas"
+                value={formData.kelas}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+              >
+                <option value="">Pilih Kelas</option>
+                <option value="X">Kelas X</option>
+                <option value="XI">Kelas XI</option>
+                <option value="XII">Kelas XII</option>
+              </select>
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button

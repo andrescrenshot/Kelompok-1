@@ -11,6 +11,7 @@ function Sidnav() {
   const menuItems = [
     { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" },
     { path: "/Daftar", label: "Data SGK", icon: "ri-database-2-line text-red-400" },
+    { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
     { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
   ];
 

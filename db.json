@@ -5,7 +5,8 @@
       "nama": "Ani",
       "jabatan": "KELAS10/OSIS",
       "email": "regis@gmail.com",
-      "kategori": "Siswa"
+      "kategori": "Siswa",
+      "kelas": "X"
     },
     {
       "id": "8a12",
@@ -176,5 +177,13 @@
       "kategori": "Siswa"
     }
   ],
-  "Tagihan": []
+  "tagihan": [
+    {
+      "id": "d931",
+      "nama": "Moreno",
+      "jenis_tagihan": "SPP",
+      "jumlah": 200000,
+      "status": "Lunas"
+    }
+  ]
 }
