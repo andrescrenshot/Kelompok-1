@@ -102,7 +102,8 @@ const Dashboard = () => {
                   <tr>
                     <th className="p-3 text-left">No</th>
                     <th className="p-3 text-left">Nama</th>
-                    <th className="p-3 text-left">Jabatan/Kelas/Bagian</th>
+                    <th className="p-3 text-left">Kelas</th>
+                    <th className="p-3 text-left">Jabatan/Bagian</th>
                     <th className="p-3 text-left">Email</th>
                     <th className="p-3 text-left">Kategori</th>
                   </tr>
@@ -120,6 +121,7 @@ const Dashboard = () => {
                           {index + 1}
                         </td>
                         <td className="p-3 text-gray-800">{item.nama}</td>
+                        <td className="p-3 text-gray-800">{item.kelas}</td>
                         <td className="p-3 text-gray-700">{item.jabatan}</td>
                         <td className="p-3 text-gray-600">{item.email}</td>
                         <td className="p-3">

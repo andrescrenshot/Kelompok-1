@@ -9,6 +9,8 @@ import Dasboard from "./component/Dasboard"
 import Tagihan from "./tagihan/Tagihan";
 import EditTagihan from "./tagihan/EditTagihan";
 import Kelas from "./component/Kelas";
+import JenisTagihan from "./tagihan/JenisTagihan"
+
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
         <Route path="/Dasboard" element={<Dasboard />} />
           <Route path="/Daftar" element={<Daftar />} />
           <Route path="/Tagihan" element={<Tagihan />} />
+          <Route path="/JenisTagihan" element={<JenisTagihan />} />
           <Route path="/Kelas" element={<Kelas />} />
         </Route>
       </Routes>

@@ -13,6 +13,7 @@ function Sidnav() {
     { path: "/Daftar", label: "Data SGK", icon: "ri-database-2-line text-red-400" },
     { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
     { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
+    { path: "/JenisTagihan", label: "JenisTagihan", icon: "ri-price-tag-3-line text-orange-400" },
   ];
 
   return (

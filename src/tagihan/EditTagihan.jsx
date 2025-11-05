@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 function EditTagihan() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const API_URL = "http://localhost:5001/tagihan";
 
   const [formData, setFormData] = useState({
     nama: "",
@@ -14,95 +13,156 @@ function EditTagihan() {
     jumlah: "",
     status: "Belum Lunas",
   });
-  const [loading, setLoading] = useState(false);
 
-  const getData = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/${id}`);
-      setFormData(res.data);
-    } catch {
-      Swal.fire("Error!", "Gagal mengambil data.", "error");
-    }
-  };
+  const [jenisTagihan, setJenisTagihan] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_TAGIHAN = "http://localhost:5001/tagihan";
+  const API_JENIS = "http://localhost:5001/JenisTagihan";
 
   useEffect(() => {
-    getData();
+    axios
+      .get(API_JENIS)
+      .then((res) => setJenisTagihan(res.data))
+      .catch((err) => console.error("Gagal ambil jenis tagihan:", err));
+  }, []);
+
+  // Ambil data tagihan berdasarkan ID
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${API_TAGIHAN}/${id}`);
+        setFormData(res.data);
+      } catch (err) {
+        console.error("Gagal mengambil data tagihan:", err);
+        Swal.fire("Error", "Gagal mengambil data tagihan", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "jumlah") {
-      const numeric = value.replace(/\D/g, "");
-      setFormData({ ...formData, jumlah: numeric ? parseInt(numeric) : "" });
-    } else setFormData({ ...formData, [name]: value });
-  };
-
-  const formatRupiah = (angka) =>
-    angka ? "Rp " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "";
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.nama || !formData.jenis_tagihan || formData.jumlah <= 0)
-      return Swal.fire("Oops!", "Semua field wajib diisi.", "warning");
-
-    setLoading(true);
-    try {
-      await axios.put(`${API_URL}/${id}`, { ...formData, jumlah: Number(formData.jumlah) });
-      Swal.fire("Berhasil!", "Tagihan berhasil diperbarui.", "success");
-      navigate("/Tagihan");
-    } catch {
-      Swal.fire("Error!", "Gagal memperbarui tagihan.", "error");
-    } finally {
-      setLoading(false);
+      if (/^\d*$/.test(value)) {
+        setFormData({ ...formData, jumlah: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const result = await Swal.fire({
+      title: "Simpan perubahan?",
+      text: "Pastikan data sudah benar.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, simpan",
+      cancelButtonText: "Batal",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.put(`${API_TAGIHAN}/${id}`, {
+          ...formData,
+          jumlah: Number(formData.jumlah),
+        });
+        Swal.fire("Berhasil!", "Data tagihan berhasil diperbarui", "success");
+        navigate("/Tagihan");
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui data", "error");
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-white bg-gradient-to-br from-purple-900 via-indigo-900 to-black">
+        <div className="text-lg animate-pulse">Memuat data...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md mt-20">
-        <h1 className="text-2xl font-bold text-center mb-6">Edit Tagihan</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white">
+      <div className="bg-black/30 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-purple-500 w-full max-w-md">
+        <h1 className="text-3xl font-extrabold mb-6 text-center">
+          Edit Tagihan
+        </h1>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="nama"
-            value={formData.nama}
-            onChange={handleChange}
-            placeholder="Nama Siswa"
-            required
-            className="border border-gray-300 p-2.5 rounded w-full focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="text"
-            name="jenis_tagihan"
-            value={formData.jenis_tagihan}
-            onChange={handleChange}
-            placeholder="Jenis Tagihan"
-            required
-            className="border border-gray-300 p-2.5 rounded w-full focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="text"
-            name="jumlah"
-            value={formatRupiah(formData.jumlah)}
-            onChange={handleChange}
-            placeholder="Jumlah (Rp)"
-            required
-            className="border border-gray-300 p-2.5 rounded w-full focus:ring-2 focus:ring-blue-400"
-          />
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded w-full"
+          <div>
+            <label className="block mb-1">Nama</label>
+            <input
+              type="text"
+              name="nama"
+              value={formData.nama}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1">Jenis Tagihan</label>
+            <select
+              name="jenis_tagihan"
+              value={formData.jenis_tagihan}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
             >
-              {loading ? "Menyimpan..." : "Simpan Perubahan"}
-            </button>
+              <option value="">-- Pilih Jenis Tagihan --</option>
+              {jenisTagihan.map((item) => (
+                <option key={item.id} value={item.nama}>
+                  {item.nama}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block mb-1">Jumlah</label>
+            <input
+              type="text"
+              name="jumlah"
+              value={formData.jumlah}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1">Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+            >
+              <option value="Belum Lunas">Belum Lunas</option>
+              <option value="Lunas">Lunas</option>
+            </select>
+          </div>
+
+          <div className="flex justify-between mt-6">
             <button
               type="button"
               onClick={() => navigate("/Tagihan")}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-semibold px-4 py-2 rounded w-full"
+              className="px-4 py-2 rounded bg-gray-500 hover:bg-gray-600 transition"
             >
               Kembali
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 font-bold transition"
+            >
+              Simpan
             </button>
           </div>
         </form>
@@ -111,4 +171,4 @@ function EditTagihan() {
   );
 }
 
-export default EditTagihan;     
+export default EditTagihan;

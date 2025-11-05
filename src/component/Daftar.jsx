@@ -48,6 +48,8 @@ function Daftar() {
   };
 
   const filteredData =
+
+
     filter === "Semua" ? data : data.filter((d) => d.kategori === filter);
 
   return (

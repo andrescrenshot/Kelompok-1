@@ -24,10 +24,10 @@ function Kelas() {
   }, [kelas]);
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50">
+    <div className="p-8 min-h-screen bg-gray-50 rounded-lg">
       <h1 className="text-3xl font-bold mb-6">Daftar Siswa Kelas {kelas}</h1>
 
-      <div className="mb-4">
+      <div className="mb-4 r">
         <label className="mr-3 font-semibold">Pilih Kelas:</label>
         <select
           value={kelas}
