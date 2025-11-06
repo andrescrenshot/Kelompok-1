@@ -9,7 +9,8 @@ function TambahData() {
 
   const [formData, setFormData] = useState({
     nama: "",
-    kelas: "", 
+    kelas: "",
+    jurusan: "",
     jabatan: "",
     email: "",
     kategori: "Siswa",
@@ -101,21 +102,41 @@ function TambahData() {
           </div>
 
           {formData.kategori === "Siswa" && (
-            <div>
-              <label className="block font-semibold mb-1 text-gray-700">
-                Kelas
-              </label>
-              <select
-                name="kelas"
-                value={formData.kelas}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-              >
-                <option value="">Pilih Kelas</option>
-                <option value="X">Kelas X</option>
-                <option value="XI">Kelas XI</option>
-                <option value="XII">Kelas XII</option>
-              </select>
+            <div className="space-y-3">
+              <div>
+                <label className="block font-semibold mb-1 text-gray-700">
+                  Kelas
+                </label>
+                <select
+                  name="kelas"
+                  value={formData.kelas}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+                >
+                  <option value="">Pilih Kelas</option>
+                  <option value="X">Kelas X</option>
+                  <option value="XI">Kelas XI</option>
+                  <option value="XII">Kelas XII</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1 text-gray-700">
+                  Jurusan
+                </label>
+                <select
+                  name="jurusan"
+                  value={formData.jurusan}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+                >
+                  <option value="">Pilih Jurusan</option>
+                  <option value="TKJ">TKJ</option>
+                  <option value="TSM">TSM</option>
+                  <option value="AKUTANSI">AKUTANSI</option>
+                  <option value="TATA BUSANA">TATA BUSANA</option>
+                </select>
+              </div>
             </div>
           )}
 

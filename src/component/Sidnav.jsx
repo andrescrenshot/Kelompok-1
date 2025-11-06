@@ -8,13 +8,34 @@ function Sidnav() {
 
   const isActive = (path) => location.pathname === path;
 
-  const menuItems = [
+  // Grup menu
+  const menuAtas = [
     { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" },
+  ];
+
+  const menuSiswaGuru = [
     { path: "/Daftar", label: "Data SGK", icon: "ri-database-2-line text-red-400" },
     { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
+  ];
+
+  const menuTagihan = [
     { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
     { path: "/JenisTagihan", label: "JenisTagihan", icon: "ri-price-tag-3-line text-orange-400" },
   ];
+
+  const SidebarButton = ({ item }) => (
+    <button
+      onClick={() => navigate(item.path)}
+      className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl font-semibold text-base transition-all duration-300 ${
+        isActive(item.path)
+          ? "bg-blue-500/90 text-white shadow-inner scale-[1.02]"
+          : "hover:bg-blue-600/70 hover:translate-x-1"
+      }`}
+    >
+      <i className={`${item.icon} text-lg`}></i>
+      {item.label}
+    </button>
+  );
 
   return (
     <>
@@ -37,22 +58,18 @@ function Sidnav() {
           </div>
 
           <nav className="px-4 space-y-2">
-            {menuItems.map((item) => (
-              <div key={item.path}>
-                {item.label === "Tagihan" && <div className="border-t border-white/40 my-2"></div>}
+            {menuAtas.map((item) => (
+              <SidebarButton key={item.path} item={item} />
+            ))}
 
-                <button
-                  onClick={() => navigate(item.path)}
-                  className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl font-semibold text-base transition-all duration-300 ${
-                    isActive(item.path)
-                      ? "bg-blue-500/90 text-white shadow-inner scale-[1.02]"
-                      : "hover:bg-blue-600/70 hover:translate-x-1"
-                  }`}
-                >
-                  <i className={`${item.icon} text-lg`}></i>
-                  {item.label}
-                </button>
-              </div>
+            <div className="border-t border-white/40 my-3"></div>
+            {menuSiswaGuru.map((item) => (
+              <SidebarButton key={item.path} item={item} />
+            ))}
+
+            <div className="border-t border-white/40 my-3"></div>
+            {menuTagihan.map((item) => (
+              <SidebarButton key={item.path} item={item} />
             ))}
           </nav>
         </div>

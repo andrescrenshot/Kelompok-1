@@ -13,9 +13,9 @@ function EditTagihan() {
     jumlah: "",
     status: "Belum Lunas",
   });
-
   const [jenisTagihan, setJenisTagihan] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const API_TAGIHAN = "http://localhost:5001/tagihan";
   const API_JENIS = "http://localhost:5001/JenisTagihan";
@@ -27,7 +27,6 @@ function EditTagihan() {
       .catch((err) => console.error("Gagal ambil jenis tagihan:", err));
   }, []);
 
-  // Ambil data tagihan berdasarkan ID
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +44,6 @@ function EditTagihan() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "jumlah") {
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, jumlah: value });
@@ -57,7 +55,6 @@ function EditTagihan() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const result = await Swal.fire({
       title: "Simpan perubahan?",
       text: "Pastikan data sudah benar.",
@@ -68,6 +65,7 @@ function EditTagihan() {
     });
 
     if (result.isConfirmed) {
+      setSaving(true);
       try {
         await axios.put(`${API_TAGIHAN}/${id}`, {
           ...formData,
@@ -78,93 +76,86 @@ function EditTagihan() {
       } catch (err) {
         console.error(err);
         Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui data", "error");
+      } finally {
+        setSaving(false);
       }
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-white bg-gradient-to-br from-purple-900 via-indigo-900 to-black">
-        <div className="text-lg animate-pulse">Memuat data...</div>
+      <div className="flex items-center justify-center min-h-screen bg-black/50">
+        <div className="text-white text-lg animate-pulse">Memuat data...</div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white">
-      <div className="bg-black/30 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-purple-500 w-full max-w-md">
-        <h1 className="text-3xl font-extrabold mb-6 text-center">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Edit Tagihan
-        </h1>
-
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1">Nama</label>
-            <input
-              type="text"
-              name="nama"
-              value={formData.nama}
-              onChange={handleChange}
-              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
-            />
-          </div>
+          <input
+            type="text"
+            name="nama"
+            placeholder="Nama Siswa"
+            value={formData.nama}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
+          />
 
-          <div>
-            <label className="block mb-1">Jenis Tagihan</label>
-            <select
-              name="jenis_tagihan"
-              value={formData.jenis_tagihan}
-              onChange={handleChange}
-              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+          <select
+            name="jenis_tagihan"
+            value={formData.jenis_tagihan}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
+          >
+            <option value="">-- Pilih Jenis Tagihan --</option>
+            {jenisTagihan.map((item) => (
+              <option key={item.id} value={item.nama}>
+                {item.nama}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="text"
+            name="jumlah"
+            placeholder="Jumlah (Rp)"
+            value={formData.jumlah}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
+          />
+
+          <div className="flex gap-4 mt-2">
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 rounded-lg shadow-md transition duration-200"
             >
-              <option value="">-- Pilih Jenis Tagihan --</option>
-              {jenisTagihan.map((item) => (
-                <option key={item.id} value={item.nama}>
-                  {item.nama}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block mb-1">Jumlah</label>
-            <input
-              type="text"
-              name="jumlah"
-              value={formData.jumlah}
-              onChange={handleChange}
-              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1">Status</label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
-            >
-              <option value="Belum Lunas">Belum Lunas</option>
-              <option value="Lunas">Lunas</option>
-            </select>
-          </div>
-
-          <div className="flex justify-between mt-6">
+              {saving ? "Menyimpan..." : "Simpan"}
+            </button>
             <button
               type="button"
               onClick={() => navigate("/Tagihan")}
-              className="px-4 py-2 rounded bg-gray-500 hover:bg-gray-600 transition"
+              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-3 rounded-lg shadow-md transition duration-200"
             >
-              Kembali
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 font-bold transition"
-            >
-              Simpan
+              Batal
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate("/Tagihan")}
+            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-lg font-bold"
+          >
+            ×
+          </button>
         </form>
       </div>
     </div>

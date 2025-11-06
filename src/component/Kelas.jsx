@@ -4,14 +4,17 @@ import axios from "axios";
 function Kelas() {
   const [siswa, setSiswa] = useState([]);
   const [kelas, setKelas] = useState("X");
+  const [jurusan, setJurusan] = useState("");
   const API_URL = "http://localhost:5001/Daftar";
 
   const getSiswa = async () => {
     try {
       const res = await axios.get(API_URL);
-      
       const filtered = res.data.filter(
-        (d) => d.kategori === "Siswa" && d.kelas === kelas
+        (d) =>
+          d.kategori === "Siswa" &&
+          d.kelas === kelas &&
+          (jurusan === "" || d.jurusan === jurusan) 
       );
       setSiswa(filtered);
     } catch (err) {
@@ -21,23 +24,40 @@ function Kelas() {
 
   useEffect(() => {
     getSiswa();
-  }, [kelas]);
+  }, [kelas, jurusan]); 
 
   return (
     <div className="p-8 min-h-screen bg-gray-50 rounded-lg">
       <h1 className="text-3xl font-bold mb-6">Daftar Siswa Kelas {kelas}</h1>
 
-      <div className="mb-4 r">
-        <label className="mr-3 font-semibold">Pilih Kelas:</label>
-        <select
-          value={kelas}
-          onChange={(e) => setKelas(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-1"
-        >
-          <option value="X">Kelas X</option>
-          <option value="XI">Kelas XI</option>
-          <option value="XII">Kelas XII</option>
-        </select>
+      <div className="flex gap-4 mb-6">
+        <div>
+          <label className="block font-semibold mb-1">Pilih Kelas:</label>
+          <select
+            value={kelas}
+            onChange={(e) => setKelas(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2"
+          >
+            <option value="X">Kelas X</option>
+            <option value="XI">Kelas XI</option>
+            <option value="XII">Kelas XII</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Pilih Jurusan:</label>
+          <select
+            value={jurusan}
+            onChange={(e) => setJurusan(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2"
+          >
+            <option value="">Semua Jurusan</option>
+            <option value="TKJ">TKJ</option>
+            <option value="TSM">TSM</option>
+            <option value="AKUTANSI">AKUTANSI</option>
+            <option value="TATA BUSANA">TATA BUSANA</option>
+          </select>
+        </div>
       </div>
 
       <table className="w-full border-collapse bg-white rounded-lg shadow">
@@ -53,9 +73,7 @@ function Kelas() {
             siswa.map((item, index) => (
               <tr
                 key={item.id}
-                className={`${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                }`}
+                className={`${index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"}`}
               >
                 <td className="p-3">{index + 1}</td>
                 <td className="p-3">{item.nama}</td>

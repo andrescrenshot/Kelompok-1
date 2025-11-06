@@ -5,7 +5,10 @@ import axios from "axios";
 
 function Daftar() {
   const [data, setData] = useState([]);
-  const [filter, setFilter] = useState("Semua");
+  const [search, setSearch] = useState("");
+  const [filterKategori, setFilterKategori] = useState("Semua");
+  const [filterKelas, setFilterKelas] = useState("Semua");
+  const [filterJurusan, setFilterJurusan] = useState("Semua");
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
@@ -47,10 +50,18 @@ function Daftar() {
     });
   };
 
-  const filteredData =
+  // Ambil daftar jurusan unik dari data
+  const jurusanList = ["Semua", ...new Set(data.map((d) => d.jurusan).filter(Boolean))];
 
-
-    filter === "Semua" ? data : data.filter((d) => d.kategori === filter);
+  // 🔍 Filter + Search logic
+  const filteredData = data.filter((d) => {
+    const matchKategori =
+      filterKategori === "Semua" || d.kategori === filterKategori;
+    const matchKelas = filterKelas === "Semua" || d.kelas === filterKelas;
+    const matchJurusan = filterJurusan === "Semua" || d.jurusan === filterJurusan;
+    const matchSearch = d.nama.toLowerCase().includes(search.toLowerCase());
+    return matchKategori && matchKelas && matchJurusan && matchSearch;
+  });
 
   return (
     <div
@@ -65,40 +76,81 @@ function Daftar() {
             DAFTAR DATA
           </h1>
 
+          {/* Filter Bar */}
+          <div className="flex flex-col md:flex-row flex-wrap justify-between items-center gap-3 mb-6">
+            {/* Search */}
+            <div className="relative w-full md:w-64">
+              <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input
+                type="text"
+                placeholder="Cari nama..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            {/* Filter Kategori */}
+            <select
+              value={filterKategori}
+              onChange={(e) => setFilterKategori(e.target.value)}
+              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="Semua">Semua Kategori</option>
+              <option value="Guru">Guru</option>
+              <option value="Siswa">Siswa</option>
+              <option value="Karyawan">Karyawan</option>
+            </select>
+
+            {/* Filter Kelas */}
+            <select
+              value={filterKelas}
+              onChange={(e) => setFilterKelas(e.target.value)}
+              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="Semua">Semua Kelas</option>
+              <option value="X">X</option>
+              <option value="XI">XI</option>
+              <option value="XII">XII</option>
+            </select>
+
+            {/* Filter Jurusan */}
+            <select
+              value={filterJurusan}
+              onChange={(e) => setFilterJurusan(e.target.value)}
+              className="w-full md:w-48 py-2 px-3 rounded-lg border border-gray-300 text-gray-700 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              {jurusanList.map((j, i) => (
+                <option key={i} value={j}>
+                  {j}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Table Section */}
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-              <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <h3 className="text-2xl font-bold text-gray-800">
                 Daftar Guru, Siswa, dan Karyawan
               </h3>
 
-              <div className="flex gap-3">
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                  className="border border-gray-300 py-2 px-3 rounded-lg text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition duration-200"
-                >
-                  <option value="Semua">Semua</option>
-                  <option value="Guru">Guru</option>
-                  <option value="Siswa">Siswa</option>
-                  <option value="Karyawan">Karyawan</option>
-                </select>
-
-                <button
-                  onClick={() => navigate("/TambahData")}
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
-                >
-                  + Tambah Data
-                </button>
-              </div>
+              <button
+                onClick={() => navigate("/TambahData")}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
+              >
+                + Tambah Data
+              </button>
             </div>
 
             <div className="overflow-x-auto rounded-lg shadow-inner">
-              <table className="w-full border-collapse overflow-hidden">
-                <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+              <table className="w-full border-collapse">
+                <thead className="bg-blue-600 text-white">
                   <tr>
                     <th className="p-3 text-left">No</th>
                     <th className="p-3 text-left">Nama</th>
                     <th className="p-3 text-left">Kelas</th>
+                    <th className="p-3 text-left">Jurusan</th>
                     <th className="p-3 text-left">Jabatan/Bagian</th>
                     <th className="p-3 text-left">Email</th>
                     <th className="p-3 text-left">Kategori</th>
@@ -112,31 +164,18 @@ function Daftar() {
                         key={item.id}
                         className={`${
                           index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                        } hover:bg-blue-50 hover:border-l-4 hover:border-blue-500 transition duration-300`}
+                        } hover:bg-blue-50 transition duration-300`}
                       >
-                        <td className="p-3 font-medium text-gray-700">
-                          {index + 1}
-                        </td>
+                        <td className="p-3 text-gray-700">{index + 1}</td>
                         <td className="p-3 text-gray-800">{item.nama}</td>
                         <td className="p-3 text-gray-800">{item.kelas}</td>
+                        <td className="p-3 text-gray-800">{item.jurusan}</td>
                         <td className="p-3 text-gray-700">{item.jabatan}</td>
                         <td className="p-3 text-gray-600">{item.email}</td>
-                        <td className="p-3">
-                          <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              item.kategori === "Guru"
-                                ? "bg-blue-100 text-blue-700"
-                                : item.kategori === "Siswa"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-yellow-100 text-yellow-700"
-                            }`}
-                          >
-                            {item.kategori}
-                          </span>
-                        </td>
+                        <td className="p-3 text-gray-800">{item.kategori}</td>
                         <td className="p-3 flex justify-center gap-2">
                           <button
-                            className="flex items-center gap-1 bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-lg shadow transition duration-300"
+                            className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg shadow transition duration-300"
                             onClick={() => navigate(`/EditData/${item.id}`)}
                           >
                             <i className="ri-edit-line"></i> Edit
@@ -153,10 +192,10 @@ function Daftar() {
                   ) : (
                     <tr>
                       <td
-                        colSpan="6"
+                        colSpan="8"
                         className="p-4 text-center text-gray-500 italic bg-gray-50"
                       >
-                        Tidak ada data untuk kategori ini
+                        Tidak ada data untuk filter ini
                       </td>
                     </tr>
                   )}
@@ -172,6 +211,6 @@ function Daftar() {
       </p>
     </div>
   );
-} 
+}
 
 export default Daftar;

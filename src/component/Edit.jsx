@@ -9,10 +9,11 @@ function EditData() {
 
   const [formData, setFormData] = useState({
     nama: "",
+    jurusan: "",
     jabatan: "",
     email: "",
     kategori: "Siswa",
-    kelas: "", 
+    kelas: "",
   });
   const [loading, setLoading] = useState(true);
 
@@ -75,7 +76,9 @@ function EditData() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">Nama</label>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Nama
+            </label>
             <input
               type="text"
               name="nama"
@@ -103,7 +106,9 @@ function EditData() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">Email</label>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -116,7 +121,9 @@ function EditData() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">Kategori</label>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Kategori
+            </label>
             <select
               name="kategori"
               value={formData.kategori}
@@ -131,19 +138,43 @@ function EditData() {
           </div>
 
           {formData.kategori === "Siswa" && (
-            <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-1">Kelas</label>
-              <select
-                name="kelas"
-                value={formData.kelas}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-              >
-                <option value="">Pilih Kelas</option>
-                <option value="X">Kelas X</option>
-                <option value="XI">Kelas XI</option>
-                <option value="XII">Kelas XII</option>
-              </select>
+            <div className="mb-4 space-y-4">
+              {/* Pilih Kelas */}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Kelas
+                </label>
+                <select
+                  name="kelas"
+                  value={formData.kelas}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+                >
+                  <option value="">Pilih Kelas</option>
+                  <option value="X">Kelas X</option>
+                  <option value="XI">Kelas XI</option>
+                  <option value="XII">Kelas XII</option>
+                </select>
+              </div>
+
+              {/* Pilih Jurusan */}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Jurusan
+                </label>
+                <select
+                  name="jurusan"
+                  value={formData.jurusan}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
+                >
+                  <option value="">Pilih Jurusan</option>
+                  <option value="TKJ">TKJ</option>
+                  <option value="TSM">TSM</option>
+                  <option value="AKUTANSI">AKUTANSI</option>
+                  <option value="TATA BUSANA">TATA BUSANA</option>
+                </select>
+              </div>
             </div>
           )}
 

@@ -7,10 +7,10 @@ function JenisTagihan() {
   const [nama, setNama] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const API_URL = "http://localhost:5001/JenisTagihan";
 
-  // Ambil data
   const getJenisTagihan = async () => {
     try {
       const res = await axios.get(API_URL);
@@ -25,15 +25,17 @@ function JenisTagihan() {
     setTimeout(() => setVisible(true), 200);
   }, []);
 
-  // Tambah data
   const tambahJenisTagihan = async () => {
     if (!nama || !deskripsi) {
       Swal.fire("Isi nama dan deskripsi dulu!");
       return;
     }
+
+    setLoading(true);
     try {
       await axios.post(API_URL, {
-        id: `j${Date.now()}`,
+        id: `j${Date.now()}`, 
+        no: jenisTagihan.length + 1, 
         nama,
         deskripsi,
       });
@@ -43,11 +45,12 @@ function JenisTagihan() {
       getJenisTagihan();
     } catch (err) {
       console.error(err);
-      Swal.fire("Gagal menambahkan data!");
+      Swal.fire("Gagal menambahkan data!", err.message, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Hapus data
   const hapusJenisTagihan = async (id) => {
     const result = await Swal.fire({
       title: "Yakin hapus data ini?",
@@ -68,7 +71,6 @@ function JenisTagihan() {
     }
   };
 
-  // Edit data
   const editJenisTagihan = async (item) => {
     const { value: formValues } = await Swal.fire({
       title: "Edit Jenis Tagihan",
@@ -84,7 +86,10 @@ function JenisTagihan() {
     });
     if (formValues) {
       try {
-        await axios.put(`${API_URL}/${item.id}`, formValues);
+        await axios.put(`${API_URL}/${item.id}`, {
+          ...item,
+          ...formValues,
+        });
         Swal.fire("Data berhasil diperbarui!");
         getJenisTagihan();
       } catch (err) {
@@ -106,7 +111,6 @@ function JenisTagihan() {
             Jenis Tagihan
           </h1>
 
-          {/* Form Tambah */}
           <div className="flex flex-col sm:flex-row gap-2 mb-6 w-full">
             <input
               type="text"
@@ -123,19 +127,23 @@ function JenisTagihan() {
               className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
             <button
+              disabled={loading || !nama || !deskripsi}
               onClick={tambahJenisTagihan}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300"
+              className={`${
+                loading || !nama || !deskripsi
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500"
+              } text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300`}
             >
-              + Tambah Jenis Tagihan
+              {loading ? "Menyimpan..." : "+ Tambah Jenis Tagihan"}
             </button>
           </div>
 
-          {/* Tabel */}
           <div className="overflow-x-auto rounded-lg shadow-inner">
             <table className="w-full border-collapse overflow-hidden">
               <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                 <tr>
-                  <th className="p-3 text-left">ID</th>
+                  <th className="p-3 text-left">No</th>
                   <th className="p-3 text-left">Nama</th>
                   <th className="p-3 text-left">Deskripsi</th>
                   <th className="p-3 text-center">Aksi</th>
@@ -150,7 +158,7 @@ function JenisTagihan() {
                         idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
                       } hover:bg-blue-50 transition`}
                     >
-                      <td className="p-3">{item.id}</td>
+                      <td className="p-3">{idx + 1}</td>
                       <td className="p-3">{item.nama}</td>
                       <td className="p-3">{item.deskripsi}</td>
                       <td className="p-3 flex justify-center gap-2 flex-wrap">
