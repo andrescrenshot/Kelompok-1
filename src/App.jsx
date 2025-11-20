@@ -10,6 +10,8 @@ import Tagihan from "./tagihan/Tagihan";
 import EditTagihan from "./tagihan/EditTagihan";
 import Kelas from "./component/Kelas";
 import JenisTagihan from "./tagihan/JenisTagihan"
+import KategoriData from "./component/KategoriData"
+import RekapTagihan from "./tagihan/RekapTagihan";
 
 
 function App() {
@@ -27,7 +29,9 @@ function App() {
           <Route path="/Daftar" element={<Daftar />} />
           <Route path="/Tagihan" element={<Tagihan />} />
           <Route path="/JenisTagihan" element={<JenisTagihan />} />
+          <Route path="/KategoriData" element={<KategoriData />} />
           <Route path="/Kelas" element={<Kelas />} />
+          <Route path="/RekapTagihan" element={<RekapTagihan />} />
         </Route>
       </Routes>
     </BrowserRouter>

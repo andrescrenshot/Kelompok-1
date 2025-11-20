@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 function TambahData() {
   const navigate = useNavigate();
-  const API_URL = "http://localhost:5001/Daftar";
+  const API_DAFTAR = "http://localhost:5001/Daftar"; 
+  const API_KATEGORI = "http://localhost:5001/Kategori";
+  const API_KELAS = "http://localhost:5001/Kelas";
+
+  const [kategoriAktif, setKategoriAktif] = useState([]);
+  const [kelasList, setKelasList] = useState([]);
+  const [jurusanList, setJurusanList] = useState([]);
+  const [loadingKelas, setLoadingKelas] = useState(true);
 
   const [formData, setFormData] = useState({
     nama: "",
@@ -16,143 +23,192 @@ function TambahData() {
     kategori: "Siswa",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  // Ambil kategori aktif
+  const getKategoriAktif = async () => {
     try {
-      await axios.post(API_URL, formData);
-      Swal.fire("Berhasil!", "Data berhasil ditambahkan", "success");
-      navigate("/Daftar");
+      const res = await axios.get(API_KATEGORI);
+      const aktifList = res.data.filter(k => k.aktif).map(k => k.kategori_nama);
+      setKategoriAktif(aktifList);
+
+      if (aktifList.length > 0 && !aktifList.includes("Siswa")) {
+        setFormData(prev => ({ ...prev, kategori: aktifList[0] }));
+      } else if (aktifList.length === 0) {
+        setFormData(prev => ({ ...prev, kategori: "" }));
+      }
     } catch (err) {
-      console.error("Gagal tambah data:", err);
-      Swal.fire("Gagal!", "Tidak dapat menambahkan data", "error");
+      console.error("Gagal mengambil kategori:", err);
+      Swal.fire("Gagal", "Tidak bisa mengambil data kategori", "error");
     }
   };
 
+  // Ambil daftar kelas
+  const getKelasList = async () => {
+    try {
+      setLoadingKelas(true);
+      const res = await axios.get(API_KELAS);
+      setKelasList(res.data || []);
+    } catch (err) {
+      console.error("Gagal mengambil data kelas:", err);
+      Swal.fire("Gagal", "Tidak bisa mengambil data kelas", "error");
+    } finally {
+      setLoadingKelas(false);
+    }
+  };
+
+  useEffect(() => {
+    getKategoriAktif();
+    getKelasList();
+  }, []);
+
+  // Update daftar jurusan ketika kelas dipilih
+  useEffect(() => {
+    if (!formData.kelas) {
+      setJurusanList([]);
+      setFormData(prev => ({ ...prev, jurusan: "" }));
+      return;
+    }
+
+    const jurusanFiltered = [
+      ...new Set(
+        kelasList
+          .filter(k => k.kelas === formData.kelas)
+          .map(k => k.jurusan)
+          .filter(Boolean)
+      ),
+    ];
+
+    setJurusanList(jurusanFiltered);
+
+    setFormData(prev => ({
+      ...prev,
+      jurusan: jurusanFiltered.includes(prev.jurusan)
+        ? prev.jurusan
+        : jurusanFiltered[0] || ""
+    }));
+  }, [formData.kelas, kelasList]);
+
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      const isSiswa = formData.kategori.toLowerCase().includes("siswa");
+      if (isSiswa && (!formData.kelas || !formData.jurusan)) {
+        return Swal.fire(
+          "Peringatan",
+          "Kelas dan Jurusan wajib diisi untuk kategori Siswa",
+          "warning"
+        );
+      }
+
+      // Set jabatan default jika kosong
+      const dataToSend = {
+        ...formData,
+        jabatan: formData.jabatan.trim() ? formData.jabatan : "Belum ada jabatan/bagian",
+      };
+
+      await axios.post(API_DAFTAR, dataToSend);
+      Swal.fire("Berhasil", "Data berhasil ditambahkan", "success");
+      navigate("/Daftar");
+    } catch (err) {
+      console.error(err);
+      const errorMessage = err.response?.data?.message || "Tidak dapat menambahkan data";
+      Swal.fire("Gagal", errorMessage, "error");
+    }
+  };
+
+  const isSiswa = formData.kategori.toLowerCase().includes("siswa"); 
+  const kelasUniqueList = [...new Set(kelasList.map(k => k.kelas).filter(Boolean))];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-      <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-lg">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Tambah Data Baru
-        </h2>
+    <div className="min-h-screen bg-gray-50 flex justify-center items-center p-8">
+      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center">Tambah Data</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            name="nama"
+            placeholder="Nama Lengkap"
+            value={formData.nama}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded"
+          />
+          <input
+            name="jabatan"
+            placeholder="Jabatan / Bagian (Opsional)"
+            value={formData.jabatan}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded"
+          />
+          
+          <select
+            name="kategori"
+            value={formData.kategori}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            {kategoriAktif.map((k, i) => (
+              <option key={i} value={k}>{k}</option>
+            ))}
+          </select>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Nama Lengkap
-            </label>
-            <input
-              type="text"
-              name="nama"
-              value={formData.nama}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-              placeholder="Masukkan nama lengkap"
-            />
-          </div>
+          {isSiswa && (
+            <>
+              <select
+                name="kelas"
+                value={formData.kelas}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+                disabled={loadingKelas || kelasUniqueList.length === 0}
+                required={isSiswa}
+              >
+                <option value="">Pilih Kelas</option>
+                {kelasUniqueList.map((k, i) => (
+                  <option key={i} value={k}>{k}</option>
+                ))}
+              </select>
 
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Jabatan / Bagian
-            </label>
-            <input
-              type="text"
-              name="jabatan"
-              value={formData.jabatan}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-              placeholder="Contoh: Wali Kelas, Bendahara, XI IPA 1"
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-              placeholder="Masukkan email aktif"
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1 text-gray-700">
-              Kategori
-            </label>
-            <select
-              name="kategori"
-              value={formData.kategori}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-            >
-              <option value="Siswa">Siswa</option>
-              <option value="Guru">Guru</option>
-              <option value="Karyawan">Karyawan</option>
-            </select>
-          </div>
-
-          {formData.kategori === "Siswa" && (
-            <div className="space-y-3">
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Kelas
-                </label>
-                <select
-                  name="kelas"
-                  value={formData.kelas}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-                >
-                  <option value="">Pilih Kelas</option>
-                  <option value="X">Kelas X</option>
-                  <option value="XI">Kelas XI</option>
-                  <option value="XII">Kelas XII</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Jurusan
-                </label>
-                <select
-                  name="jurusan"
-                  value={formData.jurusan}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-                >
-                  <option value="">Pilih Jurusan</option>
-                  <option value="TKJ">TKJ</option>
-                  <option value="TSM">TSM</option>
-                  <option value="AKUTANSI">AKUTANSI</option>
-                  <option value="TATA BUSANA">TATA BUSANA</option>
-                </select>
-              </div>
-            </div>
+              <select
+                name="jurusan"
+                value={formData.jurusan}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+                disabled={loadingKelas || jurusanList.length === 0}
+                required={isSiswa}
+              >
+                <option value="">Pilih Jurusan</option>
+                {jurusanList.map((jurusan, i) => (
+                  <option key={i} value={jurusan}>{jurusan}</option>
+                ))}
+              </select>
+            </>
           )}
 
-          <div className="flex justify-end gap-3 pt-3">
+          <div className="flex justify-between gap-2 pt-2">
             <button
               type="button"
               onClick={() => navigate("/Daftar")}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg transition duration-200"
+              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition duration-150"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-150"
+              disabled={loadingKelas}
             >
-              Simpan
+              {loadingKelas ? "Memuat Data..." : "Simpan"}
             </button>
           </div>
         </form>

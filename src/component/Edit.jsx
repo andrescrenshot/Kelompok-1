@@ -6,192 +6,139 @@ import Swal from "sweetalert2";
 function EditData() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_DAFTAR = "http://localhost:5001/Daftar";
+  const API_KATEGORI = "http://localhost:5001/Kategori";
+  const API_KELAS = "http://localhost:5001/Kelas";
 
   const [formData, setFormData] = useState({
-    nama: "",
-    jurusan: "",
-    jabatan: "",
-    email: "",
-    kategori: "Siswa",
-    kelas: "",
+    nama: "", kelas: "", jurusan: "", jabatan: "", email: "", kategori: "Siswa",
   });
+  const [kategoriAktif, setKategoriAktif] = useState([]);
+  const [kelasList, setKelasList] = useState([]);
+  const [jurusanList, setJurusanList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5001/Daftar/${id}`);
-        setFormData(res.data);
-      } catch (err) {
-        console.error("Gagal mengambil data:", err);
-        Swal.fire("Error", "Gagal mengambil data!", "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [id]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const getKategoriAktif = async () => {
+    try {
+      const res = await axios.get(API_KATEGORI);
+      setKategoriAktif(res.data.filter(k => k.aktif).map(k => k.kategori_nama));
+    } catch (err) { console.error(err); }
   };
 
-  const handleSubmit = async (e) => {
+  const getKelasList = async () => {
+    try {
+      const res = await axios.get(API_KELAS);
+      setKelasList(res.data || []);
+    } catch (err) { console.error(err); }
+  };
+
+  const getUserData = async () => {
+    try {
+      const res = await axios.get(`${API_DAFTAR}/${id}`);
+      setFormData(res.data);
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Gagal mengambil data!", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getKategoriAktif();
+    getKelasList();
+    getUserData();
+  }, [id]);
+
+  // Update jurusan saat kelas berubah atau kelasList siap
+  useEffect(() => {
+    if (!kelasList.length) return;
+    if (!formData.kelas) { setJurusanList([]); return; }
+
+    const jurusanFiltered = [...new Set(kelasList.filter(k=>k.kelas===formData.kelas).map(k=>k.jurusan).filter(Boolean))];
+    setJurusanList(jurusanFiltered);
+
+    if (!jurusanFiltered.includes(formData.jurusan)) {
+      setFormData(prev => ({ ...prev, jurusan: "" }));
+    }
+  }, [formData.kelas, kelasList]);
+
+  const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async e => {
     e.preventDefault();
     Swal.fire({
       title: "Simpan perubahan?",
-      text: "Perubahan akan disimpan dan dapat diubah kembali.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Simpan",
       cancelButtonText: "Batal",
-      confirmButtonColor: "#16a34a",
-      cancelButtonColor: "#6b7280",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.put(`http://localhost:5001/Daftar/${id}`, formData);
+    }).then(async (result)=>{
+      if(result.isConfirmed){
+        try{
+          const dataToSubmit = { ...formData, jabatan: formData.jabatan.trim() || "Belum ada jabatan/bagian" };
+          await axios.put(`${API_DAFTAR}/${id}`, dataToSubmit);
           Swal.fire("Berhasil!", "Data telah diperbarui.", "success");
           navigate("/Daftar");
-        } catch (err) {
-          console.error("Gagal mengupdate data:", err);
+        }catch(err){
+          console.error(err);
           Swal.fire("Error", "Gagal mengupdate data!", "error");
         }
       }
     });
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-700 text-lg font-medium">Memuat data...</p>
-      </div>
-    );
-  }
+  if (loading) return <p className="text-center pt-20">Memuat data...</p>;
+
+  const isSiswa = formData.kategori.toLowerCase().includes("siswa");
+  const kelasUniqueList = [...new Set(kelasList.map(k=>k.kelas).filter(Boolean))];
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-100">
+    <div className="min-h-screen flex justify-center items-start bg-gray-100 p-8">
       <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm mt-20">
         <h1 className="text-2xl font-bold text-center mb-6">Edit Data</h1>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">
-              Nama
-            </label>
-            <input
-              type="text"
-              name="nama"
-              value={formData.nama}
-              onChange={handleChange}
-              placeholder="Nama"
-              required
-              className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
-            />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label>Nama</label>
+            <input type="text" name="nama" value={formData.nama} onChange={handleChange} className="w-full border p-2 rounded" required />
           </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">
-              Jabatan/Kelas/Bagian
-            </label>
-            <input
-              type="text"
-              name="jabatan"
-              value={formData.jabatan}
-              onChange={handleChange}
-              placeholder="Jabatan/Kelas/Bagian"
-              required
-              className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
-            />
+          <div>
+            <label>Jabatan/Bagian</label>
+            <input type="text" name="jabatan" value={formData.jabatan} onChange={handleChange} className="w-full border p-2 rounded" />
           </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-              className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
-            />
+          <div>
+            <label>Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border p-2 rounded" required />
           </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-1">
-              Kategori
-            </label>
-            <select
-              name="kategori"
-              value={formData.kategori}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 p-2 rounded w-full focus:ring-2 focus:ring-blue-400"
-            >
-              <option value="Guru">Guru</option>
-              <option value="Siswa">Siswa</option>
-              <option value="Karyawan">Karyawan</option>
+          <div>
+            <label>Kategori</label>
+            <select name="kategori" value={formData.kategori} onChange={handleChange} className="w-full border p-2 rounded">
+              {kategoriAktif.map((k,i)=><option key={i} value={k}>{k}</option>)}
             </select>
           </div>
 
-          {formData.kategori === "Siswa" && (
-            <div className="mb-4 space-y-4">
-              {/* Pilih Kelas */}
+          {isSiswa && (
+            <div className="space-y-3">
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Kelas
-                </label>
-                <select
-                  name="kelas"
-                  value={formData.kelas}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-                >
+                <label>Kelas</label>
+                <select name="kelas" value={formData.kelas} onChange={handleChange} className="w-full border p-2 rounded">
                   <option value="">Pilih Kelas</option>
-                  <option value="X">Kelas X</option>
-                  <option value="XI">Kelas XI</option>
-                  <option value="XII">Kelas XII</option>
+                  {kelasUniqueList.map((k,i)=><option key={i} value={k}>{k}</option>)}
                 </select>
               </div>
-
-              {/* Pilih Jurusan */}
               <div>
-                <label className="block text-gray-700 font-semibold mb-1">
-                  Jurusan
-                </label>
-                <select
-                  name="jurusan"
-                  value={formData.jurusan}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400 outline-none"
-                >
+                <label>Jurusan</label>
+                <select name="jurusan" value={formData.jurusan} onChange={handleChange} className="w-full border p-2 rounded" disabled={!jurusanList.length}>
                   <option value="">Pilih Jurusan</option>
-                  <option value="TKJ">TKJ</option>
-                  <option value="TSM">TSM</option>
-                  <option value="AKUTANSI">AKUTANSI</option>
-                  <option value="TATA BUSANA">TATA BUSANA</option>
+                  {jurusanList.map((j,i)=><option key={i} value={j}>{j}</option>)}
                 </select>
               </div>
             </div>
           )}
 
           <div className="flex gap-3">
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded w-full"
-            >
-              Simpan
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate("/Daftar")}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-semibold px-4 py-2 rounded w-full"
-            >
-              Kembali
-            </button>
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded w-full">Simpan</button>
+            <button type="button" onClick={()=>navigate("/Daftar")} className="bg-gray-500 text-white px-4 py-2 rounded w-full">Kembali</button>
           </div>
         </form>
       </div>

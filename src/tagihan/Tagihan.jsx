@@ -31,11 +31,12 @@ function Tagihan() {
     }
   };
 
-  // Ambil data jenis tagihan
+  // Ambil data jenis tagihan (hanya yang aktif)
   const getJenisTagihan = async () => {
     try {
       const res = await axios.get(API_JENIS);
-      setJenisTagihan(res.data);
+      const aktifOnly = res.data.filter((item) => item.aktif === true);
+      setJenisTagihan(aktifOnly);
     } catch (err) {
       console.error("Gagal mengambil data jenis tagihan:", err);
     }
@@ -56,12 +57,24 @@ function Tagihan() {
       currency: "IDR",
     }).format(num || 0);
 
+  // Format input jumlah jadi Rp saat mengetik
+  const formatInputRupiah = (num) => {
+    if (!num) return "";
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(num);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "jumlah") {
       const numeric = value.replace(/\D/g, "");
       setFormData({ ...formData, jumlah: numeric ? parseInt(numeric) : "" });
-    } else setFormData({ ...formData, [name]: value });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -125,23 +138,16 @@ function Tagihan() {
   };
 
   return (
-    <div
-      className={`transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-      }`}
-    >
+    <div className={`transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
       <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-7xl space-y-8">
           <h1 className="text-3xl font-bold text-center flex items-center justify-center gap-2 text-gray-800">
-            <i className="ri-wallet-2-line text-4xl text-blue-500 animate-pulse"></i>{" "}
-            TAGIHAN
+            <i className=""></i> TAGIHAN
           </h1>
 
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-              <h3 className="text-2xl font-bold text-gray-800">
-                Data Tagihan Pembayaran
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800">Data Tagihan Pembayaran</h3>
               <div className="flex flex-col sm:flex-row gap-3">
                 <select
                   value={filter}
@@ -176,57 +182,30 @@ function Tagihan() {
                 <tbody>
                   {filteredData.length ? (
                     filteredData.map((item, i) => (
-                      <tr
-                        key={item.id}
-                        className={`${
-                          i % 2 ? "bg-gray-50" : "bg-gray-100"
-                        } hover:bg-blue-50 transition`}
-                      >
+                      <tr key={item.id} className={`${i % 2 ? "bg-gray-50" : "bg-gray-100"} hover:bg-blue-50 transition`}>
                         <td className="p-3">{i + 1}</td>
                         <td className="p-3">{item.nama}</td>
                         <td className="p-3">{item.jenis_tagihan}</td>
                         <td className="p-3">{formatRupiah(item.jumlah)}</td>
                         <td className="p-3 text-center">
-                          <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              item.status === "Lunas"
-                                ? "bg-green-200 text-green-800"
-                                : "bg-red-200 text-red-700"
-                            }`}
-                          >
+                          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${item.status === "Lunas" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-700"}`}>
                             {item.status}
                           </span>
                         </td>
                         <td className="p-3 flex justify-center gap-2 flex-wrap">
                           {item.status === "Belum Lunas" ? (
-                            <button
-                              onClick={() =>
-                                handleUpdateStatus(item.id, "Lunas")
-                              }
-                              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg"
-                            >
+                            <button onClick={() => handleUpdateStatus(item.id, "Lunas")} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
                               <i className="ri-check-line"></i> Lunas
                             </button>
                           ) : (
-                            <button
-                              onClick={() =>
-                                handleUpdateStatus(item.id, "Belum Lunas")
-                              }
-                              className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg"
-                            >
+                            <button onClick={() => handleUpdateStatus(item.id, "Belum Lunas")} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg">
                               <i className="ri-refresh-line"></i> Reset
                             </button>
                           )}
-                          <button
-                            onClick={() => navigate(`/EditTagihan/${item.id}`)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg"
-                          >
+                          <button onClick={() => navigate(`/EditTagihan/${item.id}`)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg">
                             <i className="ri-edit-line"></i> Edit
                           </button>
-                          <button
-                            onClick={() => handleDelete(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
-                          >
+                          <button onClick={() => handleDelete(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
                             <i className="ri-delete-bin-line"></i> Hapus
                           </button>
                         </td>
@@ -234,10 +213,7 @@ function Tagihan() {
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan="6"
-                        className="p-4 text-center text-gray-500 italic"
-                      >
+                      <td colSpan="6" className="p-4 text-center text-gray-500 italic">
                         Tidak ada data tagihan
                       </td>
                     </tr>
@@ -252,9 +228,7 @@ function Tagihan() {
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md relative">
-            <h3 className="text-xl font-bold mb-4 text-gray-800">
-              Tambah Tagihan
-            </h3>
+            <h3 className="text-xl font-bold mb-4 text-gray-800">Tambah Tagihan</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
@@ -265,7 +239,6 @@ function Tagihan() {
                 required
                 className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
               />
-
               <select
                 name="jenis_tagihan"
                 value={formData.jenis_tagihan}
@@ -280,12 +253,11 @@ function Tagihan() {
                   </option>
                 ))}
               </select>
-
               <input
                 type="text"
                 name="jumlah"
                 placeholder="Jumlah (Rp)"
-                value={formData.jumlah}
+                value={formatInputRupiah(formData.jumlah)}
                 onChange={handleChange}
                 required
                 className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"

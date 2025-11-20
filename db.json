@@ -1,28 +1,130 @@
 {
   "Daftar": [
     {
-      "id": "de72",
-      "nama": "Moreno hitam",
-      "kelas": "XI",
-      "jurusan": "TKJ",
-      "jabatan": "Bendahara korupsi",
-      "email": "reno@gmail.com",
+      "id": "b404",
+      "nama": "dafa",
+      "kelas": "",
+      "jurusan": "",
+      "jabatan": "Guru Jumpshot",
+      "email": "dapagacor33@hayo.gmail",
+      "kategori": "Guru"
+    },
+    {
+      "id": "6948",
+      "nama": "ayyas",
+      "kelas": "",
+      "jurusan": "",
+      "jabatan": "Satpam",
+      "email": "asgahara@gmail.com",
+      "kategori": "Karyawan"
+    },
+    {
+      "id": "eda9",
+      "nama": "Moreno hitam asli lamongan",
+      "kelas": "X",
+      "jurusan": "TSM",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "regis@gmail.com",
       "kategori": "Siswa"
+    },
+    {
+      "id": "f20e",
+      "nama": "Dimas",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "KETUA OSIS",
+      "email": "Dimasterban@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "25f1",
+      "nama": "Mahmud",
+      "kelas": "X",
+      "jurusan": "TATA BUSANA",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "Mahmudpink@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "ac75",
+      "nama": "ilham",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "wakil osis",
+      "email": "kelas@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "4ba9",
+      "nama": "darren",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "dr@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "efa8",
+      "nama": "gilang",
+      "kelas": "XI",
+      "jurusan": "TSM",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "dr@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "607c",
+      "nama": "putri",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "pt@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "a1e5",
+      "nama": "dafa",
+      "kelas": "",
+      "jurusan": "",
+      "jabatan": "satpam",
+      "email": "dr@gmail.com",
+      "kategori": "Karyawan"
     }
   ],
   "tagihan": [
     {
-      "id": "t1762404173994",
-      "nama": "Moreno",
-      "jenis_tagihan": "SERAGAM",
-      "jumlah": 200000,
+      "id": "t1762501996891",
+      "nama": "Moreno hitam asli lamongan",
+      "jenis_tagihan": "SPP",
+      "jumlah": 340000,
       "status": "Lunas"
     },
     {
-      "id": "t1762408499279",
-      "nama": "Moreno",
-      "jenis_tagihan": "SPP",
-      "jumlah": 200000,
+      "id": "t1762502005346",
+      "nama": "dafa",
+      "jenis_tagihan": "SERAGAM",
+      "jumlah": 80000,
+      "status": "Lunas"
+    },
+    {
+      "id": "t1763438185032",
+      "nama": "bambang",
+      "jenis_tagihan": "UANG GEDUNG",
+      "jumlah": 270000,
+      "status": "Belum Lunas"
+    },
+    {
+      "id": "t1763438318112",
+      "nama": "noclant",
+      "jenis_tagihan": "APA YA ",
+      "jumlah": 1111,
+      "status": "Belum Lunas"
+    },
+    {
+      "id": "t1763608446254",
+      "nama": "ilham",
+      "jenis_tagihan": "UANG GEDUNG",
+      "jumlah": 50000,
       "status": "Belum Lunas"
     }
   ],
@@ -30,24 +132,92 @@
     {
       "nama": "SPP",
       "deskripsi": "BAYAR WOI DI TIMBUN WAE",
-      "id": "j1762329118560"
+      "id": "j1762329118560",
+      "aktif": true
     },
     {
       "nama": "SERAGAM",
-      "deskripsi": "H KUE",
-      "id": "j1762329276904"
+      "deskripsi": "",
+      "id": "j1762329276904",
+      "aktif": true
     },
     {
-      "id": "j1762403686489",
+      "id": "j1763355096538",
       "no": 3,
       "nama": "UANG GEDUNG",
-      "deskripsi": "LU MAU BELAJAR DI LAPANGAN 🙄🙄"
+      "deskripsi": "UANG UNTUK GEDUNG",
+      "aktif": true
     },
     {
-      "id": "j1762403730121",
+      "id": "j1763438147903",
       "no": 4,
-      "nama": "KUE BANDUNG",
-      "deskripsi": "ENAK JIR😋😋"
+      "nama": "APA YA ",
+      "deskripsi": "----",
+      "aktif": true
+    }
+  ],
+  "Kategori": [
+    {
+      "id": "k1763006091288",
+      "kategori_nama": "Siswa",
+      "aktif": true
+    },
+    {
+      "id": "k1763006103280",
+      "kategori_nama": "Guru",
+      "aktif": true
+    },
+    {
+      "id": "k1763006114608",
+      "kategori_nama": "Karyawan",
+      "aktif": true
+    },
+    {
+      "id": "k1763438268047",
+      "kategori_nama": "ANOMALI",
+      "aktif": false
+    },
+    {
+      "id": "k1763608093261",
+      "kategori_nama": "SATPAM",
+      "aktif": true
+    }
+  ],
+  "Kelas": [
+    {
+      "id": "ce32",
+      "kelas": "X",
+      "jurusan": "TSM"
+    },
+    {
+      "id": "6a31",
+      "kelas": "X",
+      "jurusan": "TKJ"
+    },
+    {
+      "id": "ebf4",
+      "kelas": "XI",
+      "jurusan": "TKJ"
+    },
+    {
+      "id": "06ba",
+      "kelas": "XII",
+      "jurusan": "TKJ"
+    },
+    {
+      "id": "4810",
+      "kelas": "X",
+      "jurusan": "AKUTANSI"
+    },
+    {
+      "id": "1c9a",
+      "kelas": "XI",
+      "jurusan": "TSM"
+    },
+    {
+      "id": "034a",
+      "kelas": "X",
+      "jurusan": "TATA BUSANA"
     }
   ]
 }

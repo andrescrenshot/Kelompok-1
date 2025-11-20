@@ -14,13 +14,16 @@ function Sidnav() {
   ];
 
   const menuSiswaGuru = [
-    { path: "/Daftar", label: "Data SGK", icon: "ri-database-2-line text-red-400" },
+    { path: "/KategoriData", label: "Kategori Data", icon: "ri-clipboard-line" },
     { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
+    { path: "/Daftar", label: "Master Data", icon: "ri-database-2-line text-red-400" },
   ];
 
   const menuTagihan = [
+    { path: "/JenisTagihan", label: "Kategori Tagihan", icon: "ri-price-tag-3-line text-orange-400" },
     { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
-    { path: "/JenisTagihan", label: "JenisTagihan", icon: "ri-price-tag-3-line text-orange-400" },
+    { path: "/RekapTagihan", label: "Rekap Tagihan", icon: "ri-file-list-3-line" },
+    
   ];
 
   const SidebarButton = ({ item }) => (

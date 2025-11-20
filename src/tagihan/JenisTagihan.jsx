@@ -34,10 +34,11 @@ function JenisTagihan() {
     setLoading(true);
     try {
       await axios.post(API_URL, {
-        id: `j${Date.now()}`, 
-        no: jenisTagihan.length + 1, 
+        id: `j${Date.now()}`,
+        no: jenisTagihan.length + 1,
         nama,
         deskripsi,
+        aktif: true, // default aktif
       });
       Swal.fire("Berhasil ditambahkan!");
       setNama("");
@@ -99,6 +100,23 @@ function JenisTagihan() {
     }
   };
 
+  // Toggle aktif / non-aktif
+  const toggleAktif = async (item) => {
+    try {
+      await axios.put(`${API_URL}/${item.id}`, {
+        ...item,
+        aktif: !item.aktif,
+      });
+      Swal.fire(
+        `Jenis Tagihan ${item.aktif ? "dinonaktifkan" : "diaktifkan"}!`
+      );
+      getJenisTagihan();
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Gagal mengubah status!");
+    }
+  };
+
   return (
     <div
       className={`transition-all duration-700 ease-out ${
@@ -108,13 +126,13 @@ function JenisTagihan() {
       <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-6xl space-y-8">
           <h1 className="text-4xl font-extrabold mb-6 text-center text-gray-800">
-            Jenis Tagihan
+            Kategori Tagihan
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-2 mb-6 w-full">
             <input
               type="text"
-              placeholder="Nama Jenis Tagihan"
+              placeholder="Nama Kategori Tagihan"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
@@ -135,7 +153,7 @@ function JenisTagihan() {
                   : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500"
               } text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300`}
             >
-              {loading ? "Menyimpan..." : "+ Tambah Jenis Tagihan"}
+              {loading ? "Menyimpan..." : "+ Tambah Kategori Tagihan"}
             </button>
           </div>
 
@@ -146,6 +164,7 @@ function JenisTagihan() {
                   <th className="p-3 text-left">No</th>
                   <th className="p-3 text-left">Nama</th>
                   <th className="p-3 text-left">Deskripsi</th>
+                  <th className="p-3 text-center">Status</th>
                   <th className="p-3 text-center">Aksi</th>
                 </tr>
               </thead>
@@ -161,6 +180,17 @@ function JenisTagihan() {
                       <td className="p-3">{idx + 1}</td>
                       <td className="p-3">{item.nama}</td>
                       <td className="p-3">{item.deskripsi}</td>
+                      <td className="p-3 text-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                            item.aktif
+                              ? "bg-green-200 text-green-800"
+                              : "bg-red-200 text-red-800"
+                          }`}
+                        >
+                          {item.aktif ? "Aktif" : "Non-Aktif"}
+                        </span>
+                      </td>
                       <td className="p-3 flex justify-center gap-2 flex-wrap">
                         <button
                           onClick={() => editJenisTagihan(item)}
@@ -174,13 +204,23 @@ function JenisTagihan() {
                         >
                           <i className="ri-delete-bin-line"></i> Hapus
                         </button>
+                        <button
+                          onClick={() => toggleAktif(item)}
+                          className={`flex items-center gap-1 px-3 py-1 rounded-lg shadow text-white ${
+                            item.aktif
+                              ? "bg-yellow-500 hover:bg-yellow-600"
+                              : "bg-blue-500 hover:bg-blue-600"
+                          } transition duration-300`}
+                        >
+                          {item.aktif ? "Non-Aktifkan" : "Aktifkan"}
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td
-                      colSpan="4"
+                      colSpan="5"
                       className="p-4 text-center text-gray-500 italic bg-gray-50"
                     >
                       Tidak ada data
@@ -199,5 +239,6 @@ function JenisTagihan() {
     </div>
   );
 }
+
 
 export default JenisTagihan;
