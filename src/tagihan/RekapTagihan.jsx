@@ -10,7 +10,14 @@ function RekapTagihan() {
   const getTagihan = async () => {
     try {
       const res = await axios.get(API_TAGIHAN);
-      setTagihan(res.data);
+
+      // Pastikan semua jumlah dibulatkan
+      const cleanData = res.data.map((t) => ({
+        ...t,
+        jumlah: Math.round(t.jumlah), // HAPUS DESIMAL
+      }));
+
+      setTagihan(cleanData);
     } catch (err) {
       console.error(err);
     }
@@ -21,13 +28,14 @@ function RekapTagihan() {
     setTimeout(() => setVisible(true), 200);
   }, []);
 
-  // Hitung total
+  // Hitung total tanpa desimal
   const totalLunas = tagihan
     .filter((t) => t.status === "Lunas")
-    .reduce((a, b) => a + b.jumlah, 0);
+    .reduce((a, b) => a + Math.round(b.jumlah), 0);
+
   const totalBelum = tagihan
     .filter((t) => t.status === "Belum Lunas")
-    .reduce((a, b) => a + b.jumlah, 0);
+    .reduce((a, b) => a + Math.round(b.jumlah), 0);
 
   return (
     <div
@@ -46,7 +54,7 @@ function RekapTagihan() {
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
               <h2 className="text-xl font-semibold text-gray-700">Total Lunas</h2>
               <p className="text-2xl font-bold text-green-600">
-                Rp {totalLunas.toLocaleString()}
+                Rp {Math.round(totalLunas).toLocaleString()}
               </p>
             </div>
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
@@ -54,7 +62,7 @@ function RekapTagihan() {
                 Total Belum Lunas
               </h2>
               <p className="text-2xl font-bold text-red-600">
-                Rp {totalBelum.toLocaleString()}
+                Rp {Math.round(totalBelum).toLocaleString()}
               </p>
             </div>
           </div>
@@ -83,7 +91,9 @@ function RekapTagihan() {
                       <td className="p-3">{idx + 1}</td>
                       <td className="p-3">{t.nama}</td>
                       <td className="p-3">{t.jenis_tagihan}</td>
-                      <td className="p-3 text-right">Rp {t.jumlah.toLocaleString()}</td>
+                      <td className="p-3 text-right">
+                        Rp {Math.round(t.jumlah).toLocaleString()}
+                      </td>
                       <td className="text-center">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-semibold ${

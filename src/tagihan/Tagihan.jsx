@@ -25,7 +25,12 @@ function Tagihan() {
   const getData = async () => {
     try {
       const res = await axios.get(API_TAGIHAN);
-      setData(res.data);
+      // Pastikan jumlah dibulatkan
+      const cleanData = res.data.map((t) => ({
+        ...t,
+        jumlah: Math.round(t.jumlah || 0),
+      }));
+      setData(cleanData);
     } catch (err) {
       console.error("Gagal mengambil data tagihan:", err);
     }
@@ -48,14 +53,14 @@ function Tagihan() {
     setTimeout(() => setVisible(true), 200);
   }, []);
 
-  const filteredData =
-    filter === "Semua" ? data : data.filter((item) => item.status === filter);
+  const filteredData = filter === "Semua" ? data : data.filter((item) => item.status === filter);
 
   const formatRupiah = (num) =>
     new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
-    }).format(num || 0);
+      maximumFractionDigits: 0, // Hapus desimal
+    }).format(Math.round(num || 0));
 
   // Format input jumlah jadi Rp saat mengetik
   const formatInputRupiah = (num) => {
@@ -64,7 +69,8 @@ function Tagihan() {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
-    }).format(num);
+      maximumFractionDigits: 0,
+    }).format(Math.round(num));
   };
 
   const handleChange = (e) => {
@@ -86,6 +92,7 @@ function Tagihan() {
     try {
       await axios.post(API_TAGIHAN, {
         ...formData,
+        jumlah: Math.round(formData.jumlah), // pastikan disimpan bulat
         id: `t${Date.now()}`,
       });
       Swal.fire("Berhasil!", "Tagihan berhasil ditambahkan.", "success");
@@ -142,7 +149,7 @@ function Tagihan() {
       <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-7xl space-y-8">
           <h1 className="text-3xl font-bold text-center flex items-center justify-center gap-2 text-gray-800">
-            <i className=""></i> TAGIHAN
+            TAGIHAN
           </h1>
 
           <div className="bg-white/90 backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-gray-200">
@@ -195,18 +202,18 @@ function Tagihan() {
                         <td className="p-3 flex justify-center gap-2 flex-wrap">
                           {item.status === "Belum Lunas" ? (
                             <button onClick={() => handleUpdateStatus(item.id, "Lunas")} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
-                              <i className="ri-check-line"></i> Lunas
+                              Lunas
                             </button>
                           ) : (
                             <button onClick={() => handleUpdateStatus(item.id, "Belum Lunas")} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg">
-                              <i className="ri-refresh-line"></i> Reset
+                              Reset
                             </button>
                           )}
                           <button onClick={() => navigate(`/EditTagihan/${item.id}`)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg">
-                            <i className="ri-edit-line"></i> Edit
+                            Edit
                           </button>
                           <button onClick={() => handleDelete(item.id)} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
-                            <i className="ri-delete-bin-line"></i> Hapus
+                            Hapus
                           </button>
                         </td>
                       </tr>
