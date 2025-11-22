@@ -8,6 +8,7 @@ function Kelas() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({ kelas: "", jurusan: "" });
   const [editId, setEditId] = useState(null); // id yang sedang diedit
+  const [visible, setVisible] = useState(false);
 
   const API_URL = "http://localhost:5001/Kelas";
 
@@ -27,6 +28,7 @@ function Kelas() {
 
   useEffect(() => {
     fetchData();
+    setTimeout(() => setVisible(true), 200);
   }, []);
 
   // Tambah / Update data kelas
@@ -39,15 +41,12 @@ function Kelas() {
 
     try {
       if (editId) {
-        // Update
         await axios.put(`${API_URL}/${editId}`, formData);
         Swal.fire("Berhasil", "Data kelas berhasil diperbarui", "success");
       } else {
-        // Tambah
         await axios.post(API_URL, formData);
         Swal.fire("Berhasil", "Data kelas berhasil ditambahkan", "success");
       }
-
       setFormData({ kelas: "", jurusan: "" });
       setEditId(null);
       fetchData();
@@ -81,103 +80,94 @@ function Kelas() {
     }
   };
 
-  // Edit data
   const handleEdit = (item) => {
     setFormData({ kelas: item.kelas, jurusan: item.jurusan });
     setEditId(item.id);
   };
 
-  // Batalkan edit
   const handleCancelEdit = () => {
     setFormData({ kelas: "", jurusan: "" });
     setEditId(null);
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50 flex justify-center">
-      <div className="w-full max-w-4xl space-y-6">
-        <h1 className="text-3xl font-bold text-center">Data Kelas</h1>
+    <div className={`transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+      <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="w-full max-w-6xl space-y-8">
+          <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">Data Kelas</h1>
 
-        {/* Form Tambah / Edit Kelas */}
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
-            placeholder="Kelas (X/XI/XII)"
-            value={formData.kelas}
-            onChange={e => setFormData({ ...formData, kelas: e.target.value })}
-            className="flex-1 p-2 border rounded"
-          />
-          <input
-            placeholder="Jurusan"
-            value={formData.jurusan}
-            onChange={e => setFormData({ ...formData, jurusan: e.target.value })}
-            className="flex-1 p-2 border rounded"
-          />
-          <button
-            type="submit"
-            className={`px-4 rounded ${editId ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"} text-white`}
-          >
-            {editId ? "Update" : "Tambah"}
-          </button>
-          {editId && (
+          {/* Form Tambah / Edit Kelas */}
+          <form onSubmit={handleSubmit} className="flex flex-wrap gap-2 mb-6">
+            <input
+              placeholder="Kelas (X/XI/XII)"
+              value={formData.kelas}
+              onChange={e => setFormData({ ...formData, kelas: e.target.value })}
+              className="flex-1 p-2 border rounded"
+            />
+            <input
+              placeholder="Jurusan"
+              value={formData.jurusan}
+              onChange={e => setFormData({ ...formData, jurusan: e.target.value })}
+              className="flex-1 p-2 border rounded"
+            />
             <button
-              type="button"
-              onClick={handleCancelEdit}
-              className="px-4 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
+              type="submit"
+              className={`px-4 rounded ${editId ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"} text-white`}
             >
-              Batal
+              {editId ? "Update" : "Tambah"}
             </button>
-          )}
-        </form>
+            {editId && (
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="px-4 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
+              >
+                Batal
+              </button>
+            )}
+          </form>
 
-        {/* Table Kelas */}
-        <div className="bg-white rounded shadow overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-blue-100">
-              <tr>
-                <th className="p-2">Kelas</th>
-                <th className="p-2">Jurusan</th>
-                <th className="p-2">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
+          {/* Table Kelas */}
+          <div className="bg-white p-6 rounded-2xl shadow-2xl border border-gray-200 overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead className="bg-blue-600 text-white">
                 <tr>
-                  <td colSpan="3" className="text-center p-4">Memuat data...</td>
+                  <th className="p-3">No</th>
+                  <th className="p-3">Kelas</th>
+                  <th className="p-3">Jurusan</th>
+                  <th className="p-3 text-center">Aksi</th>
                 </tr>
-              ) : data.length > 0 ? (
-                data.map(item => (
-                  <tr key={item.id} className="even:bg-gray-50">
-                    <td className="p-2">{item.kelas}</td>
-                    <td className="p-2">{item.jurusan}</td>
-                    <td className="p-2 flex gap-2">
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                      >
-                        Hapus
-                      </button>
-                    </td>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="4" className="text-center p-4">Memuat data...</td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="text-center p-4 text-gray-500">
-                    Belum ada data kelas
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-         <p className="text-center text-gray-500 text-sm pt-6">
+                ) : data.length > 0 ? (
+                  [...data].sort((a,b)=>a.id-b.id).map((item,index)=>(
+                    <tr key={item.id} className={`${index%2===0?"bg-gray-50":"bg-gray-100"} hover:bg-blue-50`}>
+                      <td className="p-3">{index+1}</td>
+                      <td className="p-3">{item.kelas}</td>
+                      <td className="p-3">{item.jurusan}</td>
+                      <td className="p-3 flex gap-2 justify-center">
+                        <button onClick={()=>handleEdit(item)} className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">Edit</button>
+                        <button onClick={()=>handleDelete(item.id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="p-4 text-center text-gray-500 italic">Belum ada data kelas</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-center text-gray-500 text-sm pt-6">
             © {new Date().getFullYear()} Dashboard Sekolah — dibuat dengan 💙
           </p>
+        </div>
       </div>
     </div>
   );

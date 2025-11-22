@@ -93,38 +93,24 @@
   ],
   "tagihan": [
     {
-      "id": "t1762501996891",
+      "id": "t1763776831593",
       "nama": "Moreno hitam asli lamongan",
-      "jenis_tagihan": "SPP",
+      "jenis_tagihan": "SERAGAM",
       "jumlah": 340000,
       "status": "Lunas"
     },
     {
-      "id": "t1762502005346",
-      "nama": "dafa",
+      "id": "t1763786956099",
+      "nama": "gilang",
+      "jenis_tagihan": "ALAT PRAKTEK",
+      "jumlah": 2222222,
+      "status": "Belum Lunas"
+    },
+    {
+      "id": "t1763786974570",
+      "nama": "darren",
       "jenis_tagihan": "SERAGAM",
-      "jumlah": 80000,
-      "status": "Lunas"
-    },
-    {
-      "id": "t1763438185032",
-      "nama": "bambang",
-      "jenis_tagihan": "UANG GEDUNG",
-      "jumlah": 270000,
-      "status": "Belum Lunas"
-    },
-    {
-      "id": "t1763438318112",
-      "nama": "noclant",
-      "jenis_tagihan": "APA YA ",
-      "jumlah": 1111,
-      "status": "Belum Lunas"
-    },
-    {
-      "id": "t1763608446254",
-      "nama": "ilham",
-      "jenis_tagihan": "UANG GEDUNG",
-      "jumlah": 50000,
+      "jumlah": 890000,
       "status": "Belum Lunas"
     }
   ],
@@ -145,7 +131,7 @@
       "id": "j1763355096538",
       "no": 3,
       "nama": "UANG GEDUNG",
-      "deskripsi": "UANG UNTUK GEDUNG",
+      "deskripsi": "",
       "aktif": true
     },
     {
@@ -153,6 +139,12 @@
       "no": 4,
       "nama": "APA YA ",
       "deskripsi": "----",
+      "aktif": false
+    },
+    {
+      "id": "j1763786941450",
+      "no": 5,
+      "nama": "ALAT PRAKTEK",
       "aktif": true
     }
   ],

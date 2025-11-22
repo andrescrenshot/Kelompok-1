@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 function JenisTagihan() {
   const [jenisTagihan, setJenisTagihan] = useState([]);
   const [nama, setNama] = useState("");
-  const [deskripsi, setDeskripsi] = useState("");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -26,8 +25,8 @@ function JenisTagihan() {
   }, []);
 
   const tambahJenisTagihan = async () => {
-    if (!nama || !deskripsi) {
-      Swal.fire("Isi nama dan deskripsi dulu!");
+    if (!nama) {
+      Swal.fire("Isi nama dulu!");
       return;
     }
 
@@ -37,12 +36,10 @@ function JenisTagihan() {
         id: `j${Date.now()}`,
         no: jenisTagihan.length + 1,
         nama,
-        deskripsi,
         aktif: true, // default aktif
       });
       Swal.fire("Berhasil ditambahkan!");
       setNama("");
-      setDeskripsi("");
       getJenisTagihan();
     } catch (err) {
       console.error(err);
@@ -73,23 +70,19 @@ function JenisTagihan() {
   };
 
   const editJenisTagihan = async (item) => {
-    const { value: formValues } = await Swal.fire({
+    const { value: namaBaru } = await Swal.fire({
       title: "Edit Jenis Tagihan",
-      html:
-        `<input id="swal-nama" class="swal2-input" placeholder="Nama" value="${item.nama}">` +
-        `<input id="swal-deskripsi" class="swal2-input" placeholder="Deskripsi" value="${item.deskripsi}">`,
-      focusConfirm: false,
-      preConfirm: () => {
-        const namaBaru = document.getElementById("swal-nama").value;
-        const deskripsiBaru = document.getElementById("swal-deskripsi").value;
-        return { nama: namaBaru, deskripsi: deskripsiBaru };
-      },
+      input: "text",
+      inputLabel: "Nama",
+      inputValue: item.nama,
+      showCancelButton: true,
+      preConfirm: (value) => value,
     });
-    if (formValues) {
+    if (namaBaru) {
       try {
         await axios.put(`${API_URL}/${item.id}`, {
           ...item,
-          ...formValues,
+          nama: namaBaru,
         });
         Swal.fire("Data berhasil diperbarui!");
         getJenisTagihan();
@@ -100,7 +93,6 @@ function JenisTagihan() {
     }
   };
 
-  // Toggle aktif / non-aktif
   const toggleAktif = async (item) => {
     try {
       await axios.put(`${API_URL}/${item.id}`, {
@@ -137,18 +129,11 @@ function JenisTagihan() {
               onChange={(e) => setNama(e.target.value)}
               className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
-            <input
-              type="text"
-              placeholder="Deskripsi"
-              value={deskripsi}
-              onChange={(e) => setDeskripsi(e.target.value)}
-              className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            />
             <button
-              disabled={loading || !nama || !deskripsi}
+              disabled={loading || !nama}
               onClick={tambahJenisTagihan}
               className={`${
-                loading || !nama || !deskripsi
+                loading || !nama
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500"
               } text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300`}
@@ -163,7 +148,6 @@ function JenisTagihan() {
                 <tr>
                   <th className="p-3 text-left">No</th>
                   <th className="p-3 text-left">Nama</th>
-                  <th className="p-3 text-left">Deskripsi</th>
                   <th className="p-3 text-center">Status</th>
                   <th className="p-3 text-center">Aksi</th>
                 </tr>
@@ -179,7 +163,6 @@ function JenisTagihan() {
                     >
                       <td className="p-3">{idx + 1}</td>
                       <td className="p-3">{item.nama}</td>
-                      <td className="p-3">{item.deskripsi}</td>
                       <td className="p-3 text-center">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-semibold ${
@@ -220,7 +203,7 @@ function JenisTagihan() {
                 ) : (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="4"
                       className="p-4 text-center text-gray-500 italic bg-gray-50"
                     >
                       Tidak ada data
@@ -239,6 +222,5 @@ function JenisTagihan() {
     </div>
   );
 }
-
 
 export default JenisTagihan;

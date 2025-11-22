@@ -52,9 +52,11 @@ function RekapTagihan() {
           {/* Ringkasan */}
           <div className="flex flex-wrap gap-4 mb-6">
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-semibold text-gray-700">Total Lunas</h2>
+              <h2 className="text-xl font-semibold text-gray-700">
+                Total Lunas
+              </h2>
               <p className="text-2xl font-bold text-green-600">
-                Rp {Math.round(totalLunas).toLocaleString()}
+                Rp {totalLunas.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
@@ -62,7 +64,7 @@ function RekapTagihan() {
                 Total Belum Lunas
               </h2>
               <p className="text-2xl font-bold text-red-600">
-                Rp {Math.round(totalBelum).toLocaleString()}
+                Rp {totalBelum.toLocaleString("id-ID")}
               </p>
             </div>
           </div>
@@ -72,10 +74,10 @@ function RekapTagihan() {
             <table className="w-full border-collapse overflow-hidden">
               <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                 <tr>
-                  <th className="p-3 text-left">No</th>
-                  <th className="p-3 text-left">Nama</th>
-                  <th className="p-3 text-left">Jenis Tagihan</th>
-                  <th className="p-3 text-left">Jumlah</th>
+                  <th className="p-3 text-center">No</th>
+                  <th className="p-3 text-center">Nama</th>
+                  <th className="p-3 text-center">Jenis Tagihan</th>
+                  <th className="p-3 text-center">Jumlah</th>
                   <th className="p-3 text-center">Status</th>
                 </tr>
               </thead>
@@ -90,9 +92,9 @@ function RekapTagihan() {
                     >
                       <td className="p-3">{idx + 1}</td>
                       <td className="p-3">{t.nama}</td>
-                      <td className="p-3">{t.jenis_tagihan}</td>
+                      <td className="p-3 text-center">{t.jenis_tagihan}</td>
                       <td className="p-3 text-right">
-                        Rp {Math.round(t.jumlah).toLocaleString()}
+                        Rp {t.jumlah.toLocaleString("id-ID")}
                       </td>
                       <td className="text-center">
                         <span
