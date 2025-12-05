@@ -1,116 +1,82 @@
 {
   "Daftar": [
     {
-      "id": "b404",
+      "id": "4d55",
       "nama": "dafa",
-      "kelas": "",
-      "jurusan": "",
-      "jabatan": "Guru Jumpshot",
-      "email": "dapagacor33@hayo.gmail",
-      "kategori": "Guru"
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "kelas@gmail.com",
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-7340"
     },
     {
-      "id": "6948",
-      "nama": "ayyas",
-      "kelas": "",
-      "jurusan": "",
-      "jabatan": "Satpam",
-      "email": "asgahara@gmail.com",
-      "kategori": "Karyawan"
+      "id": "ef03",
+      "nama": "darren",
+      "kelas": "-",
+      "jurusan": "-",
+      "jabatan": "Guru Biologi",
+      "email": "regis@gmail.com",
+      "kategori": "Guru",
+      "nomorUnik": "SIS-3881"
     },
     {
-      "id": "eda9",
-      "nama": "Moreno hitam asli lamongan",
+      "id": "4204",
+      "nama": "dafa",
       "kelas": "X",
       "jurusan": "TSM",
       "jabatan": "Belum ada jabatan/bagian",
-      "email": "regis@gmail.com",
-      "kategori": "Siswa"
-    },
-    {
-      "id": "f20e",
-      "nama": "Dimas",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "jabatan": "KETUA OSIS",
-      "email": "Dimasterban@gmail.com",
-      "kategori": "Siswa"
-    },
-    {
-      "id": "25f1",
-      "nama": "Mahmud",
-      "kelas": "X",
-      "jurusan": "TATA BUSANA",
-      "jabatan": "Belum ada jabatan/bagian",
-      "email": "Mahmudpink@gmail.com",
-      "kategori": "Siswa"
-    },
-    {
-      "id": "ac75",
-      "nama": "ilham",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "jabatan": "wakil osis",
-      "email": "kelas@gmail.com",
-      "kategori": "Siswa"
-    },
-    {
-      "id": "4ba9",
-      "nama": "darren",
-      "kelas": "X",
-      "jurusan": "AKUTANSI",
-      "jabatan": "Belum ada jabatan/bagian",
       "email": "dr@gmail.com",
-      "kategori": "Siswa"
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-4063"
     },
     {
-      "id": "efa8",
-      "nama": "gilang",
+      "id": "fabc",
+      "nama": "bambang",
       "kelas": "XI",
       "jurusan": "TSM",
       "jabatan": "Belum ada jabatan/bagian",
-      "email": "dr@gmail.com",
-      "kategori": "Siswa"
+      "email": "kelas@gmail.com",
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-3679"
     },
     {
-      "id": "607c",
-      "nama": "putri",
-      "kelas": "X",
-      "jurusan": "AKUTANSI",
-      "jabatan": "Belum ada jabatan/bagian",
-      "email": "pt@gmail.com",
-      "kategori": "Siswa"
+      "id": "80d0",
+      "nama": "bambang",
+      "kelas": "-",
+      "jurusan": "-",
+      "jabatan": "Guru Jumpshot",
+      "email": "Mahmudpink@gmail.com",
+      "kategori": "Karyawan",
+      "nomorUnik": "SIS-1268"
     },
     {
-      "id": "a1e5",
-      "nama": "dafa",
-      "kelas": "",
-      "jurusan": "",
-      "jabatan": "satpam",
-      "email": "dr@gmail.com",
-      "kategori": "Karyawan"
+      "id": "8c43",
+      "nama": "fadil ",
+      "kelas": "XII",
+      "jurusan": "TKJ",
+      "jabatan": "osis",
+      "email": "kelas@gmail.com",
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-6997"
     }
   ],
   "tagihan": [
     {
-      "id": "t1763776831593",
-      "nama": "Moreno hitam asli lamongan",
+      "id": "t1764116081935",
+      "nama": "Dimas",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "nomor_telepon": "",
       "jenis_tagihan": "SERAGAM",
-      "jumlah": 340000,
+      "jumlah": 222222,
       "status": "Lunas"
     },
     {
-      "id": "t1763786956099",
-      "nama": "gilang",
-      "jenis_tagihan": "ALAT PRAKTEK",
-      "jumlah": 2222222,
-      "status": "Belum Lunas"
-    },
-    {
-      "id": "t1763786974570",
+      "id": "t1764116620991",
       "nama": "darren",
-      "jenis_tagihan": "SERAGAM",
-      "jumlah": 890000,
+      "jenis_tagihan": "UANG GEDUNG",
+      "jumlah": 2323223,
       "status": "Belum Lunas"
     }
   ],
@@ -172,7 +138,7 @@
     {
       "id": "k1763608093261",
       "kategori_nama": "SATPAM",
-      "aktif": true
+      "aktif": false
     }
   ],
   "Kelas": [
@@ -210,6 +176,82 @@
       "id": "034a",
       "kelas": "X",
       "jurusan": "TATA BUSANA"
+    }
+  ],
+  "presensi": [
+    {
+      "id": "ad35",
+      "nomorUnik": "SIS-7340",
+      "nama": "dafa",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "kategori": "Siswa",
+      "jabatan": "Belum ada jabatan/bagian",
+      "tanggal": "2025-12-03",
+      "jamMasuk": "08.49",
+      "jamPulang": ""
+    },
+    {
+      "id": "fe00",
+      "nomorUnik": "SIS-3881",
+      "nama": "darren",
+      "kelas": "-",
+      "jurusan": "-",
+      "kategori": "Guru",
+      "jabatan": "Guru Biologi",
+      "tanggal": "2025-12-03",
+      "jamMasuk": "10.15",
+      "jamPulang": ""
+    },
+    {
+      "id": "ebcd",
+      "nomorUnik": "SIS-3679",
+      "nama": "bambang",
+      "kelas": "XI",
+      "jurusan": "TSM",
+      "kategori": "Siswa",
+      "jabatan": "Belum ada jabatan/bagian",
+      "tanggal": "2025-12-03",
+      "jamMasuk": "10.52",
+      "jamPulang": ""
+    },
+    {
+      "id": "4b26",
+      "nomorUnik": "SIS-6997",
+      "nama": "fadil ",
+      "kelas": "XII",
+      "jurusan": "TKJ",
+      "kategori": "Siswa",
+      "jabatan": "osis",
+      "tanggal": "2025-12-04",
+      "jamMasuk": "07.32",
+      "jamPulang": ""
+    },
+    {
+      "id": "5e54",
+      "nomorUnik": "SIS-3881",
+      "nama": "darren",
+      "kelas": "-",
+      "jurusan": "-",
+      "kategori": "Guru",
+      "jabatan": "Guru Biologi",
+      "tanggal": "2025-12-04",
+      "jamMasuk": "07.35",
+      "jamPulang": ""
+    },
+    {
+      "id": "d246",
+      "nomorUnik": "SIS-7340",
+      "nama": "dafa",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "Belum ada jabatan/bagian",
+      "tanggal": "2025-12-05",
+      "jamMasuk": "08.20",
+      "jamPulang": "",
+      "statusMasuk": "Terlambat",
+      "statusPulang": ""
     }
   ]
 }

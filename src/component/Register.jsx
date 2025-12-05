@@ -5,12 +5,14 @@ import logo from "../../public/kakangku.jpg";
 
 function Register() {
   const [formData, setFormData] = useState({
-    nama: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +33,23 @@ function Register() {
       return;
     }
 
-    users.push(formData);
+    // VALIDASI KONFIRMASI PASSWORD
+    if (formData.password !== formData.confirmPassword) {
+      Swal.fire({
+        title: "Konfirmasi password tidak cocok!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    const newUser = {
+      nama: formData.nama,
+      email: formData.email,
+      password: formData.password,
+    };
+
+    users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
 
     Swal.fire({
@@ -45,7 +63,7 @@ function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[400px] overflow-hidden">
+      <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[480px] overflow-hidden">
         
         <div className="w-1/3 flex items-center justify-center bg-white p-6 shadow-md">
           <img src={logo} alt="Logo" className="w-90 h-90 object-contain" />
@@ -53,21 +71,8 @@ function Register() {
 
         <div className="w-2/3 p-8 flex flex-col justify-center">
           <h1 className="text-2xl font-bold text-center mb-6">Registrasi</h1>
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Nama Lengkap
-              </label>
-              <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
-                type="text"
-                name="nama"
-                value={formData.nama}
-                onChange={handleChange}
-                placeholder="Masukan Nama Anda"
-                required
-              />
-            </div>
 
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -84,6 +89,7 @@ function Register() {
               />
             </div>
 
+            {/* PASSWORD */}
             <div className="relative">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Password
@@ -97,14 +103,37 @@ function Register() {
                 placeholder="Masukan Password"
                 required
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
               >
-                <i
-                  className={`ri-${showPassword ? "eye-line" : "eye-off-line"} text-xl`}
-                ></i>
+                <i className={`ri-${showPassword ? "eye-line" : "eye-off-line"} text-xl`}></i>
+              </button>
+            </div>
+
+            {/* CONFIRM PASSWORD */}
+            <div className="relative">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Konfirmasi Password
+              </label>
+              <input
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Masukan ulang password"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
+              >
+                <i className={`ri-${showConfirmPassword ? "eye-line" : "eye-off-line"} text-xl`}></i>
               </button>
             </div>
 

@@ -231,10 +231,10 @@ function Tagihan() {
               <table className="w-full border-collapse">
                 <thead className="bg-blue-600 text-white">
                   <tr>
-                    <th className="p-3 text-left">No</th>
-                    <th className="p-3 text-left">Nama</th>
-                    <th className="p-3 text-left">Jenis Tagihan</th>
-                    <th className="p-3 text-left">Jumlah</th>
+                    <th className="p-3 text-center">No</th>
+                    <th className="p-3 text-center">Nama</th>
+                    <th className="p-3 text-center">Jenis Tagihan</th>
+                    <th className="p-3 text-center">Jumlah</th>
                     <th className="p-3 text-center">Status</th>
                     <th className="p-3 text-center">Aksi</th>
                   </tr>
@@ -251,7 +251,7 @@ function Tagihan() {
                         <td className="p-3">{i + 1}</td>
                         <td className="p-3">{item.nama}</td>
                         <td className="p-3">{item.jenis_tagihan}</td>
-                        <td className="p-3 text-center">{formatRupiah(item.jumlah)}</td>
+                        <td className="p-3 text-right">{formatRupiah(item.jumlah)}</td>
                         <td className="p-3 text-center">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-semibold ${

@@ -10,9 +10,9 @@ function Sidnav() {
 
   // Grup menu
   const menuAtas = [
-    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" },
+    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" }
   ];
-
+  
   const menuSiswaGuru = [
     { path: "/KategoriData", label: "Kategori Data", icon: "ri-clipboard-line" },
     { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
@@ -23,7 +23,11 @@ function Sidnav() {
     { path: "/JenisTagihan", label: "Kategori Tagihan", icon: "ri-price-tag-3-line text-orange-400" },
     { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
     { path: "/RekapTagihan", label: "Rekap Tagihan", icon: "ri-file-list-3-line" },
-    
+  ];
+
+  const menuPresensi = [
+    { path: "/Presensi", label: "Presensi", icon: "ri-hourglass-2-fill text-blue-200" },
+    { path: "/RekapPresensi", label: "RekapPresensi", icon: "ri-time-line text-blue-300" },
   ];
 
   const SidebarButton = ({ item }) => (
@@ -42,6 +46,7 @@ function Sidnav() {
 
   return (
     <>
+      {/* Toggle Mobile Button */}
       <button
         className="fixed top-4 left-4 z-50 text-white bg-blue-700 hover:bg-blue-800 p-2 rounded-md md:hidden shadow-md transition duration-300"
         onClick={() => setOpen(!open)}
@@ -49,18 +54,24 @@ function Sidnav() {
         <i className="ri-menu-line text-2xl"></i>
       </button>
 
+      {/* SIDEBAR */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white flex flex-col justify-between shadow-2xl transform ${
           open ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out md:translate-x-0`}
       >
-        <div>
-          <div className="text-2xl font-extrabold mb-8 text-center bg-blue-800/90 py-6 tracking-wide shadow-inner">
+        {/* Kontainer scrollable */}
+        <div className="overflow-y-auto custom-scroll h-full">
+
+          {/* HEADER */}
+          <div className="text-2xl font-extrabold mb-8 text-center bg-blue-800/90 py-6 tracking-wide shadow-inner sticky top-0">
             <i className="ri-bar-chart-grouped-line mr-2 text-yellow-300"></i>
-            Statistik Data
+            Binusa.S
           </div>
 
-          <nav className="px-4 space-y-2">
+          {/* MENU */}
+          <nav className="px-4 space-y-2 pb-24">
+
             {menuAtas.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
@@ -74,9 +85,16 @@ function Sidnav() {
             {menuTagihan.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
+
+            <div className="border-t border-white/40 my-3"></div>
+            {menuPresensi.map((item) => (
+              <SidebarButton key={item.path} item={item} />
+            ))}
+
           </nav>
         </div>
 
+        {/* BOTTOM BUTTON */}
         <div className="p-4 border-t border-blue-600/40">
           <button
             onClick={() => navigate("/")}
@@ -90,6 +108,19 @@ function Sidnav() {
           </p>
         </div>
       </div>
+
+      {/* Tambahkan CSS scrollbar agar halus */}
+      <style>
+        {`
+          .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+          }
+        `}
+      </style>
     </>
   );
 }

@@ -147,7 +147,7 @@ function JenisTagihan() {
               <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                 <tr>
                   <th className="p-3 text-left">No</th>
-                  <th className="p-3 text-left">Nama</th>
+                  <th className="p-3 text-center">Nama</th>
                   <th className="p-3 text-center">Status</th>
                   <th className="p-3 text-center">Aksi</th>
                 </tr>

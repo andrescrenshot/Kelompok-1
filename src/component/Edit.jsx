@@ -1,3 +1,4 @@
+// src/pages/EditData.js
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,9 +11,7 @@ function EditData() {
   const API_KATEGORI = "http://localhost:5001/Kategori";
   const API_KELAS = "http://localhost:5001/Kelas";
 
-  const [formData, setFormData] = useState({
-    nama: "", kelas: "", jurusan: "", jabatan: "", email: "", kategori: "Siswa",
-  });
+  const [formData, setFormData] = useState({ nama: "", kelas: "", jurusan: "", jabatan: "", email: "", kategori: "Siswa", nomorUnik: "" });
   const [kategoriAktif, setKategoriAktif] = useState([]);
   const [kelasList, setKelasList] = useState([]);
   const [jurusanList, setJurusanList] = useState([]);
@@ -50,14 +49,11 @@ function EditData() {
     getUserData();
   }, [id]);
 
-  // Update jurusan saat kelas berubah atau kelasList siap
   useEffect(() => {
     if (!kelasList.length) return;
     if (!formData.kelas) { setJurusanList([]); return; }
-
     const jurusanFiltered = [...new Set(kelasList.filter(k=>k.kelas===formData.kelas).map(k=>k.jurusan).filter(Boolean))];
     setJurusanList(jurusanFiltered);
-
     if (!jurusanFiltered.includes(formData.jurusan)) {
       setFormData(prev => ({ ...prev, jurusan: "" }));
     }
@@ -98,6 +94,10 @@ function EditData() {
       <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm mt-20">
         <h1 className="text-2xl font-bold text-center mb-6">Edit Data</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label>Nomor Unik</label>
+            <input type="text" value={formData.nomorUnik} className="w-full border p-2 rounded bg-gray-200" disabled />
+          </div>
           <div>
             <label>Nama</label>
             <input type="text" name="nama" value={formData.nama} onChange={handleChange} className="w-full border p-2 rounded" required />

@@ -12,6 +12,8 @@ import Kelas from "./component/Kelas";
 import JenisTagihan from "./tagihan/JenisTagihan"
 import KategoriData from "./component/KategoriData"
 import RekapTagihan from "./tagihan/RekapTagihan";
+import Presensi from "./component/Presensi/Presensi";
+import RekapPresensi from "./component/Presensi/RekapPresensi";
 
 
 function App() {
@@ -32,6 +34,9 @@ function App() {
           <Route path="/KategoriData" element={<KategoriData />} />
           <Route path="/Kelas" element={<Kelas />} />
           <Route path="/RekapTagihan" element={<RekapTagihan />} />
+          <Route path="/Presensi" element={<Presensi />} />
+          <Route path="/RekapPresensi" element={<RekapPresensi />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
