@@ -41,16 +41,6 @@
       "nomorUnik": "SIS-3679"
     },
     {
-      "id": "80d0",
-      "nama": "bambang",
-      "kelas": "-",
-      "jurusan": "-",
-      "jabatan": "Guru Jumpshot",
-      "email": "Mahmudpink@gmail.com",
-      "kategori": "Karyawan",
-      "nomorUnik": "SIS-1268"
-    },
-    {
       "id": "8c43",
       "nama": "fadil ",
       "kelas": "XII",
@@ -59,6 +49,36 @@
       "email": "kelas@gmail.com",
       "kategori": "Siswa",
       "nomorUnik": "SIS-6997"
+    },
+    {
+      "id": "76ad",
+      "nama": "ayyas",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "KETUA OSIS",
+      "email": "ayyaskrapyak@gmai.com",
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-3746"
+    },
+    {
+      "id": "c8de",
+      "nama": "bobi",
+      "kelas": "-",
+      "jurusan": "-",
+      "jabatan": "Guru Agama",
+      "email": "dr@gmail.com",
+      "kategori": "Guru",
+      "nomorUnik": "SIS-2968"
+    },
+    {
+      "id": "e494",
+      "nama": "obunga",
+      "kelas": "XI",
+      "jurusan": "TSM",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "kelas@gmail.com",
+      "kategori": "Siswa",
+      "nomorUnik": "SIS-8295"
     }
   ],
   "tagihan": [
@@ -252,6 +272,34 @@
       "jamPulang": "",
       "statusMasuk": "Terlambat",
       "statusPulang": ""
+    },
+    {
+      "id": "4eb4",
+      "nomorUnik": "SIS-3881",
+      "nama": "darren",
+      "kategori": "Guru",
+      "kelas": "-",
+      "jurusan": "-",
+      "jabatan": "Guru Biologi",
+      "tanggal": "2025-12-08",
+      "jamMasuk": "07.31",
+      "jamPulang": "14.40",
+      "statusMasuk": "Terlambat",
+      "statusPulang": "Tepat Waktu"
+    },
+    {
+      "id": "50ea",
+      "nomorUnik": "SIS-7340",
+      "nama": "dafa",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "jabatan": "Belum ada jabatan/bagian",
+      "tanggal": "2025-12-08",
+      "jamMasuk": "10.18",
+      "jamPulang": "14.39",
+      "statusMasuk": "Terlambat",
+      "statusPulang": "Tepat Waktu"
     }
   ]
 }

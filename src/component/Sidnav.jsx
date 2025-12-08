@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidnav() {
@@ -6,13 +6,19 @@ function Sidnav() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
   const isActive = (path) => location.pathname === path;
 
-  // Grup menu
+  // =========================
+  // MENU DEFINISI
+  // =========================
   const menuAtas = [
-    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" }
+    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" },
   ];
-  
+
   const menuSiswaGuru = [
     { path: "/KategoriData", label: "Kategori Data", icon: "ri-clipboard-line" },
     { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
@@ -27,9 +33,12 @@ function Sidnav() {
 
   const menuPresensi = [
     { path: "/Presensi", label: "Presensi", icon: "ri-hourglass-2-fill text-blue-200" },
-    { path: "/RekapPresensi", label: "RekapPresensi", icon: "ri-time-line text-blue-300" },
+    { path: "/RekapPresensi", label: "Rekap Presensi", icon: "ri-time-line text-blue-300" },
   ];
 
+  // =========================
+  // SIDEBAR BUTTON COMPONENT
+  // =========================
   const SidebarButton = ({ item }) => (
     <button
       onClick={() => navigate(item.path)}
@@ -56,51 +65,51 @@ function Sidnav() {
 
       {/* SIDEBAR */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white flex flex-col justify-between shadow-2xl transform ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white flex flex-col shadow-2xl transform transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:translate-x-0`}
+        } md:translate-x-0`}
       >
-        {/* Kontainer scrollable */}
-        <div className="overflow-y-auto custom-scroll h-full">
+        {/* HEADER */}
+        <div className="flex-none text-2xl font-extrabold text-center bg-blue-800/90 py-6 tracking-wide shadow-inner sticky top-0 z-50">
+          <i className="ri-bar-chart-grouped-line mr-2 text-yellow-300"></i>
+          Binusa.S
+        </div>
 
-          {/* HEADER */}
-          <div className="text-2xl font-extrabold mb-8 text-center bg-blue-800/90 py-6 tracking-wide shadow-inner sticky top-0">
-            <i className="ri-bar-chart-grouped-line mr-2 text-yellow-300"></i>
-            Binusa.S
-          </div>
-
-          {/* MENU */}
+        {/* MENU SCROLLABLE */}
+        <div className="flex-1 overflow-y-auto custom-scroll">
           <nav className="px-4 space-y-2 pb-24">
-
             {menuAtas.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
 
             <div className="border-t border-white/40 my-3"></div>
+
             {menuSiswaGuru.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
 
             <div className="border-t border-white/40 my-3"></div>
+
             {menuTagihan.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
 
             <div className="border-t border-white/40 my-3"></div>
+
             {menuPresensi.map((item) => (
               <SidebarButton key={item.path} item={item} />
             ))}
-
           </nav>
         </div>
 
-        {/* BOTTOM BUTTON */}
-        <div className="p-4 border-t border-blue-600/40">
+        {/* BOTTOM LOGOUT */}
+        <div className="flex-none p-4 border-t border-blue-600/40">
           <button
             onClick={() => navigate("/")}
             className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 py-2 rounded-lg font-bold transition-all duration-300 shadow-md"
           >
-            <i className="ri-logout-box-line text-lg"></i> Keluar
+            <i className="ri-logout-box-line text-lg"></i>
+            Keluar
           </button>
 
           <p className="text-xs text-center text-blue-200 mt-3">
@@ -109,7 +118,7 @@ function Sidnav() {
         </div>
       </div>
 
-      {/* Tambahkan CSS scrollbar agar halus */}
+      {/* SCROLLBAR STYLING */}
       <style>
         {`
           .custom-scroll::-webkit-scrollbar {

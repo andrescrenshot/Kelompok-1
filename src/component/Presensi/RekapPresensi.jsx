@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 
 function RekapPresensi() {
   const [presensi, setPresensi] = useState([]);
@@ -10,6 +9,9 @@ function RekapPresensi() {
 
   const API_PRESENSI = "http://localhost:5001/presensi";
 
+  // ================================
+  // GET DATA PRESENSI
+  // ================================
   const getPresensi = async () => {
     try {
       setLoading(true);
@@ -26,106 +28,132 @@ function RekapPresensi() {
     getPresensi();
   }, []);
 
-  // Filter berdasarkan tanggal dan kategori
-  const filteredPresensi = presensi.filter(p => {
-    const matchTanggal = filterTanggal ? p.tanggal === filterTanggal : true;
-    const matchKategori = filterKategori === "Semua" ? true : p.kategori === filterKategori;
+  // ================================
+  // FILTER DATA
+  // ================================
+  const filteredPresensi = presensi.filter((p) => {
+    const matchTanggal =
+      filterTanggal ? p.tanggal === filterTanggal : true;
+
+    const matchKategori =
+      filterKategori === "Semua" ? true : p.kategori === filterKategori;
+
     return matchTanggal && matchKategori;
   });
 
-  // Fungsi untuk menandai telat
-  const checkTelat = (jamMasuk) => {
-    if (!jamMasuk) return false;
-    const [jam, menit] = jamMasuk.split(":").map(Number);
-    const totalMenit = jam * 60 + menit;
-    return totalMenit > 480; // 08:00 = 480 menit
-  };
-
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <h2 className="text-2xl font-bold mb-6">Rekap Presensi</h2>
+    <div className="min-h-screen p-8 bg-gradient-to-br from-gray-100 to-blue-200 animate-fadeIn">
 
-      <div className="mb-4 flex gap-2 items-center">
-        <label className="font-semibold">Filter Tanggal:</label>
-        <input
-          type="date"
-          value={filterTanggal}
-          onChange={(e) => setFilterTanggal(e.target.value)}
-          className="border px-2 py-1 rounded"
-        />
-        
+      <h2 className="text-3xl font-extrabold mb-6 text-gray-800 text-center">
+        Rekap Presensi
+      </h2>
+
+      {/* FILTER CARD */}
+      <div className="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-wrap items-center gap-4">
+
+        <div>
+          <label className="font-semibold text-sm">Filter Tanggal</label>
+          <input
+            type="date"
+            value={filterTanggal}
+            onChange={(e) => setFilterTanggal(e.target.value)}
+            className="border px-3 py-2 rounded-lg block mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div>
+          <label className="font-semibold text-sm">Filter Kategori</label>
+          <select
+            value={filterKategori}
+            onChange={(e) => setFilterKategori(e.target.value)}
+            className="border px-3 py-2 rounded-lg block mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="Semua">Semua</option>
+            <option value="Siswa">Siswa</option>
+            <option value="Guru">Guru</option>
+            <option value="Karyawan">Karyawan</option>
+          </select>
+        </div>
+
         <button
           onClick={() => {
             setFilterTanggal("");
             setFilterKategori("Semua");
           }}
-          className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 transition"
+          className="ml-auto bg-gray-300 px-4 py-2 mt-5 rounded-lg text-sm hover:bg-gray-400 shadow"
         >
-          Reset
+          Reset Filter
         </button>
-
-        <label className="font-semibold">Filter Kategori:</label>
-        <select
-          value={filterKategori}
-          onChange={(e) => setFilterKategori(e.target.value)}
-          className="border px-2 py-1 rounded"
-        >
-          <option value="Semua">Semua</option>
-          <option value="Siswa">Siswa</option>
-          <option value="Guru">Guru</option>
-          <option value="Karyawan">Karyawan</option>
-        </select>
-
       </div>
 
-      <div className="overflow-x-auto bg-white p-4 rounded shadow">
+      {/* TABLE */}
+      <div className="overflow-x-auto bg-white p-4 rounded-xl shadow-lg">
+
         {loading ? (
-          <p className="text-center">Memuat data...</p>
+          <div className="flex justify-center py-10">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
         ) : filteredPresensi.length === 0 ? (
-          <p className="text-center text-gray-500">Tidak ada data presensi</p>
+          <p className="text-center text-gray-500 py-4">
+            Tidak ada data presensi.
+          </p>
         ) : (
-          <table className="w-full border-collapse text-sm">
-            <thead className="bg-blue-600 text-white">
-              <tr>
-                <th className="p-2 border">No</th>
-                <th className="p-2 border">Nomor Unik</th>
-                <th className="p-2 border">Nama</th>
-                <th className="p-2 border">Kategori</th>
-                <th className="p-2 border">Kelas</th>
-                <th className="p-2 border">Jurusan</th>
-                <th className="p-2 border">Tanggal</th>
-                <th className="p-2 border">Jam Masuk</th>
-                <th className="p-2 border">Jam Pulang</th>
-                <th className="p-2 border">Status</th>
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-blue-600 text-white">
+                <th className="p-3 border">No</th>
+                <th className="p-3 border">Nomor Unik</th>
+                <th className="p-3 border">Nama</th>
+                <th className="p-3 border">Kategori</th>
+                <th className="p-3 border">Kelas</th>
+                <th className="p-3 border">Jurusan</th>
+                <th className="p-3 border">Tanggal</th>
+                <th className="p-3 border">Jam Masuk</th>
+                <th className="p-3 border">Jam Pulang</th>
+                <th className="p-3 border">Status</th>
               </tr>
             </thead>
+
             <tbody>
               {filteredPresensi.map((p, idx) => {
-                let status = "";
-                if (!p.jamMasuk && p.jamPulang) {
-                  status = "Presensi di jam pulang, harus dicatat masuk juga";
-                } else if (checkTelat(p.jamMasuk)) {
-                  status = "Telat Masuk";
-                } else if (!p.jamMasuk) {
-                  status = "Belum Presensi";
-                } else {
-                  status = "Tepat Waktu";
+                // ================================
+                // STATUS PRESENSI
+                // ================================
+
+                let statusFinal = "-";
+                let color = "";
+
+                if (!p.jamMasuk && !p.jamPulang) {
+                  statusFinal = "Belum Presensi";
+                  color = "text-gray-500";
+                } else if (p.jamMasuk && !p.jamPulang) {
+                  statusFinal = p.statusMasuk || "Masuk";
+                  color =
+                    statusFinal === "Terlambat"
+                      ? "text-red-600 font-semibold"
+                      : "text-green-600 font-semibold";
+                } else if (p.jamMasuk && p.jamPulang) {
+                  statusFinal = `${p.statusMasuk || ""} / ${p.statusPulang || ""}`;
+                  color = "text-blue-700 font-semibold";
                 }
 
                 return (
-                  <tr key={p.id} className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"}`}>
-                    <td className="p-2 border">{idx + 1}</td>
+                  <tr
+                    key={p.id}
+                    className={`${
+                      idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+                    } hover:bg-blue-50 transition`}
+                  >
+                    <td className="p-2 border text-center">{idx + 1}</td>
                     <td className="p-2 border">{p.nomorUnik}</td>
-                    <td className="p-2 border">{p.nama}</td>
+                    <td className="p-2 border font-semibold">{p.nama}</td>
                     <td className="p-2 border">{p.kategori}</td>
                     <td className="p-2 border">{p.kelas}</td>
                     <td className="p-2 border">{p.jurusan}</td>
                     <td className="p-2 border">{p.tanggal}</td>
-                    <td className={`p-2 border ${checkTelat(p.jamMasuk) ? "text-red-600" : ""}`}>
-                      {p.jamMasuk || "-"}
-                    </td>
+                    <td className="p-2 border">{p.jamMasuk || "-"}</td>
                     <td className="p-2 border">{p.jamPulang || "-"}</td>
-                    <td className="p-2 border font-semibold">{status}</td>
+                    <td className={`p-2 border ${color}`}>{statusFinal}</td>
                   </tr>
                 );
               })}
@@ -133,6 +161,19 @@ function RekapPresensi() {
           </table>
         )}
       </div>
+
+      {/* Fade Animation */}
+      <style>
+        {`
+        .animate-fadeIn {
+          animation: fadeIn .5s ease;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        `}
+      </style>
     </div>
   );
 }

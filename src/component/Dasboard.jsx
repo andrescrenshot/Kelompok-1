@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-// Memoized Table Users
+// ============================
+// Table Users (Siswa, Guru, Karyawan)
+// ============================
 const TableUsers = React.memo(
   ({
     title,
@@ -14,7 +16,8 @@ const TableUsers = React.memo(
     search,
   }) => {
     let filtered = [];
-    if (kategori === "Siswa")
+
+    if (kategori === "Siswa") {
       filtered = data.filter(
         (d) =>
           (d.kategori || "").trim() === "Siswa" &&
@@ -22,18 +25,13 @@ const TableUsers = React.memo(
           (filterJurusan === "Semua" || d.jurusan === filterJurusan) &&
           (d.nama || "").toLowerCase().includes(search.toLowerCase())
       );
-    if (kategori === "Guru")
+    } else {
       filtered = data.filter(
         (d) =>
-          (d.kategori || "").trim() === "Guru" &&
+          (d.kategori || "").trim() === kategori &&
           (d.nama || "").toLowerCase().includes(search.toLowerCase())
       );
-    if (kategori === "Karyawan")
-      filtered = data.filter(
-        (d) =>
-          (d.kategori || "").trim() === "Karyawan" &&
-          (d.nama || "").toLowerCase().includes(search.toLowerCase())
-      );
+    }
 
     const isSiswa = kategori === "Siswa";
     const displayed = showAll[kategori] ? filtered : filtered.slice(0, 5);
@@ -43,17 +41,18 @@ const TableUsers = React.memo(
         <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">
           {title}
         </h2>
+
         <div className="overflow-x-auto rounded-lg shadow-inner">
           <table className="w-full border-collapse overflow-hidden">
             <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
               <tr>
-                <th className="p-3 text-center">No</th>
-                <th className="p-3 text-center">Nama</th>
-                {isSiswa && <th className="p-3 text-center">Kelas</th>}
-                {isSiswa && <th className="p-3 text-center">Jurusan</th>}
-                <th className="p-3 text-center">Jabatan/Bagian</th>
-                <th className="p-3 text-center">Email</th>
-                <th className="p-3 text-center">Kategori</th>
+                <th className="p-3 text-left">No</th>
+                <th className="p-3 text-left">Nama</th>
+                {isSiswa && <th className="p-3 text-left">Kelas</th>}
+                {isSiswa && <th className="p-3 text-left">Jurusan</th>}
+                <th className="p-3 text-left">Jabatan/Bagian</th>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">Kategori</th>
               </tr>
             </thead>
             <tbody>
@@ -66,16 +65,14 @@ const TableUsers = React.memo(
                     } hover:bg-blue-50 transition`}
                   >
                     <td className="p-3 text-center">{i + 1}</td>
-                    <td className="p-3 text-center">{item.nama}</td>
+                    <td className="p-3 text-left">{item.nama}</td>
+                    {isSiswa && <td className="p-3 text-left">{item.kelas}</td>}
                     {isSiswa && (
-                      <td className="p-3 text-center">{item.kelas}</td>
+                      <td className="p-3 text-left">{item.jurusan}</td>
                     )}
-                    {isSiswa && (
-                      <td className="p-3 text-center">{item.jurusan}</td>
-                    )}
-                    <td className="p-3 text-center">{item.jabatan}</td>
-                    <td className="p-3 text-center">{item.email}</td>
-                    <td className="p-3 text-center">{item.kategori}</td>
+                    <td className="p-3 text-left">{item.jabatan}</td>
+                    <td className="p-3 text-left">{item.email}</td>
+                    <td className="p-3 text-left">{item.kategori}</td>
                   </tr>
                 ))
               ) : (
@@ -111,7 +108,9 @@ const TableUsers = React.memo(
   }
 );
 
-// Memoized Table Tagihan
+// ============================
+// Table Tagihan
+// ============================
 const TableTagihan = React.memo(
   ({ tagihan, searchTagihan, filterStatus, filterJenisTagihan }) => {
     const filtered = tagihan.filter((t) => {
@@ -193,13 +192,15 @@ const TableTagihan = React.memo(
   }
 );
 
+// ============================
+// Dashboard
+// ============================
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [tagihan, setTagihan] = useState([]);
   const [filterKelas, setFilterKelas] = useState("Semua");
   const [filterJurusan, setFilterJurusan] = useState("Semua");
   const [search, setSearch] = useState("");
-  const [visible, setVisible] = useState(false);
   const [showAll, setShowAll] = useState({
     Siswa: false,
     Guru: false,
@@ -209,63 +210,54 @@ const Dashboard = () => {
   const [filterStatus, setFilterStatus] = useState("Semua");
   const [filterJenisTagihan, setFilterJenisTagihan] = useState("Semua");
   const [jenisTagihanOptions, setJenisTagihanOptions] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   const API_USERS = "http://localhost:5001/Daftar";
   const API_TAGIHAN = "http://localhost:5001/tagihan";
 
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(API_USERS);
-      setData(res.data.Daftar || res.data || []);
-    } catch (err) {
-      console.error("Gagal ambil data pengguna:", err);
-    }
-  };
-
-  const fetchTagihan = async () => {
-    try {
-      const res = await axios.get(API_TAGIHAN);
-      const cleanData = res.data.map((t) => ({
-        ...t,
-        jumlah: Math.round(t.jumlah || 0),
-      }));
-      setTagihan(cleanData);
-      const jenisUnik = [...new Set(cleanData.map((t) => t.jenis_tagihan))];
-      setJenisTagihanOptions(jenisUnik);
-    } catch (err) {
-      console.error("Gagal ambil data tagihan:", err);
-    }
-  };
-
+  // Fetch data
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(API_USERS);
+        setData(res.data.Daftar || res.data || []);
+      } catch (err) {
+        console.error("Gagal ambil data pengguna:", err);
+      }
+    };
+
+    const fetchTagihan = async () => {
+      try {
+        const res = await axios.get(API_TAGIHAN);
+        const cleanData = res.data.map((t) => ({
+          ...t,
+          jumlah: Math.round(t.jumlah || 0),
+        }));
+        setTagihan(cleanData);
+        const jenisUnik = [...new Set(cleanData.map((t) => t.jenis_tagihan))];
+        setJenisTagihanOptions(jenisUnik);
+      } catch (err) {
+        console.error("Gagal ambil data tagihan:", err);
+      }
+    };
+
     fetchUsers();
     fetchTagihan();
     setTimeout(() => setVisible(true), 200);
   }, []);
 
-  // Statistik
-  const totalGuru = data.filter(
-    (d) => (d.kategori || "").trim() === "Guru"
-  ).length;
-  const totalSiswa = data.filter(
-    (d) => (d.kategori || "").trim() === "Siswa"
-  ).length;
-  const totalKaryawan = data.filter(
-    (d) => (d.kategori || "").trim() === "Karyawan"
-  ).length;
+  // Statistik Pengguna
+  const totalGuru = data.filter((d) => (d.kategori || "").trim() === "Guru").length;
+  const totalSiswa = data.filter((d) => (d.kategori || "").trim() === "Siswa").length;
+  const totalKaryawan = data.filter((d) => (d.kategori || "").trim() === "Karyawan").length;
   const totalSemua = data.length;
 
+  // Statistik Tagihan
   const totalTagihan = tagihan.length;
-  const totalLunas = tagihan.filter(
-    (t) => (t.status || "").trim() === "Lunas"
-  ).length;
-  const totalBelumLunas = tagihan.filter(
-    (t) => (t.status || "").trim() === "Belum Lunas"
-  ).length;
-  const totalNominal = tagihan.reduce(
-    (sum, t) => sum + Math.round(t.jumlah || 0),
-    0
-  );
+  const totalLunas = tagihan.filter((t) => (t.status || "").trim() === "Lunas").length;
+  const totalBelumLunas = tagihan.filter((t) => (t.status || "").trim() === "Belum Lunas").length;
+  const totalNominal = tagihan.reduce((sum, t) => sum + Math.round(t.jumlah || 0), 0);
+
   const formatRupiah = (num) =>
     new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -274,16 +266,10 @@ const Dashboard = () => {
     }).format(Math.round(num || 0));
 
   return (
-    <div
-      className={`transition-all duration-700 ${
-        visible ? "opacity-100" : "opacity-0"
-      }`}
-    >
+    <div className={`transition-all duration-700 ${visible ? "opacity-100" : "opacity-0"}`}>
       <div className="min-h-screen p-8 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="w-full max-w-7xl space-y-8">
-          <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
-            DASHBOARD
-          </h1>
+          <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">DASHBOARD</h1>
 
           {/* Statistik Pengguna */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -297,9 +283,7 @@ const Dashboard = () => {
                 key={idx}
                 className="bg-white/90 p-5 rounded-2xl shadow-md text-center"
               >
-                <h2 className="text-lg font-semibold mb-2 text-gray-700">
-                  {card.label}
-                </h2>
+                <h2 className="text-lg font-semibold mb-2 text-gray-700">{card.label}</h2>
                 <p className="text-2xl font-bold">{card.value}</p>
               </div>
             ))}
@@ -317,25 +301,21 @@ const Dashboard = () => {
                 key={idx}
                 className="bg-white/90 p-5 rounded-2xl shadow-md text-center"
               >
-                <h2 className="text-lg font-semibold mb-2 text-gray-700">
-                  {card.label}
-                </h2>
+                <h2 className="text-lg font-semibold mb-2 text-gray-700">{card.label}</h2>
                 <p className="text-2xl font-bold">{card.value}</p>
               </div>
             ))}
           </div>
 
-          {/* FILTER & TABEL */}
+          {/* Filter & Table Users */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 mb-6">
-            <div className="relative w-full md:w-64">
-              <input
-                type="text"
-                placeholder="Cari nama siswa..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Cari nama siswa..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full md:w-64 pl-3 py-2 rounded-lg border border-gray-300"
+            />
 
             <select
               value={filterKelas}
@@ -388,7 +368,7 @@ const Dashboard = () => {
             search={search}
           />
 
-          {/* Search Tagihan */}
+          {/* Filter & Table Tagihan */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 mb-4">
             <input
               type="text"

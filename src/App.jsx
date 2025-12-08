@@ -27,6 +27,7 @@ function App() {
         <Route path="/EditTagihan/:id" element={<EditTagihan />} />
 
         <Route element={<MainLayout />}>
+          <Route path="/Presensi" element={<Presensi />} />
         <Route path="/Dasboard" element={<Dasboard />} />
           <Route path="/Daftar" element={<Daftar />} />
           <Route path="/Tagihan" element={<Tagihan />} />
@@ -34,7 +35,6 @@ function App() {
           <Route path="/KategoriData" element={<KategoriData />} />
           <Route path="/Kelas" element={<Kelas />} />
           <Route path="/RekapTagihan" element={<RekapTagihan />} />
-          <Route path="/Presensi" element={<Presensi />} />
           <Route path="/RekapPresensi" element={<RekapPresensi />} />
 
         </Route>
