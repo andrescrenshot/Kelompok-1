@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function RekapPresensi() {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
   const [presensi, setPresensi] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterTanggal, setFilterTanggal] = useState("");
+  const [filterTanggal, setFilterTanggal] = useState(today);
   const [filterKategori, setFilterKategori] = useState("Semua");
 
   const API_PRESENSI = "http://localhost:5001/presensi";
+
+  // ================================
+  // Format Tanggal → dd/mm/yy
+  // ================================
+  const formatTanggal = (tgl) => {
+    if (!tgl) return "-";
+    const [year, month, day] = tgl.split("-");
+    return `${day}/${month}/${year.slice(2)}`;
+  };
 
   // ================================
   // GET DATA PRESENSI
@@ -29,35 +40,61 @@ function RekapPresensi() {
   }, []);
 
   // ================================
+  // Hapus Presensi
+  // ================================
+  const handleHapus = async (id) => {
+    const confirm = await Swal.fire({
+      title: "Hapus Presensi?",
+      text: "Data presensi akan dihapus secara permanen!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Hapus",
+      cancelButtonText: "Batal",
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await axios.delete(`${API_PRESENSI}/${id}`);
+      Swal.fire("Berhasil", "Presensi berhasil dihapus", "success");
+      getPresensi();
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Gagal", "Tidak dapat menghapus presensi", "error");
+    }
+  };
+
+  // ================================
   // FILTER DATA
   // ================================
   const filteredPresensi = presensi.filter((p) => {
-    const matchTanggal =
-      filterTanggal ? p.tanggal === filterTanggal : true;
+    const presensiDate = new Date(p.tanggal);
+    const todayDate = new Date();
 
+    const matchTanggal = filterTanggal ? p.tanggal === filterTanggal : true;
+    const matchBulan =
+      presensiDate.getMonth() === todayDate.getMonth() &&
+      presensiDate.getFullYear() === todayDate.getFullYear();
     const matchKategori =
       filterKategori === "Semua" ? true : p.kategori === filterKategori;
 
-    return matchTanggal && matchKategori;
+    return matchTanggal && matchKategori && matchBulan;
   });
 
   return (
     <div className="min-h-screen p-8 bg-gradient-to-br from-gray-100 to-blue-200 animate-fadeIn">
-
       <h2 className="text-3xl font-extrabold mb-6 text-gray-800 text-center">
         Rekap Presensi
       </h2>
 
       {/* FILTER CARD */}
       <div className="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-wrap items-center gap-4">
-
         <div>
           <label className="font-semibold text-sm">Filter Tanggal</label>
           <input
             type="date"
             value={filterTanggal}
             onChange={(e) => setFilterTanggal(e.target.value)}
-            className="border px-3 py-2 rounded-lg block mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
+            className="border px-3 py-2 rounded-lg mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -66,7 +103,7 @@ function RekapPresensi() {
           <select
             value={filterKategori}
             onChange={(e) => setFilterKategori(e.target.value)}
-            className="border px-3 py-2 rounded-lg block mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
+            className="border px-3 py-2 rounded-lg mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
           >
             <option value="Semua">Semua</option>
             <option value="Siswa">Siswa</option>
@@ -77,10 +114,10 @@ function RekapPresensi() {
 
         <button
           onClick={() => {
-            setFilterTanggal("");
+            setFilterTanggal(today);
             setFilterKategori("Semua");
           }}
-          className="ml-auto bg-gray-300 px-4 py-2 mt-5 rounded-lg text-sm hover:bg-gray-400 shadow"
+          className="ml-auto bg-gray-300 px-4 py-2 mt-5 rounded-lg text-sm hover:bg-gray-400 shadow transition"
         >
           Reset Filter
         </button>
@@ -88,7 +125,6 @@ function RekapPresensi() {
 
       {/* TABLE */}
       <div className="overflow-x-auto bg-white p-4 rounded-xl shadow-lg">
-
         {loading ? (
           <div className="flex justify-center py-10">
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -111,15 +147,12 @@ function RekapPresensi() {
                 <th className="p-3 border">Jam Masuk</th>
                 <th className="p-3 border">Jam Pulang</th>
                 <th className="p-3 border">Status</th>
+                <th className="p-3 border">Aksi</th>
               </tr>
             </thead>
 
             <tbody>
               {filteredPresensi.map((p, idx) => {
-                // ================================
-                // STATUS PRESENSI
-                // ================================
-
                 let statusFinal = "-";
                 let color = "";
 
@@ -150,10 +183,18 @@ function RekapPresensi() {
                     <td className="p-2 border">{p.kategori}</td>
                     <td className="p-2 border">{p.kelas}</td>
                     <td className="p-2 border">{p.jurusan}</td>
-                    <td className="p-2 border">{p.tanggal}</td>
+                    <td className="p-2 border">{formatTanggal(p.tanggal)}</td>
                     <td className="p-2 border">{p.jamMasuk || "-"}</td>
                     <td className="p-2 border">{p.jamPulang || "-"}</td>
                     <td className={`p-2 border ${color}`}>{statusFinal}</td>
+                    <td className="p-2 border text-center">
+                      <button
+                        onClick={() => handleHapus(p.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+                      >
+                        Hapus
+                      </button>
+                    </td>
                   </tr>
                 );
               })}

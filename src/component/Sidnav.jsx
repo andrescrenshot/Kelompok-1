@@ -13,27 +13,27 @@ function Sidnav() {
   const isActive = (path) => location.pathname === path;
 
   // =========================
-  // MENU DEFINISI
+  // MENU DEFINISI (PROFESIONAL)
   // =========================
   const menuAtas = [
-    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-purple-400" },
+    { path: "/Dasboard", label: "Dashboard", icon: "ri-dashboard-line text-gray-100" },
   ];
 
   const menuSiswaGuru = [
-    { path: "/KategoriData", label: "Kategori Data", icon: "ri-clipboard-line" },
-    { path: "/Kelas", label: "Kelas", icon: "ri-school-line text-gray-400" },
-    { path: "/Daftar", label: "Master Data", icon: "ri-database-2-line text-red-400" },
+    { path: "/KategoriData", label: "Kategori Data", icon: "ri-folder-2-line text-indigo-300" },
+    { path: "/Kelas", label: "Kelas", icon: "ri-group-line text-indigo-200" },
+    { path: "/Daftar", label: "Master Data", icon: "ri-database-2-line text-indigo-400" },
   ];
 
   const menuTagihan = [
-    { path: "/JenisTagihan", label: "Kategori Tagihan", icon: "ri-price-tag-3-line text-orange-400" },
-    { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-400" },
-    { path: "/RekapTagihan", label: "Rekap Tagihan", icon: "ri-file-list-3-line" },
+    { path: "/JenisTagihan", label: "Kategori Tagihan", icon: "ri-file-list-2-line text-orange-300" },
+    { path: "/Tagihan", label: "Tagihan", icon: "ri-wallet-2-line text-green-300" },
+    { path: "/RekapTagihan", label: "Rekap Tagihan", icon: "ri-bar-chart-line text-yellow-300" },
   ];
 
   const menuPresensi = [
-    { path: "/Presensi", label: "Presensi", icon: "ri-hourglass-2-fill text-blue-200" },
-    { path: "/RekapPresensi", label: "Rekap Presensi", icon: "ri-time-line text-blue-300" },
+    { path: "/Presensi", label: "Presensi", icon: "ri-check-line text-blue-300" },
+    { path: "/RekapPresensi", label: "Rekap Presensi", icon: "ri-timer-line text-blue-400" },
   ];
 
   // =========================
@@ -44,7 +44,7 @@ function Sidnav() {
       onClick={() => navigate(item.path)}
       className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl font-semibold text-base transition-all duration-300 ${
         isActive(item.path)
-          ? "bg-blue-500/90 text-white shadow-inner scale-[1.02]"
+          ? "bg-blue-700/90 text-white shadow-inner scale-[1.02]"
           : "hover:bg-blue-600/70 hover:translate-x-1"
       }`}
     >
@@ -57,7 +57,7 @@ function Sidnav() {
     <>
       {/* Toggle Mobile Button */}
       <button
-        className="fixed top-4 left-4 z-50 text-white bg-blue-700 hover:bg-blue-800 p-2 rounded-md md:hidden shadow-md transition duration-300"
+        className="fixed top-4 left-4 z-50 text-white bg-blue-500 hover:bg-blue-400 p-2 rounded-md md:hidden shadow-md transition duration-300"
         onClick={() => setOpen(!open)}
       >
         <i className="ri-menu-line text-2xl"></i>
@@ -65,7 +65,7 @@ function Sidnav() {
 
       {/* SIDEBAR */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-700 text-white flex flex-col shadow-2xl transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-blue-900 to-blue-800 text-white flex flex-col shadow-2xl transform transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >

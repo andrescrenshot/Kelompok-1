@@ -21,16 +21,6 @@
       "nomorUnik": "SIS-3881"
     },
     {
-      "id": "4204",
-      "nama": "dafa",
-      "kelas": "X",
-      "jurusan": "TSM",
-      "jabatan": "Belum ada jabatan/bagian",
-      "email": "dr@gmail.com",
-      "kategori": "Siswa",
-      "nomorUnik": "SIS-4063"
-    },
-    {
       "id": "fabc",
       "nama": "bambang",
       "kelas": "XI",
@@ -200,106 +190,31 @@
   ],
   "presensi": [
     {
-      "id": "ad35",
-      "nomorUnik": "SIS-7340",
-      "nama": "dafa",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "kategori": "Siswa",
-      "jabatan": "Belum ada jabatan/bagian",
-      "tanggal": "2025-12-03",
-      "jamMasuk": "08.49",
-      "jamPulang": ""
-    },
-    {
-      "id": "fe00",
-      "nomorUnik": "SIS-3881",
-      "nama": "darren",
-      "kelas": "-",
-      "jurusan": "-",
-      "kategori": "Guru",
-      "jabatan": "Guru Biologi",
-      "tanggal": "2025-12-03",
-      "jamMasuk": "10.15",
-      "jamPulang": ""
-    },
-    {
-      "id": "ebcd",
-      "nomorUnik": "SIS-3679",
-      "nama": "bambang",
-      "kelas": "XI",
-      "jurusan": "TSM",
-      "kategori": "Siswa",
-      "jabatan": "Belum ada jabatan/bagian",
-      "tanggal": "2025-12-03",
-      "jamMasuk": "10.52",
-      "jamPulang": ""
-    },
-    {
-      "id": "4b26",
-      "nomorUnik": "SIS-6997",
-      "nama": "fadil ",
-      "kelas": "XII",
-      "jurusan": "TKJ",
-      "kategori": "Siswa",
-      "jabatan": "osis",
-      "tanggal": "2025-12-04",
-      "jamMasuk": "07.32",
-      "jamPulang": ""
-    },
-    {
-      "id": "5e54",
-      "nomorUnik": "SIS-3881",
-      "nama": "darren",
-      "kelas": "-",
-      "jurusan": "-",
-      "kategori": "Guru",
-      "jabatan": "Guru Biologi",
-      "tanggal": "2025-12-04",
-      "jamMasuk": "07.35",
-      "jamPulang": ""
-    },
-    {
-      "id": "d246",
+      "id": "4ffb",
       "nomorUnik": "SIS-7340",
       "nama": "dafa",
       "kategori": "Siswa",
       "kelas": "X",
       "jurusan": "TKJ",
       "jabatan": "Belum ada jabatan/bagian",
-      "tanggal": "2025-12-05",
-      "jamMasuk": "08.20",
+      "tanggal": "2025-12-09",
+      "jamMasuk": "11.27",
       "jamPulang": "",
       "statusMasuk": "Terlambat",
       "statusPulang": ""
     },
     {
-      "id": "4eb4",
-      "nomorUnik": "SIS-3881",
-      "nama": "darren",
-      "kategori": "Guru",
-      "kelas": "-",
-      "jurusan": "-",
-      "jabatan": "Guru Biologi",
-      "tanggal": "2025-12-08",
-      "jamMasuk": "07.31",
-      "jamPulang": "14.40",
-      "statusMasuk": "Terlambat",
-      "statusPulang": "Tepat Waktu"
-    },
-    {
-      "id": "50ea",
-      "nomorUnik": "SIS-7340",
-      "nama": "dafa",
-      "kategori": "Siswa",
+      "id": "ed98",
+      "nomorUnik": "SIS-3746",
+      "nama": "ayyas",
       "kelas": "X",
       "jurusan": "TKJ",
-      "jabatan": "Belum ada jabatan/bagian",
-      "tanggal": "2025-12-08",
-      "jamMasuk": "10.18",
-      "jamPulang": "14.39",
+      "kategori": "Siswa",
+      "status": "Masuk",
+      "tanggal": "2025-12-11",
+      "jam": "14:36",
       "statusMasuk": "Terlambat",
-      "statusPulang": "Tepat Waktu"
+      "jamMasuk": "14:36"
     }
   ]
 }
