@@ -1,35 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function RekapPresensi() {
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+export default function RekapPresensi() {
+  const today = new Date().toISOString().split("T")[0];
   const [presensi, setPresensi] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterTanggal, setFilterTanggal] = useState(today);
   const [filterKategori, setFilterKategori] = useState("Semua");
+  const [searchNomor, setSearchNomor] = useState("");
 
   const API_PRESENSI = "http://localhost:5001/presensi";
 
-  // ================================
-  // Format Tanggal → dd/mm/yy
-  // ================================
   const formatTanggal = (tgl) => {
     if (!tgl) return "-";
-    const [year, month, day] = tgl.split("-");
-    return `${day}/${month}/${year.slice(2)}`;
+    const [y, m, d] = tgl.split("-");
+    return `${d}/${m}/${y}`;
   };
 
-  // ================================
-  // GET DATA PRESENSI
-  // ================================
   const getPresensi = async () => {
     try {
       setLoading(true);
       const res = await axios.get(API_PRESENSI);
-      setPresensi(res.data);
+      setPresensi(res.data || []);
     } catch (err) {
-      console.error("Gagal fetch presensi:", err);
+      Swal.fire("Error", "Gagal mengambil data presensi", "error");
     } finally {
       setLoading(false);
     }
@@ -39,13 +34,10 @@ function RekapPresensi() {
     getPresensi();
   }, []);
 
-  // ================================
-  // Hapus Presensi
-  // ================================
   const handleHapus = async (id) => {
     const confirm = await Swal.fire({
       title: "Hapus Presensi?",
-      text: "Data presensi akan dihapus secara permanen!",
+      text: "Data akan dihapus permanen!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Hapus",
@@ -53,170 +45,153 @@ function RekapPresensi() {
     });
     if (!confirm.isConfirmed) return;
 
-    try {
-      await axios.delete(`${API_PRESENSI}/${id}`);
-      Swal.fire("Berhasil", "Presensi berhasil dihapus", "success");
-      getPresensi();
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Gagal", "Tidak dapat menghapus presensi", "error");
-    }
+    await axios.delete(`${API_PRESENSI}/${id}`);
+    Swal.fire("Berhasil", "Presensi dihapus", "success");
+    getPresensi();
   };
 
-  // ================================
-  // FILTER DATA
-  // ================================
-  const filteredPresensi = presensi.filter((p) => {
-    const presensiDate = new Date(p.tanggal);
-    const todayDate = new Date();
+  /* ================= FILTER + SEARCH ================= */
+  const filteredPresensi = useMemo(() => {
+    return presensi.filter((p) => {
+      const matchTanggal = filterTanggal ? p.tanggal === filterTanggal : true;
+      const matchKategori =
+        filterKategori === "Semua" ? true : p.kategori === filterKategori;
+      const matchNomor = searchNomor
+        ? String(p.nomorUnik).includes(searchNomor)
+        : true;
 
-    const matchTanggal = filterTanggal ? p.tanggal === filterTanggal : true;
-    const matchBulan =
-      presensiDate.getMonth() === todayDate.getMonth() &&
-      presensiDate.getFullYear() === todayDate.getFullYear();
-    const matchKategori =
-      filterKategori === "Semua" ? true : p.kategori === filterKategori;
-
-    return matchTanggal && matchKategori && matchBulan;
-  });
+      return matchTanggal && matchKategori && matchNomor;
+    });
+  }, [presensi, filterTanggal, filterKategori, searchNomor]);
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-gray-100 to-blue-200 animate-fadeIn">
-      <h2 className="text-3xl font-extrabold mb-6 text-gray-800 text-center">
-        Rekap Presensi
-      </h2>
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-slate-800">
+          Rekap Presensi
+        </h2>
 
-      {/* FILTER CARD */}
-      <div className="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-wrap items-center gap-4">
-        <div>
-          <label className="font-semibold text-sm">Filter Tanggal</label>
-          <input
-            type="date"
-            value={filterTanggal}
-            onChange={(e) => setFilterTanggal(e.target.value)}
-            className="border px-3 py-2 rounded-lg mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+        {/* FILTER */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            {/* TANGGAL */}
+            <div>
+              <label className="text-sm font-medium text-slate-600">
+                Tanggal
+              </label>
+              <input
+                type="date"
+                value={filterTanggal}
+                onChange={(e) => setFilterTanggal(e.target.value)}
+                className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-        <div>
-          <label className="font-semibold text-sm">Filter Kategori</label>
-          <select
-            value={filterKategori}
-            onChange={(e) => setFilterKategori(e.target.value)}
-            className="border px-3 py-2 rounded-lg mt-1 shadow-sm focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="Semua">Semua</option>
-            <option value="Siswa">Siswa</option>
-            <option value="Guru">Guru</option>
-            <option value="Karyawan">Karyawan</option>
-          </select>
-        </div>
+            {/* KATEGORI */}
+            <div>
+              <label className="text-sm font-medium text-slate-600">
+                Kategori
+              </label>
+              <select
+                value={filterKategori}
+                onChange={(e) => setFilterKategori(e.target.value)}
+                className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Semua">Semua</option>
+                <option value="Siswa">Siswa</option>
+                <option value="Guru">Guru</option>
+                <option value="Karyawan">Karyawan</option>
+              </select>
+            </div>
 
-        <button
-          onClick={() => {
-            setFilterTanggal(today);
-            setFilterKategori("Semua");
-          }}
-          className="ml-auto bg-gray-300 px-4 py-2 mt-5 rounded-lg text-sm hover:bg-gray-400 shadow transition"
-        >
-          Reset Filter
-        </button>
-      </div>
+            {/* SEARCH NOMOR */}
+            <div>
+              <label className="text-sm font-medium text-slate-600">
+                Cari Nomor RFID Siswa
+              </label>
+              <input
+                type="text"
+                value={searchNomor}
+                onChange={(e) => setSearchNomor(e.target.value)}
+                placeholder="Contoh: 1023"
+                className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-      {/* TABLE */}
-      <div className="overflow-x-auto bg-white p-4 rounded-xl shadow-lg">
-        {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="md:col-span-2 flex gap-2 md:justify-end">
+              <button
+                onClick={() => {
+                  setFilterTanggal(today);
+                  setFilterKategori("Semua");
+                  setSearchNomor("");
+                }}
+                className="rounded-xl border px-4 py-2 hover:bg-slate-100"
+              >
+                Reset
+              </button>
+            </div>
           </div>
-        ) : filteredPresensi.length === 0 ? (
-          <p className="text-center text-gray-500 py-4">
-            Tidak ada data presensi.
-          </p>
-        ) : (
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th className="p-3 border">No</th>
-                <th className="p-3 border">Nomor Unik</th>
-                <th className="p-3 border">Nama</th>
-                <th className="p-3 border">Kategori</th>
-                <th className="p-3 border">Kelas</th>
-                <th className="p-3 border">Jurusan</th>
-                <th className="p-3 border">Tanggal</th>
-                <th className="p-3 border">Jam Masuk</th>
-                <th className="p-3 border">Jam Pulang</th>
-                <th className="p-3 border">Status</th>
-                <th className="p-3 border">Aksi</th>
-              </tr>
-            </thead>
+        </div>
 
-            <tbody>
-              {filteredPresensi.map((p, idx) => {
-                let statusFinal = "-";
-                let color = "";
-
-                if (!p.jamMasuk && !p.jamPulang) {
-                  statusFinal = "Belum Presensi";
-                  color = "text-gray-500";
-                } else if (p.jamMasuk && !p.jamPulang) {
-                  statusFinal = p.statusMasuk || "Masuk";
-                  color =
-                    statusFinal === "Terlambat"
-                      ? "text-red-600 font-semibold"
-                      : "text-green-600 font-semibold";
-                } else if (p.jamMasuk && p.jamPulang) {
-                  statusFinal = `${p.statusMasuk || ""} / ${p.statusPulang || ""}`;
-                  color = "text-blue-700 font-semibold";
-                }
-
-                return (
-                  <tr
-                    key={p.id}
-                    className={`${
-                      idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                    } hover:bg-blue-50 transition`}
-                  >
-                    <td className="p-2 border text-center">{idx + 1}</td>
-                    <td className="p-2 border">{p.nomorUnik}</td>
-                    <td className="p-2 border font-semibold">{p.nama}</td>
-                    <td className="p-2 border">{p.kategori}</td>
-                    <td className="p-2 border">{p.kelas}</td>
-                    <td className="p-2 border">{p.jurusan}</td>
-                    <td className="p-2 border">{formatTanggal(p.tanggal)}</td>
-                    <td className="p-2 border">{p.jamMasuk || "-"}</td>
-                    <td className="p-2 border">{p.jamPulang || "-"}</td>
-                    <td className={`p-2 border ${color}`}>{statusFinal}</td>
-                    <td className="p-2 border text-center">
-                      <button
-                        onClick={() => handleHapus(p.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
-                      >
-                        Hapus
-                      </button>
-                    </td>
+        {/* TABLE */}
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          {loading ? (
+            <div className="py-16 text-center">
+              <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+            </div>
+          ) : filteredPresensi.length === 0 ? (
+            <div className="py-16 text-center text-slate-500">
+              Tidak ada data presensi
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="bg-blue-400 text-white">
+                  <tr>
+                    <th className="p-3 text-left">No</th>
+                    <th className="p-3 text-left">Nomor</th>
+                    <th className="p-3 text-left">Nama</th>
+                    <th className="p-3 text-left">Kategori</th>
+                    <th className="p-3 text-left">Kelas</th>
+                    <th className="p-3 text-left">Jurusan</th>
+                    <th className="p-3 text-left">Tanggal</th>
+                    <th className="p-3 text-left">Masuk</th>
+                    <th className="p-3 text-left">Pulang</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Keterangan</th>
+                    <th className="p-3 text-center">Aksi</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+                </thead>
+                <tbody>
+                  {filteredPresensi.map((p, i) => (
+                    <tr key={p.id} className="border-t hover:bg-slate-50">
+                      <td className="p-3">{i + 1}</td>
+                      <td className="p-3">{p.nomorUnik}</td>
+                      <td className="p-3 font-semibold">{p.nama}</td>
+                      <td className="p-3">{p.kategori}</td>
+                      <td className="p-3">{p.kelas || "-"}</td>
+                      <td className="p-3">{p.jurusan || "-"}</td>
+                      <td className="p-3">{formatTanggal(p.tanggal)}</td>
+                      <td className="p-3">{p.jamMasuk || "-"}</td>
+                      <td className="p-3">{p.jamPulang || "-"}</td>
+                      <td className="p-3">{p.statusMasuk || p.status}</td>
+                      <td className="p-3">{p.keteranganIzin || "-"}</td>
+                      <td className="p-3 text-center">
+                        <button
+                          onClick={() => handleHapus(p.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* Fade Animation */}
-      <style>
-        {`
-        .animate-fadeIn {
-          animation: fadeIn .5s ease;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        `}
-      </style>
     </div>
   );
 }
-
-export default RekapPresensi;

@@ -1,7 +1,7 @@
-// src/pages/Presensi.js
 import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import huh1 from "../../../public/kakangku.jpg";
 
 function Presensi() {
   const [nomor, setNomor] = useState("");
@@ -11,43 +11,49 @@ function Presensi() {
   const [jam, setJam] = useState("");
   const [siswaInfo, setSiswaInfo] = useState(null);
   const [daftar, setDaftar] = useState([]);
-  const inputRef = useRef();
+  const [keteranganIzin, setKeteranganIzin] = useState("");
+
+  const inputRef = useRef(null);
 
   const API_DAFTAR = "http://localhost:5001/Daftar";
   const API_PRESENSI = "http://localhost:5001/presensi";
 
-  // Ambil master data
-  const getDaftar = async () => {
-    try {
-      const res = await axios.get(API_DAFTAR);
-      setDaftar(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  /* ================= LOAD DATA ================= */
   useEffect(() => {
-    getDaftar();
+    axios
+      .get(API_DAFTAR)
+      .then((res) => setDaftar(res.data))
+      .catch(() => setDaftar([]));
 
     const timer = setInterval(() => {
       const now = new Date();
-      const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-      setTanggal(now.toLocaleDateString("id-ID", options));
+      setTanggal(
+        now.toLocaleDateString("id-ID", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      );
       setJam(now.toLocaleTimeString("id-ID", { hour12: false }));
     }, 1000);
 
+    inputRef.current?.focus();
     return () => clearInterval(timer);
   }, []);
 
-  // Lookup siswa otomatis
+  /* ================= LOOKUP SISWA ================= */
   useEffect(() => {
-    if (!nomor) {
+    if (!nomor.trim()) {
       setNama("-");
       setSiswaInfo(null);
       return;
     }
 
-    const siswa = daftar.find((d) => d.nomorUnik === nomor.trim());
+    const siswa = daftar.find(
+      (d) => String(d.nomorUnik) === String(nomor.trim())
+    );
+
     if (siswa) {
       setNama(siswa.nama);
       setSiswaInfo(siswa);
@@ -57,40 +63,90 @@ function Presensi() {
     }
   }, [nomor, daftar]);
 
+  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
-    if (!nomor || !siswaInfo) {
-      return Swal.fire("Error", "Nomor unik tidak valid!", "error");
+    if (!nomor.trim() || !siswaInfo) {
+      Swal.fire("Error", "Nomor unik tidak valid!", "error");
+      return;
     }
 
     const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const jamSekarang =
+      now.getHours() + ":" + now.getMinutes().toString().padStart(2, "0");
+
     let presensiHariIni = [];
+
     try {
-      const res = await axios.get(`${API_PRESENSI}?nomorUnik=${siswaInfo.nomorUnik}`);
-      presensiHariIni = res.data.filter((p) => p.tanggal === today);
-    } catch (err) {
-      console.error("Gagal ambil presensi hari ini:", err);
+      const res = await axios.get(
+        `${API_PRESENSI}?nomorUnik=${siswaInfo.nomorUnik}&tanggal=${today}`
+      );
+      presensiHariIni = res.data;
+    } catch {
+      presensiHariIni = [];
     }
 
-    const now = new Date();
-    const jamSekarang = now.getHours() + ":" + now.getMinutes().toString().padStart(2, "0");
+    const sudahMasuk = presensiHariIni.some((p) => p.status === "Masuk");
+    const sudahPulang = presensiHariIni.some((p) => p.status === "Pulang");
+    const sudahIzin = presensiHariIni.some((p) => p.status === "Izin");
 
-    // Logika Masuk
+    /* ================= IZIN ================= */
+    if (status === "Izin") {
+      if (sudahMasuk || sudahPulang) {
+        Swal.fire(
+          "Ditolak",
+          "Tidak bisa Izin karena sudah presensi Masuk/Pulang hari ini!",
+          "warning"
+        );
+        return;
+      }
+
+      if (sudahIzin) {
+        Swal.fire("Error", "Sudah Izin hari ini!", "error");
+        return;
+      }
+
+      if (!keteranganIzin.trim()) {
+        Swal.fire("Error", "Keterangan izin wajib diisi!", "error");
+        return;
+      }
+
+      await axios.post(API_PRESENSI, {
+        nomorUnik: siswaInfo.nomorUnik,
+        nama: siswaInfo.nama,
+        kelas: siswaInfo.kelas,
+        jurusan: siswaInfo.jurusan,
+        kategori: siswaInfo.kategori,
+        status: "Izin",
+        tanggal: today,
+        jam: jamSekarang,
+        keteranganIzin,
+      });
+
+      Swal.fire("Berhasil", "Izin berhasil dicatat", "success");
+    }
+
+    /* ================= MASUK ================= */
     if (status === "Masuk") {
-      const sudahMasuk = presensiHariIni.some((p) => p.status === "Masuk");
+      if (sudahIzin) {
+        Swal.fire(
+          "Ditolak",
+          "Sudah Izin hari ini. Presensi Masuk hanya bisa besok.",
+          "warning"
+        );
+        return;
+      }
+
       if (sudahMasuk) {
-        return Swal.fire("Error", "Anda sudah presensi Masuk hari ini!", "error");
-      }
-      const jamMasukMulai = new Date();
-      jamMasukMulai.setHours(5, 0, 0);
-      const jamMasukAkhir = new Date();
-      jamMasukAkhir.setHours(6, 50, 0);
-
-      let statusMasuk = "Masuk";
-      if (now < jamMasukMulai || now > jamMasukAkhir) {
-        statusMasuk = "Terlambat";
+        Swal.fire("Error", "Sudah presensi Masuk hari ini!", "error");
+        return;
       }
 
-      const presensiData = {
+      const batas = new Date();
+      batas.setHours(6, 50, 0);
+      const statusMasuk = now > batas ? "Terlambat" : "Tepat Waktu";
+
+      await axios.post(API_PRESENSI, {
         nomorUnik: siswaInfo.nomorUnik,
         nama: siswaInfo.nama,
         kelas: siswaInfo.kelas,
@@ -99,78 +155,40 @@ function Presensi() {
         status: "Masuk",
         tanggal: today,
         jam: jamSekarang,
-        statusMasuk: statusMasuk,
         jamMasuk: jamSekarang,
-      };
+        statusMasuk,
+      });
 
-      try {
-        await axios.post(API_PRESENSI, presensiData);
-        Swal.fire("Berhasil", `Presensi Masuk berhasil (${statusMasuk})`, "success");
-        setNomor("");
-        setNama("-");
-        setSiswaInfo(null);
-        inputRef.current?.focus();
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Gagal melakukan presensi!", "", "error");
-      }
+      Swal.fire("Berhasil", `Masuk (${statusMasuk})`, "success");
     }
 
-    // Logika Pulang
+    /* ================= PULANG ================= */
     if (status === "Pulang") {
-      const sudahMasuk = presensiHariIni.some((p) => p.status === "Masuk");
-      const sudahPulang = presensiHariIni.some((p) => p.status === "Pulang");
-
-      if (sudahPulang) {
-        return Swal.fire("Error", "Anda sudah presensi Pulang hari ini!", "error");
+      if (sudahIzin) {
+        Swal.fire(
+          "Ditolak",
+          "Sudah Izin hari ini. Presensi Pulang hanya bisa besok.",
+          "warning"
+        );
+        return;
       }
 
       if (!sudahMasuk) {
-        // Siswa belum presensi Masuk → lakukan dua kali presensi
-        const konfirmasi = await Swal.fire({
-          title: "Belum presensi Masuk!",
-          text: "Anda belum presensi Masuk. Sistem akan melakukan presensi Masuk otomatis sebelum Pulang.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Lanjutkan",
-        });
-        if (!konfirmasi.isConfirmed) return;
-
-        // Presensi Masuk otomatis (Terlambat jika jam >06:50)
-        let statusMasuk = "Masuk";
-        const jamMasukAkhir = new Date();
-        jamMasukAkhir.setHours(6, 50, 0);
-        if (now > jamMasukAkhir) statusMasuk = "Terlambat";
-
-        const presensiMasuk = {
-          nomorUnik: siswaInfo.nomorUnik,
-          nama: siswaInfo.nama,
-          kelas: siswaInfo.kelas,
-          jurusan: siswaInfo.jurusan,
-          kategori: siswaInfo.kategori,
-          status: "Masuk",
-          tanggal: today,
-          jam: jamSekarang,
-          statusMasuk: statusMasuk,
-          jamMasuk: jamSekarang,
-        };
-        try {
-          await axios.post(API_PRESENSI, presensiMasuk);
-        } catch (err) {
-          console.error(err);
-        }
+        Swal.fire("Error", "Belum presensi Masuk!", "error");
+        return;
       }
 
-      // Cek jam Pulang
+      if (sudahPulang) {
+        Swal.fire("Error", "Sudah presensi Pulang hari ini!", "error");
+        return;
+      }
+
       if (now.getHours() < 15) {
-        return Swal.fire(
-          "Error",
-          "Belum waktunya pulang",
-          "error"
-        );
+        Swal.fire("Error", "Belum waktunya pulang!", "error");
+        return;
       }
 
-      const presensiPulang = {
+      await axios.post(API_PRESENSI, {
         nomorUnik: siswaInfo.nomorUnik,
         nama: siswaInfo.nama,
         kelas: siswaInfo.kelas,
@@ -179,107 +197,120 @@ function Presensi() {
         status: "Pulang",
         tanggal: today,
         jam: jamSekarang,
-        statusPulang: "Pulang",
         jamPulang: jamSekarang,
-      };
+      });
 
-      try {
-        await axios.post(API_PRESENSI, presensiPulang);
-        Swal.fire("Berhasil", `Presensi Pulang berhasil`, "success");
-        setNomor("");
-        setNama("-");
-        setSiswaInfo(null);
-        inputRef.current?.focus();
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Gagal melakukan presensi!", "", "error");
-      }
+      Swal.fire("Berhasil", "Presensi Pulang berhasil", "success");
     }
+
+    setNomor("");
+    setNama("-");
+    setSiswaInfo(null);
+    setKeteranganIzin("");
+    setStatus("Masuk");
+    inputRef.current?.focus();
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 p-5">
-      <div className="w-full max-w-2xl bg-blue-100/80 border border-blue-400 rounded-3xl p-8 flex flex-col md:flex-row gap-6 shadow-lg backdrop-blur-md">
-
-        {/* Foto Placeholder */}
-        <div className="md:w-1/3 bg-blue-200/50 flex items-center justify-center rounded-2xl p-4">
-          <div className="w-32 h-32 bg-blue-400 rounded-full flex items-center justify-center text-white text-3xl font-bold animate-pulse">
-            ?
-          </div>
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-6">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
+        {/* FOTO */}
+        <div className="md:w-1/3 bg-white rounded-3xl shadow-xl p-6 flex items-center justify-center h-[460px]">
+          <img
+            src={huh1}
+            alt="Profil"
+            className="w-full h-full object-cover rounded-2xl"
+          />
         </div>
 
-        {/* Form */}
-        <div className="md:w-2/3 flex flex-col gap-4">
-          <div>
-            <label className="text-blue-800 font-semibold">Nomor Unik</label>
-            <input
-              type="text"
-              ref={inputRef}
-              value={nomor}
-              onChange={(e) => setNomor(e.target.value)}
-              placeholder="Masukkan Nomor Unik"
-              className="w-full mt-1 px-4 py-3 rounded-xl bg-blue-100 text-blue-900 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+        {/* FORM */}
+        <div className="md:w-2/3 bg-white rounded-3xl shadow-xl p-8">
+          {/* JUDUL */}
+          <div className="text-center mb-2">
+            <h1 className="text-3xl font-extrabold">
+              <span className="text-black">Presensi </span>
+              <span className="text-blue-600">SGK</span>
+            </h1>
           </div>
 
-          <div>
-            <label className="text-blue-800 font-semibold">Nama</label>
-            <input
-              type="text"
-              value={nama}
-              readOnly
-              className="w-full mt-1 px-4 py-3 rounded-xl bg-blue-100 text-blue-900"
-            />
+          {/* TANGGAL & JAM */}
+          <div className="text-center mb-6 text-sm text-gray-600">
+            <div>{tanggal}</div>
+            <div className="font-semibold">{jam}</div>
           </div>
 
-          {/* Info siswa di bawah nama */}
-          {siswaInfo && (
-            <div className="p-4 bg-blue-200 rounded-xl text-blue-900 font-medium shadow-inner">
-              <p><strong>Kelas:</strong> {siswaInfo.kelas}</p>
-              <p><strong>Jurusan:</strong> {siswaInfo.jurusan}</p>
-              <p><strong>Kategori:</strong> {siswaInfo.kategori}</p>
-            </div>
-          )}
-
-          <div className="flex items-center gap-6 mt-2">
-            <label className="text-blue-800 font-semibold">Status Presensi</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-1 text-blue-900">
-                <input
-                  type="radio"
-                  name="status"
-                  value="Masuk"
-                  checked={status === "Masuk"}
-                  onChange={() => setStatus("Masuk")}
-                  className="accent-blue-500"
-                />
-                Masuk
+          <div className="space-y-4">
+            <div>
+              <label className="font-semibold text-blue-800">
+                Nomor RFID
               </label>
-              <label className="flex items-center gap-1 text-blue-900">
-                <input
-                  type="radio"
-                  name="status"
-                  value="Pulang"
-                  checked={status === "Pulang"}
-                  onChange={() => setStatus("Pulang")}
-                  className="accent-blue-500"
-                />
-                Pulang
-              </label>
+              <input
+                ref={inputRef}
+                value={nomor}
+                onChange={(e) => setNomor(e.target.value)}
+                className="w-full mt-1 px-4 py-3 rounded-xl border focus:ring-2 focus:ring-blue-400"
+                placeholder="Masukkan nomor RFID"
+              />
             </div>
-          </div>
 
-          <div className="mt-2 p-4 bg-blue-100 rounded-xl text-blue-900 font-medium shadow-inner flex justify-between">
-            <span>{tanggal}</span>
-            <span>{jam}</span>
-          </div>
+            <div>
+              <label className="font-semibold text-blue-800">Nama</label>
+              <input
+                value={nama}
+                readOnly
+                className="w-full mt-1 px-4 py-3 rounded-xl bg-gray-100"
+              />
+            </div>
 
-          <button
-            onClick={handleSubmit}
-            className="mt-6 py-4 rounded-2xl bg-blue-400 hover:bg-blue-500 text-blue-900 font-bold text-lg shadow-md transition transform active:scale-95"
-          >
-            Submit
-          </button>
+            {siswaInfo && (
+              <div className="text-sm text-blue-800 border-t pt-2 space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Kategori</span>
+                  <span className="font-semibold">{siswaInfo.kategori}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Kelas</span>
+                  <span className="font-semibold">{siswaInfo.kelas}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Jurusan</span>
+                  <span className="font-semibold">{siswaInfo.jurusan}</span>
+                </div>
+              </div>
+            )}
+
+            {/* STATUS */}
+            <div className="flex gap-6 items-center">
+              <label className="font-semibold text-blue-800">Status</label>
+              {["Masuk", "Pulang", "Izin"].map((s) => (
+                <label key={s} className="flex items-center gap-1">
+                  <input
+                    type="radio"
+                    checked={status === s}
+                    onChange={() => setStatus(s)}
+                  />
+                  {s}
+                </label>
+              ))}
+            </div>
+
+            {status === "Izin" && (
+              <textarea
+                value={keteranganIzin}
+                onChange={(e) => setKeteranganIzin(e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-orange-400"
+                placeholder="Keterangan izin"
+              />
+            )}
+
+            <button
+              onClick={handleSubmit}
+              className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg active:scale-95 transition"
+            >
+              Submit Presensi
+            </button>
+          </div>
         </div>
       </div>
     </div>

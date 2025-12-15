@@ -33,7 +33,7 @@ function Sidnav() {
 
   const menuPresensi = [
     { path: "/Presensi", label: "Presensi", icon: "ri-check-line text-blue-300" },
-    { path: "/RekapPresensi", label: "Rekap Presensi", icon: "ri-timer-line text-blue-400" },
+    { path: "/RekapPresensi", label: "Re  `kap Presensi", icon: "ri-timer-line text-blue-400" },
   ];
 
   // =========================

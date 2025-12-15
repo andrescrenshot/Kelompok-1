@@ -1,74 +1,24 @@
 {
   "Daftar": [
     {
-      "id": "4d55",
-      "nama": "dafa",
+      "id": "4d72",
+      "nama": "noclant",
       "kelas": "X",
       "jurusan": "TKJ",
       "jabatan": "Belum ada jabatan/bagian",
       "email": "kelas@gmail.com",
       "kategori": "Siswa",
-      "nomorUnik": "SIS-7340"
+      "nomorUnik": "12193903"
     },
     {
-      "id": "ef03",
-      "nama": "darren",
-      "kelas": "-",
-      "jurusan": "-",
-      "jabatan": "Guru Biologi",
-      "email": "regis@gmail.com",
-      "kategori": "Guru",
-      "nomorUnik": "SIS-3881"
-    },
-    {
-      "id": "fabc",
-      "nama": "bambang",
+      "id": "2955",
+      "nama": "moreno",
       "kelas": "XI",
       "jurusan": "TSM",
-      "jabatan": "Belum ada jabatan/bagian",
-      "email": "kelas@gmail.com",
+      "jabatan": "Pendiri Ngawi",
+      "email": "ngebruk@gmail.com",
       "kategori": "Siswa",
-      "nomorUnik": "SIS-3679"
-    },
-    {
-      "id": "8c43",
-      "nama": "fadil ",
-      "kelas": "XII",
-      "jurusan": "TKJ",
-      "jabatan": "osis",
-      "email": "kelas@gmail.com",
-      "kategori": "Siswa",
-      "nomorUnik": "SIS-6997"
-    },
-    {
-      "id": "76ad",
-      "nama": "ayyas",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "jabatan": "KETUA OSIS",
-      "email": "ayyaskrapyak@gmai.com",
-      "kategori": "Siswa",
-      "nomorUnik": "SIS-3746"
-    },
-    {
-      "id": "c8de",
-      "nama": "bobi",
-      "kelas": "-",
-      "jurusan": "-",
-      "jabatan": "Guru Agama",
-      "email": "dr@gmail.com",
-      "kategori": "Guru",
-      "nomorUnik": "SIS-2968"
-    },
-    {
-      "id": "e494",
-      "nama": "obunga",
-      "kelas": "XI",
-      "jurusan": "TSM",
-      "jabatan": "Belum ada jabatan/bagian",
-      "email": "kelas@gmail.com",
-      "kategori": "Siswa",
-      "nomorUnik": "SIS-8295"
+      "nomorUnik": "20420869"
     }
   ],
   "tagihan": [
@@ -215,6 +165,31 @@
       "jam": "14:36",
       "statusMasuk": "Terlambat",
       "jamMasuk": "14:36"
+    },
+    {
+      "id": "00ba",
+      "nomorUnik": "12193903",
+      "nama": "noclant",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "kategori": "Siswa",
+      "status": "Izin",
+      "tanggal": "2025-12-15",
+      "jam": "14:32",
+      "keteranganIzin": "magang"
+    },
+    {
+      "id": "3179",
+      "nomorUnik": "20420869",
+      "nama": "moreno",
+      "kelas": "XI",
+      "jurusan": "TSM",
+      "kategori": "Siswa",
+      "status": "Masuk",
+      "tanggal": "2025-12-15",
+      "jam": "14:33",
+      "jamMasuk": "14:33",
+      "statusMasuk": "Terlambat"
     }
   ]
 }
