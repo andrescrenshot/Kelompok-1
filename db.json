@@ -190,6 +190,34 @@
       "jam": "14:33",
       "jamMasuk": "14:33",
       "statusMasuk": "Terlambat"
+    },
+    {
+      "id": "d432",
+      "nomorUnik": "12193903",
+      "nama": "noclant",
+      "kelas": "X",
+      "jurusan": "TKJ",
+      "kategori": "Siswa",
+      "status": "Masuk",
+      "tanggal": "2025-12-17",
+      "jam": "7:41",
+      "jamMasuk": "7:41",
+      "statusMasuk": "",
+      "keteranganIzin": ""
+    },
+    {
+      "id": "0820",
+      "nomorUnik": "20420869",
+      "nama": "moreno",
+      "kelas": "XI",
+      "jurusan": "TSM",
+      "kategori": "Siswa",
+      "status": "Masuk",
+      "tanggal": "2025-12-17",
+      "jam": "9:14",
+      "jamMasuk": "06:27",
+      "statusMasuk": "Tepat Waktu",
+      "keteranganIzin": ""
     }
   ]
 }
