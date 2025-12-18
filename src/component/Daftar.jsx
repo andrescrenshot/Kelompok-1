@@ -176,7 +176,7 @@ function Daftar() {
                 <thead className="bg-blue-600 text-white">
                   <tr>
                     <th className="p-3 text-left">No</th>
-                    <th className="p-3 text-left">Nomor Unik</th>
+                    <th className="p-3 text-left">RFID</th>
                     <th className="p-3 text-left">Nama</th>
                     <th className="p-3 text-left">Kelas</th>
                     <th className="p-3 text-left">Jurusan</th>

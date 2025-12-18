@@ -21,6 +21,22 @@ export default function RekapPresensi() {
     return `${d}/${m}/${y}`;
   };
 
+  const formatJam = (jam) => {
+    if (!jam) return "-";
+    return jam.slice(0, 5); // HH:mm
+  };
+
+  const renderStatus = (p) => {
+    if (p.status === "Masuk") {
+      return p.keteranganStatus === "Terlambat"
+        ? "Masuk (Terlambat)"
+        : "Masuk (Tepat Waktu)";
+    }
+    if (p.status === "Pulang") return "Pulang";
+    if (p.status === "Izin") return "Izin";
+    return p.status;
+  };
+
   /* ================= FETCH ================= */
   const getPresensi = async () => {
     try {
@@ -38,6 +54,100 @@ export default function RekapPresensi() {
     getPresensi();
   }, []);
 
+  /* ================= EDIT JAM (CENTER) ================= */
+  const handleEdit = async (data) => {
+    const { value: form } = await Swal.fire({
+      title: `<div style="text-align:center;font-size:20px;font-weight:600">
+                Edit Jam Presensi
+              </div>`,
+      html: `
+        <div style="
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:14px;
+          margin-top:10px;
+        ">
+          <label style="font-weight:600">Jam Masuk</label>
+          <input
+            type="time"
+            id="jamMasuk"
+            style="
+              text-align:center;
+              padding:10px;
+              border-radius:10px;
+              border:1px solid #cbd5e1;
+              width:200px;
+            "
+          />
+
+          <label style="font-weight:600;margin-top:6px">
+            Jam Pulang
+          </label>
+          <input
+            type="time"
+            id="jamPulang"
+            style="
+              text-align:center;
+              padding:10px;
+              border-radius:10px;
+              border:1px solid #cbd5e1;
+              width:200px;
+            "
+          />
+        </div>
+      `,
+      didOpen: () => {
+        document.getElementById("jamMasuk").value =
+          data.jamMasuk || "";
+        document.getElementById("jamPulang").value =
+          data.jamPulang || "";
+      },
+      showCancelButton: true,
+      confirmButtonText: "Simpan",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#2563eb", // biru
+      cancelButtonColor: "#94a3b8",
+      focusConfirm: false,
+      preConfirm: () => {
+        const jamMasuk =
+          document.getElementById("jamMasuk").value;
+        const jamPulang =
+          document.getElementById("jamPulang").value;
+
+        if (!jamMasuk && !jamPulang) {
+          Swal.showValidationMessage(
+            "Minimal salah satu jam harus diisi"
+          );
+          return false;
+        }
+
+        return { jamMasuk, jamPulang };
+      },
+    });
+
+    if (!form) return;
+
+    try {
+      await axios.put(`${API_PRESENSI}/${data.id}`, {
+        ...data,
+        jamMasuk: form.jamMasuk || data.jamMasuk,
+        jamPulang: form.jamPulang || data.jamPulang,
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Jam presensi berhasil diperbarui",
+        confirmButtonColor: "#2563eb",
+      });
+
+      getPresensi();
+    } catch {
+      Swal.fire("Error", "Gagal update jam", "error");
+    }
+  };
+
   /* ================= DELETE ================= */
   const handleHapus = async (id) => {
     const confirm = await Swal.fire({
@@ -47,6 +157,7 @@ export default function RekapPresensi() {
       showCancelButton: true,
       confirmButtonText: "Hapus",
       cancelButtonText: "Batal",
+      confirmButtonColor: "#1e3a8a",
     });
 
     if (!confirm.isConfirmed) return;
@@ -56,80 +167,7 @@ export default function RekapPresensi() {
     getPresensi();
   };
 
-  /* ================= EDIT ================= */
-  const handleEdit = async (data) => {
-    const { value: form } = await Swal.fire({
-      title: "Edit Presensi",
-      html: `
-        <select id="statusMasuk" class="swal2-input">
-          <option value="Tepat Waktu">Masuk Tepat Waktu</option>
-          <option value="Terlambat">Terlambat</option>
-          <option value="Izin">Izin</option>
-        </select>
-
-        <input type="time" id="jamMasuk" class="swal2-input" />
-
-        <input
-          id="keterangan"
-          class="swal2-input"
-          placeholder="Keterangan Izin"
-          style="display:none"
-        />
-      `,
-      focusConfirm: false,
-
-      didOpen: () => {
-        const status = document.getElementById("statusMasuk");
-        const jamMasuk = document.getElementById("jamMasuk");
-        const ket = document.getElementById("keterangan");
-
-        status.value =
-          data.statusMasuk || data.status || "Masuk Tepat Waktu";
-        jamMasuk.value = data.jamMasuk || "";
-        ket.value = data.keteranganIzin || "";
-
-        if (status.value === "Izin") ket.style.display = "block";
-
-        status.addEventListener("change", () => {
-          if (status.value === "Izin") {
-            ket.style.display = "block";
-          } else {
-            ket.style.display = "none";
-            ket.value = "";
-          }
-        });
-      },
-
-      preConfirm: () => {
-        const statusMasuk = document.getElementById("statusMasuk").value;
-        const jamMasuk = document.getElementById("jamMasuk").value;
-        const keteranganIzin = document.getElementById("keterangan").value;
-
-        if (statusMasuk === "Izin" && !keteranganIzin) {
-          Swal.showValidationMessage(
-            "Keterangan wajib diisi jika status Izin"
-          );
-          return false;
-        }
-
-        return { statusMasuk, jamMasuk, keteranganIzin };
-      },
-    });
-
-    if (!form) return;
-
-    await axios.put(`${API_PRESENSI}/${data.id}`, {
-      ...data,
-      statusMasuk: form.statusMasuk,
-      jamMasuk: form.jamMasuk || data.jamMasuk,
-      keteranganIzin: form.keteranganIzin,
-    });
-
-    Swal.fire("Berhasil", "Data presensi diperbarui", "success");
-    getPresensi();
-  };
-
-  /* ================= FILTER + SEARCH ================= */
+  /* ================= FILTER ================= */
   const filteredPresensi = useMemo(() => {
     return presensi.filter((p) => {
       const matchTanggal = filterTanggal
@@ -137,7 +175,9 @@ export default function RekapPresensi() {
         : true;
 
       const matchKategori =
-        filterKategori === "Semua" ? true : p.kategori === filterKategori;
+        filterKategori === "Semua"
+          ? true
+          : p.kategori === filterKategori;
 
       const matchSearch = searchText
         ? String(p.nomorUnik).includes(searchText) ||
@@ -152,7 +192,9 @@ export default function RekapPresensi() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-6">Rekap Presensi</h2>
+        <h2 className="text-3xl font-bold mb-6 text-blue-700">
+          Rekap Presensi
+        </h2>
 
         {/* FILTER */}
         <div className="bg-white p-4 rounded-xl mb-6 grid md:grid-cols-4 gap-4">
@@ -176,7 +218,7 @@ export default function RekapPresensi() {
 
           <input
             type="text"
-            placeholder="Cari nama / nomor unik"
+            placeholder="Cari nama / RFID"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             className="border rounded-xl px-3 py-2"
@@ -193,40 +235,45 @@ export default function RekapPresensi() {
             </div>
           ) : (
             <table className="w-full text-sm">
-              <thead className="bg-blue-500 text-white">
+              <thead className="bg-blue-600 text-white">
                 <tr>
                   <th className="p-3">No</th>
-                  <th className="p-3">Nomor</th>
+                  <th className="p-3">RFID</th>
                   <th className="p-3">Nama</th>
                   <th className="p-3">Kategori</th>
                   <th className="p-3">Tanggal</th>
-                  <th className="p-3">Jam Masuk</th>
+                  <th className="p-3">Jam</th>
                   <th className="p-3">Status</th>
-                  <th className="p-3">Keterangan</th>
                   <th className="p-3">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPresensi.map((p, i) => (
                   <tr key={p.id} className="border-t">
-                    <td className="p-3">{i + 1}</td>
-                    <td className="p-3">{p.nomorUnik}</td>
+                    <td className="p-3 text-center">{i + 1}</td>
+                    <td className="p-3 text-center">{p.nomorUnik}</td>
                     <td className="p-3 font-semibold">{p.nama}</td>
-                    <td className="p-3">{p.kategori}</td>
-                    <td className="p-3">{formatTanggal(p.tanggal)}</td>
-                    <td className="p-3">{p.jamMasuk || "-"}</td>
-                    <td className="p-3">{p.statusMasuk || p.status}</td>
-                    <td className="p-3">{p.keteranganIzin || "-"}</td>
-                    <td className="p-3 flex gap-2">
+                    <td className="p-3 text-center">{p.kategori}</td>
+                    <td className="p-3 text-center">
+                      {formatTanggal(p.tanggal)}
+                    </td>
+                    <td className="p-3 text-center">
+                      {formatJam(p.jamMasuk)} /{" "}
+                      {formatJam(p.jamPulang)}
+                    </td>
+                    <td className="p-3 text-center font-semibold text-blue-600">
+                      {renderStatus(p)}
+                    </td>
+                    <td className="p-3 flex justify-center gap-2">
                       <button
                         onClick={() => handleEdit(p)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-lg"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleHapus(p.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
+                        className="bg-blue-800 hover:bg-blue-900 text-white px-4 py-1 rounded-lg"
                       >
                         Hapus
                       </button>

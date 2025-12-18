@@ -1,24 +1,14 @@
 {
   "Daftar": [
     {
-      "id": "4d72",
-      "nama": "noclant",
+      "id": "ba41",
+      "nama": "Mahmud",
       "kelas": "X",
-      "jurusan": "TKJ",
+      "jurusan": "AKUTANSI",
       "jabatan": "Belum ada jabatan/bagian",
-      "email": "kelas@gmail.com",
+      "email": "Mahmudpink@gmail.com",
       "kategori": "Siswa",
-      "nomorUnik": "12193903"
-    },
-    {
-      "id": "2955",
-      "nama": "moreno",
-      "kelas": "XI",
-      "jurusan": "TSM",
-      "jabatan": "Pendiri Ngawi",
-      "email": "ngebruk@gmail.com",
-      "kategori": "Siswa",
-      "nomorUnik": "20420869"
+      "nomorUnik": "33994326"
     }
   ],
   "tagihan": [
@@ -140,84 +130,18 @@
   ],
   "presensi": [
     {
-      "id": "4ffb",
-      "nomorUnik": "SIS-7340",
-      "nama": "dafa",
+      "id": "f1b8",
+      "daftarId": "ba41",
+      "nomorUnik": "33994326",
+      "nama": "Mahmud",
       "kategori": "Siswa",
       "kelas": "X",
-      "jurusan": "TKJ",
-      "jabatan": "Belum ada jabatan/bagian",
-      "tanggal": "2025-12-09",
-      "jamMasuk": "11.27",
-      "jamPulang": "",
-      "statusMasuk": "Terlambat",
-      "statusPulang": ""
-    },
-    {
-      "id": "ed98",
-      "nomorUnik": "SIS-3746",
-      "nama": "ayyas",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "kategori": "Siswa",
+      "jurusan": "AKUTANSI",
+      "tanggal": "2025-12-18",
+      "jamMasuk": "09:23:01",
       "status": "Masuk",
-      "tanggal": "2025-12-11",
-      "jam": "14:36",
-      "statusMasuk": "Terlambat",
-      "jamMasuk": "14:36"
-    },
-    {
-      "id": "00ba",
-      "nomorUnik": "12193903",
-      "nama": "noclant",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "kategori": "Siswa",
-      "status": "Izin",
-      "tanggal": "2025-12-15",
-      "jam": "14:32",
-      "keteranganIzin": "magang"
-    },
-    {
-      "id": "3179",
-      "nomorUnik": "20420869",
-      "nama": "moreno",
-      "kelas": "XI",
-      "jurusan": "TSM",
-      "kategori": "Siswa",
-      "status": "Masuk",
-      "tanggal": "2025-12-15",
-      "jam": "14:33",
-      "jamMasuk": "14:33",
-      "statusMasuk": "Terlambat"
-    },
-    {
-      "id": "d432",
-      "nomorUnik": "12193903",
-      "nama": "noclant",
-      "kelas": "X",
-      "jurusan": "TKJ",
-      "kategori": "Siswa",
-      "status": "Masuk",
-      "tanggal": "2025-12-17",
-      "jam": "7:41",
-      "jamMasuk": "7:41",
-      "statusMasuk": "",
-      "keteranganIzin": ""
-    },
-    {
-      "id": "0820",
-      "nomorUnik": "20420869",
-      "nama": "moreno",
-      "kelas": "XI",
-      "jurusan": "TSM",
-      "kategori": "Siswa",
-      "status": "Masuk",
-      "tanggal": "2025-12-17",
-      "jam": "9:14",
-      "jamMasuk": "06:27",
-      "statusMasuk": "Tepat Waktu",
-      "keteranganIzin": ""
+      "keteranganIzin": "",
+      "keteranganStatus": "Terlambat"
     }
   ]
 }
