@@ -1,21 +1,18 @@
+// src/pages/TambahData.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function TambahData() {
+const API_MASTER = "http://localhost:8080/api/master-data";
+const API_KELAS = "http://localhost:8080/api/kelas";
+const API_KATEGORI = "http://localhost:8080/api/kategori";
+
+export default function TambahData({ editData }) {
   const navigate = useNavigate();
 
-  const API_DAFTAR = "http://localhost:5001/Daftar";
-  const API_KATEGORI = "http://localhost:5001/Kategori";
-  const API_KELAS = "http://localhost:5001/Kelas";
-
-  const [kategoriAktif, setKategoriAktif] = useState([]);
-  const [kelasList, setKelasList] = useState([]);
-  const [jurusanList, setJurusanList] = useState([]);
-  const [loadingKelas, setLoadingKelas] = useState(true);
-
   const [formData, setFormData] = useState({
+    nomorUnik: "",
     nama: "",
     kelas: "",
     jurusan: "",
@@ -24,99 +21,146 @@ function TambahData() {
     kategori: "Siswa",
   });
 
-  const getKategoriAktif = async () => {
-    const res = await axios.get(API_KATEGORI);
-    const aktif = res.data
-      .filter((k) => k.aktif)
-      .map((k) => k.kategori_nama);
-    setKategoriAktif(aktif);
-  };
+  const [dataDaftar, setDataDaftar] = useState([]);
+  const [kategoriAktif, setKategoriAktif] = useState([]);
+  const [kelasList, setKelasList] = useState([]);
+  const [jurusanList, setJurusanList] = useState([]);
+  const [loadingKelas, setLoadingKelas] = useState(true);
 
-  const getKelasList = async () => {
-    try {
-      setLoadingKelas(true);
-      const res = await axios.get(API_KELAS);
-      setKelasList(res.data || []);
-    } finally {
+  // ========================= FETCH MASTER DATA =========================
+  useEffect(() => {
+    if (editData) setFormData(editData);
+
+    // Semua data daftar
+    axios.get(API_MASTER).then(res => setDataDaftar(res.data || []));
+
+    // Kategori aktif
+    axios.get(API_KATEGORI).then(res => {
+      const aktif = (res.data || []).filter(k => k.aktif).map(k => k.nama);
+      setKategoriAktif(aktif.length ? aktif : ["Siswa"]);
+    });
+
+    // Kelas & jurusan
+    axios.get(API_KELAS).then(res => {
+      const kelasData = res.data || [];
+      setKelasList([...new Set(kelasData.map(k => k.nama).filter(Boolean))]);
       setLoadingKelas(false);
-    }
-  };
+    });
+  }, [editData]);
 
-  useEffect(() => {
-    getKategoriAktif();
-    getKelasList();
-  }, []);
-
-  useEffect(() => {
-    const isSiswa = formData.kategori.toLowerCase().includes("siswa");
-    if (!isSiswa) {
-      setFormData((p) => ({ ...p, kelas: "-", jurusan: "-" }));
-    } else {
-      setFormData((p) => ({ ...p, kelas: "", jurusan: "" }));
-    }
-  }, [formData.kategori]);
-
+  // ========================= FILTER JURUSAN =========================
   useEffect(() => {
     if (!formData.kelas || formData.kelas === "-") {
       setJurusanList([]);
+      setFormData(prev => ({ ...prev, jurusan: "" }));
       return;
     }
-    const filtered = [
-      ...new Set(
-        kelasList
-          .filter((k) => k.kelas === formData.kelas)
-          .map((k) => k.jurusan)
-          .filter(Boolean)
-      ),
-    ];
-    setJurusanList(filtered);
-  }, [formData.kelas, kelasList]);
+    axios.get(API_KELAS).then(res => {
+      const filtered = [
+        ...new Set(
+          (res.data || [])
+            .filter(k => k.nama === formData.kelas)
+            .map(k => k.jurusan)
+            .filter(Boolean)
+        ),
+      ];
+      setJurusanList(filtered);
+      if (!filtered.includes(formData.jurusan)) {
+        setFormData(prev => ({ ...prev, jurusan: "" }));
+      }
+    });
+  }, [formData.kelas]);
 
-  const handleChange = (e) =>
+  // ========================= HANDLE CHANGE =========================
+  const handleChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const generateUniqueNumber = () =>
-    Math.floor(10000000 + Math.random() * 90000000).toString();
+  // ========================= GENERATE RFID =========================
+  const generateRFID = () => {
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const last = dataDaftar
+      .filter(d => d.nomorUnik?.startsWith(`RFID-${today}`))
+      .map(d => Number(d.nomorUnik.split("-")[2]))
+      .sort((a, b) => b - a)[0] || 0;
+    return `RFID-${today}-${String(last + 1).padStart(3, "0")}`;
+  };
 
-  const handleSubmit = async (e) => {
+  // ========================= SUBMIT DATA =========================
+  const handleSubmit = async e => {
     e.preventDefault();
 
     const isSiswa = formData.kategori.toLowerCase().includes("siswa");
     if (isSiswa && (!formData.kelas || !formData.jurusan)) {
       return Swal.fire(
         "Peringatan",
-        "Kelas dan Jurusan wajib diisi untuk kategori Siswa",
+        "Kelas dan Jurusan wajib diisi untuk Siswa",
         "warning"
       );
     }
 
+    let rfidFinal = formData.nomorUnik.trim();
+    if (!rfidFinal) rfidFinal = generateRFID();
+
+    const duplikat = dataDaftar.some(
+      d => d.nomorUnik === rfidFinal && d.id !== formData.id
+    );
+    if (duplikat) {
+      return Swal.fire("Error", "RFID sudah digunakan", "error");
+    }
+
     try {
-      await axios.post(API_DAFTAR, {
-        ...formData,
-        nomorUnik: generateUniqueNumber(),
-        jabatan: formData.jabatan.trim() || "Belum ada jabatan/bagian",
-      });
-      Swal.fire("Berhasil", "Data berhasil ditambahkan", "success");
+      if (formData.id) {
+        // UPDATE
+        await axios.put(`${API_MASTER}/${formData.id}`, {
+          ...formData,
+          nomorUnik: rfidFinal,
+        });
+        Swal.fire("Berhasil", "Data diperbarui", "success");
+      } else {
+        // CREATE
+        await axios.post(API_MASTER, {
+          ...formData,
+          nomorUnik: rfidFinal,
+          jabatan: formData.jabatan.trim() || "Belum ada jabatan/bagian",
+        });
+        Swal.fire("Berhasil", `RFID: ${rfidFinal}`, "success");
+      }
       navigate("/Daftar");
-    } catch {
-      Swal.fire("Gagal", "Tidak dapat menambahkan data", "error");
+    } catch (err) {
+      Swal.fire(
+        "Gagal",
+        err.response?.data || "Tidak dapat menyimpan data",
+        "error"
+      );
     }
   };
 
   const isSiswa = formData.kategori.toLowerCase().includes("siswa");
-  const kelasUnique = [...new Set(kelasList.map((k) => k.kelas).filter(Boolean))];
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center p-6">
       <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl p-8 mt-10">
         <h1 className="text-2xl font-bold text-center mb-6">
-          Tambah Data
+          {formData.id ? "Edit Data" : "Tambah Data"}
         </h1>
 
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
+          {/* RFID */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-1">RFID</label>
+            <input
+              type="text"
+              name="nomorUnik"
+              value={formData.nomorUnik}
+              onChange={handleChange}
+              placeholder="Kosongkan jika ingin otomatis"
+              className="w-full border p-2 rounded"
+            />
+          </div>
+
           {/* Nama */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium mb-1">Nama</label>
@@ -132,9 +176,7 @@ function TambahData() {
 
           {/* Jabatan */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Jabatan / Bagian
-            </label>
+            <label className="block text-sm font-medium mb-1">Jabatan / Bagian</label>
             <input
               type="text"
               name="jabatan"
@@ -174,9 +216,9 @@ function TambahData() {
             </select>
           </div>
 
+          {/* Kelas & Jurusan (hanya untuk Siswa) */}
           {isSiswa && (
             <>
-              {/* Kelas */}
               <div>
                 <label className="block text-sm font-medium mb-1">Kelas</label>
                 <select
@@ -188,7 +230,7 @@ function TambahData() {
                   required
                 >
                   <option value="">Pilih Kelas</option>
-                  {kelasUnique.map((k, i) => (
+                  {kelasList.map((k, i) => (
                     <option key={i} value={k}>
                       {k}
                     </option>
@@ -196,14 +238,13 @@ function TambahData() {
                 </select>
               </div>
 
-              {/* Jurusan */}
               <div>
-                <label className="block text-sm font-medium mb-1 ml-45">Jurusan</label>
+                <label className="block text-sm font-medium mb-1">Jurusan</label>
                 <select
                   name="jurusan"
                   value={formData.jurusan}
                   onChange={handleChange}
-                  className="w-full border p-2 rounded  ml-45"
+                  className="w-full border p-2 rounded"
                   disabled={!jurusanList.length}
                   required
                 >
@@ -219,17 +260,17 @@ function TambahData() {
           )}
 
           {/* Tombol */}
-          <div className="md:col-span-2 flex gap-4 pt-4"> 
+          <div className="md:col-span-2 flex gap-4 pt-4">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded w-full"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded w-full"
             >
               Simpan
             </button>
             <button
               type="button"
               onClick={() => navigate("/Daftar")}
-              className="bg-gray-500 hover:bg-gray-600 transition text-white py-2 rounded w-full"
+              className="bg-gray-500 hover:bg-gray-600 text-white py-2 rounded w-full"
             >
               Batal
             </button>
@@ -239,6 +280,3 @@ function TambahData() {
     </div>
   );
 }
-
-export default TambahData;
-   

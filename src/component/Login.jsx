@@ -4,49 +4,45 @@ import Swal from "sweetalert2";
 import logo from "../../public/kakangku.jpg";
 
 function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find((u) => u.email === formData.email);
-
-    if (!user) {
-      Swal.fire({
-        title: "Akun belum terdaftar!",
-        text: "Silakan daftar terlebih dahulu.",
-        icon: "error",
-        confirmButtonText: "OK",
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-      return;
-    }
 
-    if (user.password !== formData.password) {
+      const data = await res.json();
+
+      if (data.status === "error") {
+        Swal.fire({
+          title: data.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          title: data.message,
+          icon: "success",
+        }).then(() => navigate("/Dasboard"));
+      }
+    } catch (err) {
+      console.error(err);
       Swal.fire({
-        title: "Password salah!",
+        title: "Terjadi kesalahan server!",
         icon: "error",
-        confirmButtonText: "Coba Lagi",
       });
-      return;
     }
-
-    Swal.fire({
-      title: "Login Berhasil!",
-      icon: "success",
-      draggable: true,
-    }).then(() => {
-      navigate("/Dasboard");
-    });
   };
 
   return (
@@ -60,31 +56,27 @@ function Login() {
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
               <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Masukan Email anda"
+                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
                 required
               />
             </div>
 
             <div className="relative">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Password
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Masukan Password"
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 required
               />
               <button
@@ -92,17 +84,13 @@ function Login() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-9 text-gray-500 hover:text-gray-700"
               >
-                <i
-                  className={`ri-${
-                    showPassword ? "eye-line" : "eye-off-line"
-                  } text-xl`}
-                ></i>
+                <i className={`ri-${showPassword ? "eye-line" : "eye-off-line"} text-xl`}></i>
               </button>
             </div>
 
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
               type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
             >
               Login
             </button>

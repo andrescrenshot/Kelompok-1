@@ -7,18 +7,18 @@ function EditData() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const API_DAFTAR = "http://localhost:5001/Daftar";
-  const API_KATEGORI = "http://localhost:5001/Kategori";
-  const API_KELAS = "http://localhost:5001/Kelas";
+  const API_MASTER = "http://localhost:8080/api/master-data";
+  const API_KATEGORI = "http://localhost:8080/api/kategori";
+  const API_KELAS = "http://localhost:8080/api/kelas";
 
   const [formData, setFormData] = useState({
+    nomorUnik: "",
     nama: "",
     kelas: "",
     jurusan: "",
     jabatan: "",
     email: "",
     kategori: "Siswa",
-    nomorUnik: "",
   });
 
   const [kategoriAktif, setKategoriAktif] = useState([]);
@@ -26,116 +26,123 @@ function EditData() {
   const [jurusanList, setJurusanList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const getKategoriAktif = async () => {
-    const res = await axios.get(API_KATEGORI);
-    setKategoriAktif(
-      res.data.filter((k) => k.aktif).map((k) => k.kategori_nama)
-    );
-  };
-
-  const getKelasList = async () => {
-    const res = await axios.get(API_KELAS);
-    setKelasList(res.data || []);
-  };
-
-  const getUserData = async () => {
-    try {
-      const res = await axios.get(`${API_DAFTAR}/${id}`);
-      setFormData(res.data);
-    } catch {
-      Swal.fire("Error", "Gagal mengambil data!", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch data master + kategori + kelas
   useEffect(() => {
-    getKategoriAktif();
-    getKelasList();
-    getUserData();
+    const fetchAll = async () => {
+      try {
+        const [resMaster, resKategori, resKelas] = await Promise.all([
+          axios.get(`${API_MASTER}/${id}`),
+          axios.get(API_KATEGORI),
+          axios.get(API_KELAS),
+        ]);
+
+        const d = resMaster.data;
+
+        setFormData({
+          nomorUnik: d.nomorUnik ?? "",
+          nama: d.nama ?? "",
+          kelas: d.kelas ?? "",
+          jurusan: d.jurusan ?? "",
+          jabatan: d.jabatan ?? "",
+          email: d.email ?? "",
+          kategori: d.kategori ?? "Siswa",
+        });
+
+        setKategoriAktif(
+          (resKategori.data || [])
+            .filter(k => k.aktif)
+            .map(k => k.nama)
+        );
+
+        setKelasList(resKelas.data || []);
+      } catch (err) {
+        console.error(err);
+        Swal.fire("Error", "Gagal memuat data", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAll();
   }, [id]);
 
+  // Filter jurusan jika kategori Siswa
   useEffect(() => {
+    const isSiswa = formData.kategori.toLowerCase().includes("siswa");
+
+    if (!isSiswa) {
+      setFormData(prev => ({ ...prev, kelas: "-", jurusan: "-" }));
+      setJurusanList([]);
+      return;
+    }
+
     if (!formData.kelas) {
       setJurusanList([]);
       return;
     }
-    const filtered = [
+
+    const jurusan = [
       ...new Set(
         kelasList
-          .filter((k) => k.kelas === formData.kelas)
-          .map((k) => k.jurusan)
+          .filter(k => k.nama === formData.kelas)
+          .map(k => k.jurusan)
           .filter(Boolean)
       ),
     ];
-    setJurusanList(filtered);
-  }, [formData.kelas, kelasList]);
 
-  const handleChange = (e) =>
+    setJurusanList(jurusan);
+  }, [formData.kelas, formData.kategori, kelasList]);
+
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!/^\d{8}$/.test(formData.nomorUnik)) {
+    const isSiswa = formData.kategori.toLowerCase().includes("siswa");
+    if (isSiswa && (!formData.kelas || !formData.jurusan)) {
       return Swal.fire(
         "Peringatan",
-        "Nomor Unik harus tepat 8 angka",
+        "Kelas & Jurusan wajib diisi untuk Siswa",
         "warning"
       );
     }
 
-    const confirm = await Swal.fire({
-      title: "Simpan perubahan?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Simpan",
-      cancelButtonText: "Batal",
-    });
-
-    if (!confirm.isConfirmed) return;
-
     try {
-      await axios.put(`${API_DAFTAR}/${id}`, {
+      await axios.put(`${API_MASTER}/${id}`, {
         ...formData,
-        jabatan: formData.jabatan.trim() || "Belum ada jabatan/bagian",
+        jabatan: formData.jabatan?.trim() || "Belum ada jabatan/bagian",
       });
+
       Swal.fire("Berhasil", "Data berhasil diperbarui", "success");
       navigate("/Daftar");
-    } catch {
-      Swal.fire("Error", "Gagal mengupdate data!", "error");
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", err.response?.data || "Gagal update data", "error");
     }
   };
 
   if (loading) return <p className="text-center mt-20">Memuat data...</p>;
 
   const isSiswa = formData.kategori.toLowerCase().includes("siswa");
-  const kelasUnique = [...new Set(kelasList.map((k) => k.kelas).filter(Boolean))];
+  const kelasUnique = [...new Set(kelasList.map(k => k.nama).filter(Boolean))];
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center p-6">
       <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl p-8 mt-10">
         <h1 className="text-2xl font-bold text-center mb-6">Edit Data</h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
-        >
-          {/* Nomor Unik */}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* RFID */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium mb-1">
-              Nomor Unik
-            </label>
+            <label className="block text-sm font-medium mb-1">RFID</label>
             <input
               type="text"
+              name="nomorUnik"
               value={formData.nomorUnik}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, "");
-                if (v.length <= 8)
-                  setFormData({ ...formData, nomorUnik: v });
-              }}
+              onChange={handleChange}
               className="w-full border p-2 rounded"
-              placeholder="Contoh: 12345678"
               required
             />
           </div>
@@ -155,9 +162,7 @@ function EditData() {
 
           {/* Jabatan */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Jabatan / Bagian
-            </label>
+            <label className="block text-sm font-medium mb-1">Jabatan / Bagian</label>
             <input
               type="text"
               name="jabatan"
@@ -190,16 +195,14 @@ function EditData() {
               className="w-full border p-2 rounded"
             >
               {kategoriAktif.map((k, i) => (
-                <option key={i} value={k}>
-                  {k}
-                </option>
+                <option key={i} value={k}>{k}</option>
               ))}
             </select>
           </div>
 
+          {/* Kelas & Jurusan */}
           {isSiswa && (
             <>
-              {/* Kelas */}
               <div>
                 <label className="block text-sm font-medium mb-1">Kelas</label>
                 <select
@@ -207,33 +210,28 @@ function EditData() {
                   value={formData.kelas}
                   onChange={handleChange}
                   className="w-full border p-2 rounded"
+                  required
                 >
                   <option value="">Pilih Kelas</option>
                   {kelasUnique.map((k, i) => (
-                    <option key={i} value={k}>
-                      {k}
-                    </option>
+                    <option key={i} value={k}>{k}</option>
                   ))}
                 </select>
               </div>
 
-              {/* Jurusan */}
               <div>
-                <label className="block text-sm font-medium mb-1 ml-45  ">
-                  Jurusan
-                </label>
+                <label className="block text-sm font-medium mb-1">Jurusan</label>
                 <select
                   name="jurusan"
                   value={formData.jurusan}
                   onChange={handleChange}
-                  className="w-full border p-2 rounded ml-45"
+                  className="w-full border p-2 rounded"
                   disabled={!jurusanList.length}
+                  required
                 >
                   <option value="">Pilih Jurusan</option>
                   {jurusanList.map((j, i) => (
-                    <option key={i} value={j}>
-                      {j}
-                    </option>
+                    <option key={i} value={j}>{j}</option>
                   ))}
                 </select>
               </div>
@@ -244,14 +242,14 @@ function EditData() {
           <div className="md:col-span-2 flex gap-4 pt-4">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded w-full"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded w-full"
             >
               Simpan
             </button>
             <button
               type="button"
               onClick={() => navigate("/Daftar")}
-              className="bg-gray-500 hover:bg-gray-600 transition text-white py-2 rounded w-full"
+              className="bg-gray-500 hover:bg-gray-600 text-white py-2 rounded w-full"
             >
               Kembali
             </button>

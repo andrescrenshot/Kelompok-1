@@ -8,7 +8,47 @@
       "jabatan": "Belum ada jabatan/bagian",
       "email": "Mahmudpink@gmail.com",
       "kategori": "Siswa",
-      "nomorUnik": "33994326"
+      "nomorUnik": "11111111"
+    },
+    {
+      "id": "8cf9",
+      "nama": "darren",
+      "kelas": "-",
+      "jurusan": "-",
+      "jabatan": "Guru Matematika",
+      "email": "DARRENBEBEK@gmail.com",
+      "kategori": "Guru",
+      "nomorUnik": "69623765"
+    },
+    {
+      "id": "a79d",
+      "nomorUnik": "01920192",
+      "nama": "noclant",
+      "kelas": "XI",
+      "jurusan": "TKJ",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "dr@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "db5c",
+      "nomorUnik": "12345678",
+      "nama": "ambatukam",
+      "kelas": "X",
+      "jurusan": "TSM",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "Mahmudpink@gmail.com",
+      "kategori": "Siswa"
+    },
+    {
+      "id": "2330",
+      "nomorUnik": "09876543",
+      "nama": "amba",
+      "kelas": "X",
+      "jurusan": "TATA BUSANA",
+      "jabatan": "Belum ada jabatan/bagian",
+      "email": "Mahmudpink@gmail.com",
+      "kategori": "Siswa"
     }
   ],
   "tagihan": [
@@ -89,6 +129,11 @@
       "id": "k1763608093261",
       "kategori_nama": "SATPAM",
       "aktif": false
+    },
+    {
+      "id": "k1768288795979",
+      "kategori_nama": "ustad",
+      "aktif": false
     }
   ],
   "Kelas": [
@@ -121,11 +166,6 @@
       "id": "1c9a",
       "kelas": "XI",
       "jurusan": "TSM"
-    },
-    {
-      "id": "034a",
-      "kelas": "X",
-      "jurusan": "TATA BUSANA"
     }
   ],
   "presensi": [
@@ -142,6 +182,125 @@
       "status": "Masuk",
       "keteranganIzin": "",
       "keteranganStatus": "Terlambat"
+    },
+    {
+      "id": "f801",
+      "daftarId": "ba41",
+      "nomorUnik": "33994326",
+      "nama": "Mahmud",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "tanggal": "2025-12-19",
+      "jamMasuk": "10:54:01",
+      "status": "Masuk",
+      "keteranganIzin": "",
+      "keteranganStatus": "Terlambat"
+    },
+    {
+      "id": "d5a0",
+      "daftarId": "ba41",
+      "nomorUnik": "11111111",
+      "nama": "Mahmud",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "tanggal": "2025-12-22",
+      "jamMasuk": "06:21",
+      "status": "Masuk",
+      "keteranganIzin": "",
+      "keteranganStatus": "Tepat Waktu",
+      "jamPulang": ""
+    },
+    {
+      "id": "2bb0",
+      "daftarId": "a79d",
+      "nomorUnik": "01920192",
+      "nama": "noclant",
+      "kategori": "Siswa",
+      "kelas": "XI",
+      "jurusan": "TKJ",
+      "tanggal": "2025-12-22",
+      "jamMasuk": "06:50",
+      "jamPulang": "",
+      "status": "Masuk",
+      "keteranganIzin": "",
+      "keteranganStatus": "Tepat Waktu"
+    },
+    {
+      "id": "3e3c",
+      "daftarId": "8cf9",
+      "nomorUnik": "69623765",
+      "nama": "darren",
+      "kategori": "Guru",
+      "kelas": "-",
+      "jurusan": "-",
+      "tanggal": "2025-12-22",
+      "jamMasuk": "06:50",
+      "jamPulang": "09:46",
+      "status": "Pulang",
+      "keteranganIzin": "",
+      "keteranganStatus": "Tepat Waktu"
+    },
+    {
+      "id": "f14e",
+      "daftarId": "ba41",
+      "nomorUnik": "11111111",
+      "nama": "Mahmud",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "tanggal": "2026-01-05",
+      "jamMasuk": "08:37:00",
+      "jamPulang": "",
+      "status": "Masuk",
+      "keteranganIzin": "",
+      "keteranganStatus": "Terlambat"
+    },
+    {
+      "id": "ed28",
+      "daftarId": "ba41",
+      "nomorUnik": "11111111",
+      "nama": "Mahmud",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "AKUTANSI",
+      "tanggal": "2026-01-13",
+      "jamMasuk": "06:49",
+      "jamPulang": "14:08",
+      "status": "Pulang",
+      "keteranganIzin": "",
+      "keteranganStatus": "Tepat Waktu"
+    },
+    {
+      "id": "cc76",
+      "daftarId": "2330",
+      "nomorUnik": "09876543",
+      "nama": "amba",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "TATA BUSANA",
+      "tanggal": "2026-01-13",
+      "jamMasuk": "06:26",
+      "jamPulang": "15:00",
+      "status": "Pulang",
+      "keteranganIzin": "",
+      "keteranganStatus": "Tepat Waktu"
+    },
+    {
+      "id": "aa22",
+      "daftarId": "db5c",
+      "nomorUnik": "12345678",
+      "nama": "ambatukam",
+      "kategori": "Siswa",
+      "kelas": "X",
+      "jurusan": "TSM",
+      "tanggal": "2026-01-13",
+      "jamMasuk": "",
+      "jamPulang": "",
+      "status": "Izin",
+      "keteranganIzin": "Ngawi",
+      "keteranganStatus": ""
     }
   ]
 }

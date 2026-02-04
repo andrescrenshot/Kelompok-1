@@ -3,21 +3,35 @@ import axios from "axios";
 
 function RekapTagihan() {
   const [tagihan, setTagihan] = useState([]);
+  const [masterSiswa, setMasterSiswa] = useState([]);
+  const [jenisTagihan, setJenisTagihan] = useState([]);
   const [visible, setVisible] = useState(false);
 
-  const API_TAGIHAN = "http://localhost:5001/tagihan";
+  const API_TAGIHAN = "http://localhost:8080/tagihan";
+  const API_SISWA = "http://localhost:8080/siswa";
+  const API_JENIS = "http://localhost:8080/jenis-tagihan";
 
+  // ================= FETCH DATA =================
   const getTagihan = async () => {
     try {
       const res = await axios.get(API_TAGIHAN);
-
-      // Pastikan semua jumlah dibulatkan
-      const cleanData = res.data.map((t) => ({
+      const cleanData = (res.data || []).map((t) => ({
         ...t,
-        jumlah: Math.round(t.jumlah), // HAPUS DESIMAL
+        jumlah: Math.round(t.jumlah || 0),
       }));
-
       setTagihan(cleanData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getMasterData = async () => {
+    try {
+      const resSiswa = await axios.get(API_SISWA);
+      setMasterSiswa(resSiswa.data || []);
+
+      const resJenis = await axios.get(API_JENIS);
+      setJenisTagihan(resJenis.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -25,17 +39,18 @@ function RekapTagihan() {
 
   useEffect(() => {
     getTagihan();
+    getMasterData();
     setTimeout(() => setVisible(true), 200);
   }, []);
 
-  // Hitung total tanpa desimal
+  // ================= HITUNG TOTAL =================
   const totalLunas = tagihan
     .filter((t) => t.status === "Lunas")
-    .reduce((a, b) => a + Math.round(b.jumlah), 0);
+    .reduce((a, b) => a + (b.jumlah || 0), 0);
 
   const totalBelum = tagihan
     .filter((t) => t.status === "Belum Lunas")
-    .reduce((a, b) => a + Math.round(b.jumlah), 0);
+    .reduce((a, b) => a + (b.jumlah || 0), 0);
 
   return (
     <div
@@ -52,17 +67,13 @@ function RekapTagihan() {
           {/* Ringkasan */}
           <div className="flex flex-wrap gap-4 mb-6">
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-semibold text-gray-700">
-                Total Lunas
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-700">Total Lunas</h2>
               <p className="text-2xl font-bold text-green-600">
                 Rp {totalLunas.toLocaleString("id-ID")}
               </p>
             </div>
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-semibold text-gray-700">
-                Total Belum Lunas
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-700">Total Belum Lunas</h2>
               <p className="text-2xl font-bold text-red-600">
                 Rp {totalBelum.toLocaleString("id-ID")}
               </p>
@@ -75,7 +86,7 @@ function RekapTagihan() {
               <thead className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
                 <tr>
                   <th className="p-3 text-center">No</th>
-                  <th className="p-3 text-center">Nama</th>
+                  <th className="p-3 text-center">Nama Siswa</th>
                   <th className="p-3 text-center">Jenis Tagihan</th>
                   <th className="p-3 text-center">Jumlah</th>
                   <th className="p-3 text-center">Status</th>
@@ -83,32 +94,36 @@ function RekapTagihan() {
               </thead>
               <tbody>
                 {tagihan.length > 0 ? (
-                  tagihan.map((t, idx) => (
-                    <tr
-                      key={t.id}
-                      className={`${
-                        idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
-                      } hover:bg-blue-50 transition`}
-                    >
-                      <td className="p-3">{idx + 1}</td>
-                      <td className="p-3">{t.nama}</td>
-                      <td className="p-3 text-center">{t.jenis_tagihan}</td>
-                      <td className="p-3 text-right">
-                        Rp {t.jumlah.toLocaleString("id-ID")}
-                      </td>
-                      <td className="text-center">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                            t.status === "Lunas"
-                              ? "bg-green-200 text-green-800"
-                              : "bg-red-200 text-red-800"
-                          }`}
-                        >
-                          {t.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
+                  tagihan.map((t, idx) => {
+                    const siswa = masterSiswa.find((s) => s.id === t.siswaId);
+                    const jenis = jenisTagihan.find((j) => j.id === t.jenisTagihanId);
+                    return (
+                      <tr
+                        key={t.id}
+                        className={`${
+                          idx % 2 === 0 ? "bg-gray-50" : "bg-gray-100"
+                        } hover:bg-blue-50 transition`}
+                      >
+                        <td className="p-3 text-center">{idx + 1}</td>
+                        <td className="p-3">{siswa ? `${siswa.nama} - ${siswa.kelas}` : "-"}</td>
+                        <td className="p-3 text-center">{jenis ? jenis.nama : "-"}</td>
+                        <td className="p-3 text-right">
+                          Rp {t.jumlah.toLocaleString("id-ID")}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                              t.status === "Lunas"
+                                ? "bg-green-200 text-green-800"
+                                : "bg-red-200 text-red-800"
+                            }`}
+                          >
+                            {t.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td

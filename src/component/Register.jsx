@@ -4,36 +4,18 @@ import Swal from "sweetalert2";
 import logo from "../../public/kakangku.jpg";
 
 function Register() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const exists = users.some((u) => u.email === formData.email);
-
-    if (exists) {
-      Swal.fire({
-        title: "Email sudah terdaftar!",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
-    // VALIDASI KONFIRMASI PASSWORD
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({
         title: "Konfirmasi password tidak cocok!",
@@ -43,67 +25,60 @@ function Register() {
       return;
     }
 
-    const newUser = {
-      nama: formData.nama,
-      email: formData.email,
-      password: formData.password,
-    };
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
+      });
 
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
+      const data = await res.json();
 
-    Swal.fire({
-      title: "Registrasi berhasil!",
-      icon: "success",
-      draggable: true,
-    }).then(() => {
-      navigate("/");
-    });
+      if (data.status === "error") {
+        Swal.fire({ title: data.message, icon: "error", confirmButtonText: "OK" });
+      } else {
+        Swal.fire({ title: data.message, icon: "success" }).then(() => navigate("/"));
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({ title: "Terjadi kesalahan server!", icon: "error" });
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="flex bg-gradient-to-r from-blue-100 via-white to-blue-100 rounded-3xl shadow-lg w-[720px] h-[480px] overflow-hidden">
-        
         <div className="w-1/3 flex items-center justify-center bg-white p-6 shadow-md">
           <img src={logo} alt="Logo" className="w-90 h-90 object-contain" />
         </div>
 
         <div className="w-2/3 p-8 flex flex-col justify-center">
           <h1 className="text-2xl font-bold text-center mb-6">Registrasi</h1>
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
               <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Masukan Email Anda"
+                className="shadow appearance-none rounded-full w-full py-2 px-4 text-gray-700 focus:outline-none focus:shadow-outline"
                 required
               />
             </div>
 
-            {/* PASSWORD */}
             <div className="relative">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Password
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Masukan Password"
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 required
               />
-
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -113,21 +88,17 @@ function Register() {
               </button>
             </div>
 
-            {/* CONFIRM PASSWORD */}
             <div className="relative">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Konfirmasi Password
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Password</label>
               <input
-                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Masukan ulang password"
+                className="shadow appearance-none rounded-full w-full py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
                 required
               />
-
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -137,10 +108,7 @@ function Register() {
               </button>
             </div>
 
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-              type="submit"
-            >
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
               Registrasi
             </button>
           </form>

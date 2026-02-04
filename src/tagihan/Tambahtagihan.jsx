@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 function TambahTagihan() {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nama: "",
     jenis_tagihan: "",
@@ -13,41 +14,61 @@ function TambahTagihan() {
   });
 
   const [jenisTagihan, setJenisTagihan] = useState([]);
-  const API_TAGIHAN = "http://localhost:5001/tagihan";
-  const API_JENIS = "http://localhost:5001/JenisTagihan";
 
+  // ✅ API JAVA
+  const API_TAGIHAN = "http://localhost:8080/tagihan";
+  const API_JENIS = "http://localhost:8080/jenis-tagihan";
+
+  /* ================= LOAD JENIS TAGIHAN ================= */
   useEffect(() => {
     axios
       .get(API_JENIS)
       .then((res) => setJenisTagihan(res.data))
-      .catch((err) => console.error("Gagal ambil Jenis Tagihan:", err));
+      .catch(() =>
+        Swal.fire("Error", "Gagal mengambil jenis tagihan", "error")
+      );
   }, []);
 
+  /* ================= HANDLE ================= */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(API_TAGIHAN, {
+    if (name === "jumlah") {
+      setFormData({
         ...formData,
-        id: `t${Date.now()}`,
-        jumlah: Number(formData.jumlah),
+        jumlah: value.replace(/\D/g, ""),
       });
-      Swal.fire("Berhasil!", "Tagihan berhasil ditambahkan!", "success");
-      navigate("/Tagihan");
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Gagal!", "Terjadi kesalahan saat menambah tagihan", "error");
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
   };
 
+  /* ================= SUBMIT ================= */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post(API_TAGIHAN, {
+        nama: formData.nama,
+        jenis_tagihan: formData.jenis_tagihan,
+        jumlah: Number(formData.jumlah),
+        status: formData.status,
+      });
+
+      Swal.fire("Berhasil!", "Tagihan berhasil ditambahkan", "success");
+      navigate("/Tagihan");
+    } catch (err) {
+      Swal.fire("Gagal!", "Gagal menyimpan tagihan", "error");
+    }
+  };
+
+  /* ================= UI (TIDAK DIUBAH) ================= */
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white">
       <div className="bg-black/30 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-purple-500 w-full max-w-md">
-        <h1 className="text-3xl font-extrabold mb-6 text-center">Tambah Tagihan</h1>
+        <h1 className="text-3xl font-extrabold mb-6 text-center">
+          Tambah Tagihan
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -58,6 +79,7 @@ function TambahTagihan() {
               value={formData.nama}
               onChange={handleChange}
               className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+              required
             />
           </div>
 
@@ -68,6 +90,7 @@ function TambahTagihan() {
               value={formData.jenis_tagihan}
               onChange={handleChange}
               className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+              required
             >
               <option value="">-- Pilih Jenis Tagihan --</option>
               {jenisTagihan.map((item) => (
@@ -86,6 +109,7 @@ function TambahTagihan() {
               value={formData.jumlah}
               onChange={handleChange}
               className="w-full p-2 rounded bg-black/50 border border-purple-500 text-white"
+              required
             />
           </div>
 
