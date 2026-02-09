@@ -4,12 +4,10 @@ import axios from "axios";
 function RekapTagihan() {
   const [tagihan, setTagihan] = useState([]);
   const [masterSiswa, setMasterSiswa] = useState([]);
-  const [jenisTagihan, setJenisTagihan] = useState([]);
   const [visible, setVisible] = useState(false);
 
   const API_TAGIHAN = "http://localhost:8080/tagihan";
-  const API_SISWA = "http://localhost:8080/siswa";
-  const API_JENIS = "http://localhost:8080/jenis-tagihan";
+  const API_MASTER = "http://localhost:8080/api/master-data";
 
   // ================= FETCH DATA =================
   const getTagihan = async () => {
@@ -21,19 +19,16 @@ function RekapTagihan() {
       }));
       setTagihan(cleanData);
     } catch (err) {
-      console.error(err);
+      console.error("TAGIHAN ERROR:", err);
     }
   };
 
   const getMasterData = async () => {
     try {
-      const resSiswa = await axios.get(API_SISWA);
-      setMasterSiswa(resSiswa.data || []);
-
-      const resJenis = await axios.get(API_JENIS);
-      setJenisTagihan(resJenis.data || []);
+      const res = await axios.get(API_MASTER);
+      setMasterSiswa(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("MASTER DATA ERROR:", err);
     }
   };
 
@@ -67,13 +62,18 @@ function RekapTagihan() {
           {/* Ringkasan */}
           <div className="flex flex-wrap gap-4 mb-6">
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-semibold text-gray-700">Total Lunas</h2>
+              <h2 className="text-xl font-semibold text-gray-700">
+                Total Lunas
+              </h2>
               <p className="text-2xl font-bold text-green-600">
                 Rp {totalLunas.toLocaleString("id-ID")}
               </p>
             </div>
+
             <div className="flex-1 bg-white p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-semibold text-gray-700">Total Belum Lunas</h2>
+              <h2 className="text-xl font-semibold text-gray-700">
+                Total Belum Lunas
+              </h2>
               <p className="text-2xl font-bold text-red-600">
                 Rp {totalBelum.toLocaleString("id-ID")}
               </p>
@@ -95,8 +95,10 @@ function RekapTagihan() {
               <tbody>
                 {tagihan.length > 0 ? (
                   tagihan.map((t, idx) => {
-                    const siswa = masterSiswa.find((s) => s.id === t.siswaId);
-                    const jenis = jenisTagihan.find((j) => j.id === t.jenisTagihanId);
+                    const siswa = masterSiswa.find(
+                      (s) => s.id === t.siswaId
+                    );
+
                     return (
                       <tr
                         key={t.id}
@@ -105,11 +107,21 @@ function RekapTagihan() {
                         } hover:bg-blue-50 transition`}
                       >
                         <td className="p-3 text-center">{idx + 1}</td>
-                        <td className="p-3">{siswa ? `${siswa.nama} - ${siswa.kelas}` : "-"}</td>
-                        <td className="p-3 text-center">{jenis ? jenis.nama : "-"}</td>
+
+                        <td className="p-3">
+                          {siswa
+                            ? `${siswa.nama} - ${siswa.kelas}`
+                            : "-"}
+                        </td>
+
+                        <td className="p-3 text-center">
+                          {t.jenisTagihanNama || "-"}
+                        </td>
+
                         <td className="p-3 text-right">
                           Rp {t.jumlah.toLocaleString("id-ID")}
                         </td>
+
                         <td className="p-3 text-center">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-semibold ${

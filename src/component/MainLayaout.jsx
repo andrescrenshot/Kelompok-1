@@ -1,14 +1,13 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useMatch } from "react-router-dom";
 import Sidnav from "./Sidnav";
 
 function MainLayout() {
-  const { pathname } = useLocation();
-  const hideSidebar = pathname === "/Presensi";
+  // lebih stabil daripada useLocation
+  const hideSidebar = useMatch("/Presensi");
 
   return (
     <div className="flex min-h-screen bg-transparent">
-
       {/* SIDEBAR */}
       {!hideSidebar && (
         <div className="w-64 flex-shrink-0">
@@ -17,14 +16,9 @@ function MainLayout() {
       )}
 
       {/* KONTEN UTAMA */}
-      <div
-        className={`flex-1 ${
-          hideSidebar ? "p-0" : "p-6"
-        } transition-all duration-300`}
-      >
+      <div className={`flex-1 ${hideSidebar ? "p-0" : "p-6"}`}>
         <Outlet />
       </div>
-
     </div>
   );
 }

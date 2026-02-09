@@ -16,7 +16,7 @@ export default function Daftar() {
   const [filterJurusan, setFilterJurusan] = useState("Semua");
 
   const [kategoriList, setKategoriList] = useState(["Semua"]);
-  const [kelasList, setKelasList] = useState(["Semua"]);
+  const [kelasList, setKelasList] = useState(["Semua  "]);
   const [jurusanList, setJurusanList] = useState(["Semua"]);
 
   const navigate = useNavigate();
